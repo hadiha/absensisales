@@ -1,0 +1,49 @@
+
+    .cyan.header{
+      color: rgba(40,168,224) !important;
+    }
+    .basic.segment{
+      padding: 1rem 0;
+    }
+    .step.menu{
+      margin-top: 0 !important;
+      list-style-type: none;
+    }
+    .step.menu > .item{
+      list-style-type: none;
+      position: relative;
+      font-size: .9rem !important;
+    }
+    .step.menu > .active.item{
+      color: rgba(40,168,224,.9) !important;
+    }
+    .step.menu > .done.item{
+      color: #21ba45 !important;
+    }
+    .step.menu > .item > .numbering{
+      width: 22px;
+      display: inline-block;
+      font-weight: bold
+    }
+    .sticky.menu{
+      position: -webkit-sticky;
+      position: sticky;
+      top: 5rem;
+    }
+    .transparent.table{
+      border:none;
+    }
+    .transparent.table tr td{
+      border:none !important;
+      padding: .1em .8em .1em 0 !important;
+    }
+    textarea.inline{
+      resize: none !important;
+      min-height: 20px !important;
+    }
+    .surat.segment{
+      padding: 2em 1em;
+    }
+    .surat.container{
+      padding: .5em 3em;
+    }

@@ -1,0 +1,48 @@
+  .checkbox, .dn, .up {
+    display: inline-block !important;
+    vertical-align: middle;
+  }
+  .ui.checkbox input,
+  .ui.toggle.checkbox label:before { 
+      padding-top: 2px;
+      font-size: xx-small;
+      content: attr(data-content)
+  }
+
+  .ui.checkbox input,
+  .ui.toggle.checkbox label.up:before {
+      padding-left: 8px;
+      color:white;
+  }
+
+  .ui.checkbox input,
+  .ui.toggle.checkbox label.dn:before {
+      padding-left: 24px;   
+      color:black;
+  }
+
+  .ui.toggle.checkbox input:checked ~ .box:after, .ui.toggle.checkbox input:checked ~ label:after {
+      left: 2.5rem;
+  }
+
+  .ui.toggle.checkbox input:checked + label:before {
+      background-color: #21ba45 !important;
+  }
+
+  .ui.toggle.checkbox input:checked ~ .box:before, .ui.toggle.checkbox input:checked ~ label:before {
+      background-color: #21ba45 !important;
+  }
+
+  .ui.toggle.checkbox input:checked ~ .box:before, .ui.toggle.checkbox input:checked ~ label:before {
+      background-color: #21ba45 !important;
+  }
+
+  .ui.toggle.checkbox input:focus:checked ~ .box:before, .ui.toggle.checkbox input:focus:checked ~ label:before {
+      background-color: #21ba45 !important;
+  }
+
+  .ui.checkbox input, .ui.toggle.checkbox label:before {
+      padding-top: 2px;
+      font-size: xx-small;
+      content: attr(data-content);
+      width: 4rem;}

@@ -1,0 +1,207 @@
+
+-> Role
+  1. Perbaiki menu user tiap role
+  2. tambah menu role admin pusat (yang bisa mengakses semua akses aps)
+
+-> user proyek (terdapat menu)
+   1. semua menu kecuali dokumen k-3 dan master
+-> user wilayah & divisi sama
+  1. tidak bisa input, just unlock data
+-> User Head office (Pusat)
+
+Review setiap menu:
+-> Menu JTK (JENIS DIGANTI JADI NAMA )
+  1. data grid set setiap user proyek
+  2. Table JTK bisa input (kemarin, sekarang dan besok) apabila lebih input di hari tersebut, harus lapor ke manager/wilayah
+  3. GROUP (Karyawan Proyek, Mandor, sub kontraktor{ini PT}, TAMU)
+     
+  4. Jenis menjadi inputan (gausah dari master)
+  5. Di table kalender tampilkan bulan dan tahun
+  6. di menu jtk, table kalender ditambah jam
+  7. aksi edit & hapus tidak bisa digunakan ketika user proyek sudah approve proyek. 
+  8. mulai Proyek tampilkan awal dan akhir.
+  9. tiap role, beda beda dashboard nya>
+	di menu audit, kalender ada tambahan jam, lalu akumulasi: jml tk+ jmlh hari kerja / 30 (tampil di dashboard)
+
+
+-> Menu Audit  ()
+   0. pengukuran kinerja internal, diganti menjadi audit nasional
+   1. bukti dan keterangan diganti.
+   2. ada org yang ditunjuk buat khusus auditor
+   3. Tambah kode temuan
+   4. di laporan tindakan pake no
+   5. point diganti menjadi finding.
+   6. di form bukti/ perbaikan tambahkan deskripsi atau inputan
+   7. Tindakan menjadi tindakan perbaikan
+-> Menu Tindakan
+   1. memberikan alert 2 hari sebelum kepada attendance dan inspektor 
+   2. tindakan approve oleh pusat
+   3. tampil keterangan tulisan di bawah gambar
+  
+
+-> Rapat K3
+  1. Bukti di hapus
+
+-> Inspeksi 
+  a. safety Patrpl
+     - Attendance inputan
+     - PIC sama dengan attendance. inputan
+     - inspektor gausah ada pilihan, memilih diri nya sendiri
+
+  B. inspeksi alat mingguan (get alat dari master alat dr user_proyek)
+     - tambah pendaftaran alat proyek di master. misal, tambah buldoser di proyek A. bisa di cek alat tsbut di .
+     - pusat meriksa nama alat dana apa yg diperiksa.
+     - di sebelah catatan tambah foto dan catatan
+     - di inspeksi mingguan 
+     - PM dirundingkan dengan IT lagi.
+     - dibawah comment notification, tambah isian attendance
+
+   C. Tambah Menu Inspeksi Management sama persis dengan pengukuran kinerja
+      
+-> Induction
+   - list grid induksi (jabatan diganti) jadi kek gini = NO. | KTP |  NAMA  | GROUP | JENIS diganti jadi REGU | 
+   - Session inputan (ke-1, ke-2)
+   - btn cari hilangkan,
+   - tgl di input induksi by sistem
+   - daftar hadir ini mewakili sesi
+   - Jabatan / skill.
+   - induksi simpan di menu paling atas.
+   - tambah peserta
+   - tambah data induksi, otomatis pindah ke jtk..
+   - Upload induksi diganti jadi file induction.
+   - file nya hapus.
+   - REVISI HILANGIN
+   - SATU NAMA PROYEK, terakhir di update tgl brp
+   - edit, dan hapus hilangkan.
+  
+    kesimpulan induksi & HARIAN JTK (data grid list get per user proyek)
+   - induksi (jenis, regu, tg, sesi otomatis)
+   - tambah peserta ( No. KTP, Nama, Jabatan, FOTO)
+   - edit dan hapus di hilangkan
+   - grid Daftar peserta( KTP | NAMA | JABATAN | (DI merge = (GROUP | NAMA)) | TGL Induksi | SESI   
+
+-> TRAINING
+   - tambah data, pilih data jabatan
+
+-> INPUT DATA TALK
+  - Proyek pilihan
+  - Tgl, Waktu (otomatis)
+  - Pelaksana (ngambil data dari induksi)
+
+-> INPUT DATA MEETING
+  - pembicara (get dari induksi)
+  - tgl, waktu (otomatis)
+  - edit Lampiran/Absensi (tambah keterangan : absen, daftar hadir, dan materi) tambah tool tip
+  
+-> Equipment (diganti menjadi daftar alat) menu ini sama dengan di master Equipment
+  - buat master equipment(alat) utk user proyek
+  - histori alat keluar dan masuk.
+  - form nya ganti jadi :
+    a. Nama (pilihan dari master alat) *tambah master data alat.
+    b. 
+    c.
+    d. 
+    e. 
+    f.
+
+
+-> DOKUMEN K3
+   - di input oleh pusat
+   - semua role bisa baca
+   - Judul Arsip diganti menjadi Dokumen eksternal
+   - Prosedur diganti menjadi Dokumen Internal (ada folder tab 1. prosedur, 2. instruksi kerja, 3. dokumen pendukung dan 4. formulir) dibuat master tipe prosuder
+   - policy bisa baca semua cman edit hapus pusat.
+
+-> Master 
+  - Menu master di bagi2 buat  three
+  - hapus tipe plicy, buletin kondisi inspeksi, jenis pekerjaan, session, jabatan, 
+
+
+
+ 
+SEMUA JENIS DIGANTI JADI REGU
+
+*Approval (oleh proyek, wilayah dan PM) ada reject dan approve (lalu ketika di reject ada keterangan nya), ketika ada koreksi harus ada ijin juga dari wilayah,.
+
+- JTK, Pengukuran dari bawah, 
+- Rapat,
+*tbl spro_divisi (untuk nge link kode wilayah dimana aja)
+*tambah Menu Investigasi dibawah equipment
+*Revisi table utk dashboard
+
+ 
+priority:
+1. JTK
+2. inspection (safety patrol)
+3. induction
+4. toolbox talk
+5. toolbox meeting
+	
+6. rapat k3
+
+
+
+meeting hari kamis, 24, 05 2018:
+
+-> Rapat k3
+   - Form Data umum (add data nya ada di aksi)
+   - Berita Acara dikasi status.
+   - Rapat K3 yang menginput User proyek, wilayah dan pusat hanya melihat data.
+
+-> Pengukuran kinerja internal
+  -  tindakan oleh orang yang menginput
+  -  
+
+-> Dokument K3 
+  - Hapus menu safety plan
+
+-> Yang menjadi dashboard
+  - 
+
+-> Tambah MEnu Accident
+  - form mengikuti di draf
+  - ada 3 bagian (pake stepper)
+  - form yang mengisi User wilayah (manager)
+  - form bagian 3 point F diisi user pusat
+-> Equipment (Daftar alat di input di pusat)
+  - untuk penambahan alat masuk dan keluar, lalu ada history nya..
+  - form mengikti pada Lembar monitoring peralatan, inspeksi dan perawatan.
+  - inputan dinamis, dari master.
+  - Jenis Alat.
+  - point A - D ada suratnya.
+  - waktu berakhir diberi alert warna merah.
+
+  -Stock Flow    diganti nama menjadi Daftar ALat
+
+-> Inspeksi mingguan alat (Menampilkan yang list daftar alat yang ada di equipment)
+  -  Btn Tambah data Di hapus,
+  - btn hapus pada aksi di hapus.
+  - hanya menampilkan list daftar alat
+  - ketika klik item, keluar data nya pemeriksaan alat 
+  - tanggal inspeksi satu minggu. apabila sudah lewat satu minggu kasi keterangan merah.
+
+
+-> Master
+  - menu Equipment, Tambah SIO, tanggal masuk
+  - tambah isian field baru tambah di m
+  - Tambah data equipment diinput user proyek. inputan nya sebagai berikut:
+    1. Jenis (Dropdown)
+    2. Nama Equipment 
+    3. Merk/Type
+    4. No, Induk
+    5. Tgl. Masuk/Terpasang
+    6. No. Sertifikat
+    7. Tgl Berakhir sertifikat.
+    8. Operator 
+       - SIO NOmor
+       - tanggal berakhir nya kapan
+    9. Hour Meter
+    10. Lampiran
+
+-> 
+*approval oleh KAPRO satu minggu 1x.
+*PM dan KAPRO itu adalah User proyek.. 
+*PM hanya 1.
+*SO mungkin 2 so(dlm satu proyek)
+*SO saja yang tidak ada approve
+
