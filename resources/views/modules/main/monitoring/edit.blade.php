@@ -11,38 +11,49 @@
 		<input type="hidden" name="id" value="{{ $record->id }}">
         <div class="field">
         	<label>Nama Pegawai</label>
-            <input type="text" placeholder="Nama" name="pegawai_id" value="{{$record->pegawai_id}}">
+            <input type="text" placeholder="Nama" name="pegawai_id" value="{{$record->user->username}}" readonly>
 		</div>
 		<div class="field">
         	<label>Area</label>
-            <input type="text" placeholder="Area" name="area">
+            <input type="text" placeholder="Area" name="area" value="">
         </div>
         <div class="field">
         	<label>Tanggal</label>
-            <input type="text" placeholder="Tanggal" name="tanggal" value="{{Carbon::parse($record->tanggal)->format('d/m/Y')}}">
+            <input type="text" placeholder="Tanggal" name="tanggal" value="{{ $record->date_in ? Carbon::parse($record->date_in)->format('d/m/Y') : ''}}" readonly>
 		</div>
 		
 
 		<div class="two fields">
-			<div class="field">
+			<div class="field" id="in">
 			  <label>Jam Masuk</label>
-			  <input type="text" placeholder="Jam Masuk" name="time_in" value="{{ Carbon::parse($record->time_in)->format('H:i')}}">
+			  <input type="text" placeholder="Jam Masuk" name="time_in" value="{{ $record->date_in ? Carbon::parse($record->date_in)->format('H:i') : '' }}">
 			</div>
-			<div class="field">
+			<div class="field" id="out">
 			  <label>Jam Pulang</label>
-			  <input type="text" placeholder="Jam Masuk" name="time_out" value="{{Carbon::parse($record->time_out)->format('H:i')}}">
+			  <input type="text" placeholder="Jam Pulang" name="time_out" value="{{$record->date_out ? Carbon::parse($record->date_out)->format('H:i') : ''}}">
 			</div>
 		</div>
 
         <div class="field">
         	<label>Koordinat</label>
-            <input type="text" placeholder="Koordinat" name="koordinat" value="{{$record->koordinat}}">
+            <input type="text" placeholder="Koordinat" name="koordinat" value="{{$record->koordinat}}" readonly>
 		</div>
 		
-        <div class="field">
+		<div class="field">
+        	<label>Status</label>
+            <select name="status" class="ui search dropdown">
+				<option value="hadir" @if($record->status == 'hadir') selected  @endif>Hadir</option>
+				<option value="izin" @if($record->status == 'izin') selected  @endif>Izin</option>
+				<option value="sakit" @if($record->status == 'sakit') selected  @endif>Sakit</option>
+				<option value="cuti" @if($record->status == 'cuti') selected  @endif>Cuti</option>
+				<option value="tk" @if($record->status == '') selected  @endif>Tanpa Keterangan</option>
+			</select>
+		</div>
+		
+		<div class="field">
         	<label>Keterangan</label>
             <textarea placeholder="Keterangan" name="keterangan" rows="3">{{$record->keterangan}}</textarea>
-        </div>
+		</div>
 	</form>
 </div>
 <div class="actions">

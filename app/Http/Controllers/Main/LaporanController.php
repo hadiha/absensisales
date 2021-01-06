@@ -7,7 +7,8 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Main\LaporanRequest;
 use App\Models\Kehadiran\Monitoring;
-use App\Models\Main\MainBarang;
+use App\Models\Main\DataFile;
+use App\Models\Main\Laporan;
 /* Validation */
 // use App\Http\Requests\Konfigurasi\LaporanRequest;
 
@@ -17,9 +18,10 @@ use App\Models\Master\Barang;
 /* Libraries */
 use DataTables;
 use Carbon\Carbon;
+use Exception;
 use Hash;
 
-class MainBarangController extends Controller
+class LaporanController extends Controller
 {
     protected $link = 'barang/';
 
@@ -123,7 +125,7 @@ class MainBarangController extends Controller
 
     public function grid(Request $request)
     {
-        $records = MainBarang::when($name = request()->name, function ($q) use ($name) {
+        $records = Laporan::when($name = request()->name, function ($q) use ($name) {
                         return $q->where('pegawai_id', $name);
                     })
                     ->when($area = request()->area, function ($q) use ($area) {
@@ -204,7 +206,7 @@ class MainBarangController extends Controller
 
     public function store(LaporanRequest $request)
     {
-        $record = new MainBarang();
+        $record = new Laporan();
         $record->fill($request->all());
         $record->save();
 
@@ -213,7 +215,7 @@ class MainBarangController extends Controller
         ]);
     }
 
-    public function edit(MainBarang $barang)
+    public function edit(Laporan $barang)
     {
         return $this->render('modules.main.barang.edit', [
             'record' => $barang,
@@ -225,8 +227,53 @@ class MainBarangController extends Controller
     //   
     }
 
-    public function update(LaporanRequest $request, MainBarang $barang)
+    public function update(LaporanRequest $request, Laporan $barang)
     {
+        // dd($request->all());
+        if(isset($request->filespath)){
+            if(count($request->filespath) > 0){
+                        foreach ($request->filespath as $key => $value) {
+                                if($request->filename[$key])
+                                {
+                                    $saveFile['filename'] = $request->filename[$key];
+                                }
+
+                                $saveFile['fileurl'] = $value;
+                                $saveFile['barang_id'] = $barang->id;
+
+                                $recordFile = new DataFile();
+                                if(isset($request->fileid[$key]))
+                                {
+                                    $recordFile = DataFile::where('fileurl', $value)->where('barang_id', $barang->id)->first();
+                                }
+                                $recordFile->fill($saveFile);
+                                $recordFile->save();
+
+                                $fileid[] = $recordFile->id;
+                        }
+
+                        $notExist = DataFile::whereNotIn('id', $fileid)->where('barang_id', $barang->id)->get();
+
+                        if($notExist->count() > 0)
+                        {
+                                foreach($notExist as $ne)
+                                {
+                                    if(file_exists(storage_path().'/app/public/'.$ne->fileurl))
+                                    {
+                                            unlink(storage_path().'/app/public/'.$ne->fileurl);
+                                    }
+                                    $ne->delete();
+                                }
+                        }
+                }
+        }else{
+                $this->validate($request, [
+                    'fileupload' => 'required',
+                ],[
+                    'fileupload.required' => 'References Files is required.',
+                ]);
+        }
+
         $barang->fill($request->all());
         $barang->save();
 
@@ -235,8 +282,7 @@ class MainBarangController extends Controller
         ]);
     }
 
-
-    public function destroy(MainBarang $barang)
+    public function destroy(Laporan $barang)
     {
         $barang->delete();
 
@@ -244,4 +290,31 @@ class MainBarangController extends Controller
             'status' => true,
         ]);
     }
+
+    public function fileUpload(Request $request)
+    {
+        try {
+            $url = [];
+            if($request->file)
+            {
+                $path = $request->file->storeAs('fileupload', md5($request->file->getClientOriginalName().Carbon::now()->format('Ymdhisu')).'.'.$request->file->getClientOriginalExtension(), 'public');
+
+                return response([
+                    'status' => true,
+                    'filepath' => $path,
+                    'filename' => $request->file->getClientOriginalName(),
+                ]);
+            }
+
+        } catch (Exception $e) {
+            return response([
+                'status' => false,
+                'errors' => $e
+            ]);
+        }
+        return response([
+            'status' => false,
+        ]);
+    }
+
 }

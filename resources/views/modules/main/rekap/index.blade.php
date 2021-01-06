@@ -16,14 +16,21 @@
 		<input type="text" name="filter[area]" placeholder="Area">
     </div>
     <div class="field">
+        <div class="ui month" id="from">
+            <div class="ui input left icon">
+                <i class="calendar icon"></i>
+                <input type="text" name="filter[from]"  placeholder="Dari" value="{{ Carbon::now()->startOfMonth() }}">
+            </div>
+        </div>
+    </div>
+    {{-- <div class="field">
         <div class="ui month" id="to">
             <div class="ui input left icon">
                 <i class="calendar icon"></i>
-                <input type="text" name="filter[bulan]"  placeholder="Month & year" value="">
+                <input type="text" name="filter[to]"  placeholder="Sampai" value="{{ Carbon::now()->endOfMonth() }}">
             </div>
         </div>
-        <!-- <input name="filter[bulan]" class="ui month" placeholder="Month & year" type="text"> -->
-    </div>
+    </div> --}}
 	<button type="button" class="ui teal icon filter button" data-content="Cari Data">
 		<i class="search icon"></i>
 	</button>
@@ -36,8 +43,9 @@
 @endsection
 
 @section('js-filters')
-	d.kode = $("input[name='filter[kode]']").val();
-	d.name = $("input[name='filter[name]']").val();
+	d.area = $("input[name='filter[area]']").val();
+	d.from = $("input[name='filter[from]']").val();
+	{{-- d.to = $("input[name='filter[to]']").val(); --}}
 @endsection
 
 @section('rules')
@@ -53,10 +61,14 @@
 @section('init-modal')
 <script>
 	$(document).ready(function() {
-		$('.ui.month').calendar({
-			type: 'date'
-		});
-
+        $('#from').calendar({
+            type: 'month',
+            // endCalendar: $('#to')
+        });
+        // $('#to').calendar({
+        //     type: 'date',
+        //     startCalendar: $('#from')
+        // });
 	});
 
         onShow = function(){

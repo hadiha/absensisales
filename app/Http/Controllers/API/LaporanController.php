@@ -6,14 +6,14 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Http\Controllers\ApiController;
 use App\Http\Requests\Main\LaporanRequest;
-use App\Models\Main\MainBarang;
+use App\Models\Main\Laporan;
 use App\Transformers\MainResource;
 
 class LaporanController extends ApiController
 {
     public function index()
     {
-        $records = MainBarang::forGrid()
+        $records = Laporan::forGrid()
                         ->paginate(request()->per_page ?: 10)->appends(request()->query());
 
         $this->loadIfExists($records);
@@ -28,10 +28,10 @@ class LaporanController extends ApiController
 
     public function store(LaporanRequest $request)
     {
-        return MainBarang::createByRequest($request);
+        return Laporan::createByRequest($request);
     }
 
-    public function show(MainBarang $laporan)
+    public function show(Laporan $laporan)
     {
         $this->loadIfExists($laporan);
         return new MainResource($laporan);
@@ -42,12 +42,12 @@ class LaporanController extends ApiController
         return view('main::barang.edit');
     }
 
-    public function update(LaporanRequest $request, MainBarang $laporan)
+    public function update(LaporanRequest $request, Laporan $laporan)
     {
-        return $laporan->updateByRequest($request);
+        // return $laporan->updateByRequest($request);
     }
 
-    public function destroy(MainBarang $laporan)
+    public function destroy(Laporan $laporan)
     {
         // return $laporan->deleteByRequest();
     }

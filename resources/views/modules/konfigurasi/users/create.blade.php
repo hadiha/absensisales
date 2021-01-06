@@ -22,6 +22,20 @@
             </div>
         </div>
         <div class="field">
+        	<label>Nama Lengkap</label>
+            <div class="ui left icon input">
+                <i class="user icon"></i>
+                <input type="text" placeholder="Nama" name="name" value="{{ old('name') }}">
+            </div>
+        </div>
+        <div class="field">
+        	<label>Phone</label>
+            <div class="ui left icon input">
+                <i class="phone icon"></i>
+                <input type="text" placeholder="Phone" name="phone" value="{{ old('phone') }}">
+            </div>
+        </div>
+        <div class="field">
         	<label>Hak Akses</label>
 			<select name="roles[]" class="ui fluid multiple dropdown" multiple>
 				{!! App\Models\Authentication\Role::options('display_name', 'id', [], 'Pilih Hak Akses') !!}

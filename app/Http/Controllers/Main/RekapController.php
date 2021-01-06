@@ -16,7 +16,7 @@ use App\Models\Master\Barang;
 
 /* Libraries */
 use DataTables;
-use Carbon;
+use Carbon\Carbon;
 use Hash;
 
 class RekapController extends Controller
@@ -78,6 +78,13 @@ class RekapController extends Controller
                 'sortable' => true,
             ],
             [
+                'data' => 'cuti',
+                'name' => 'cuti',
+                'label' => 'Cuti',
+                'searchable' => false,
+                'sortable' => true,
+            ],
+            [
                 'data' => 'tk',
                 'name' => 'tk',
                 'label' => 'Tanpa Keterangan',
@@ -89,23 +96,40 @@ class RekapController extends Controller
 
     public function grid(Request $request)
     {
+        // dd(Carbon::parse(request()->from)->format('m'));
         $records = User::when($name = request()->name, function ($q) use ($name) {
                         return $q->where('name', 'like', '%' . $name . '%');
                     })
+                    ->when($from = request()->from, function ($q) use ($from){
+                        $q->with(['absensi' => function($w) use ($from){
+                            return $w->whereMonth('date_in', Carbon::parse($from)->format('m'));
+                                    // ->whereYear('date_in', Carbon::parse($from)->format('Y'));
+                        }]);
+                    })
+                    // ->whereHas('absensi', function($q){
+                    //     $q->whereMonth('created_at', Carbon::now()->format('m'));
+                    // })
                     ->select('*');
         
         //Init Sort
+        // $from = Carbon::parse(request()->from)->format('Y-m-d 00:00:00');
+        // $to = Carbon::parse(request()->to)->format('Y-m-d 23:59:59');
+        // if($from){
+        //     $records->whereHas('absensi', function($w) use ($from, $to){
+        //         return $w->whereBetween('date_in', [$from, $to]);
+        //     });
+        // }
+
         if (!isset(request()->order[0]['column'])) {
             $records->orderBy('created_at', 'desc');
         }
-
         $link = $this->link;
         return DataTables::of($records)
             ->addColumn('num', function ($record) use ($request) {
                 return $request->get('start');
             })
             ->editColumn('area', function ($record) {
-                return $record->status;
+                return $record->area;
             })
             ->editColumn('hadir', function ($record) {
                 return $record->hadir();
@@ -115,6 +139,9 @@ class RekapController extends Controller
             })
             ->editColumn('izin', function ($record) {
                 return $record->izin();
+            })
+            ->editColumn('cuti', function ($record) {
+                return $record->cuti();
             })
             
             ->addColumn('action', function ($record) use ($link){
@@ -157,21 +184,14 @@ class RekapController extends Controller
         return $this->render('modules.main.rekap.create');
     }
 
-    public function store(BarangRequest $request)
+    public function store(Request $request)
     {
-        $record = new Barang();
-        $record->fill($request->all());
-        $record->save();
-
-        return response([
-            'status' => true
-        ]);
+        //
     }
 
-    public function edit(Barang $barang)
+    public function edit($id)
     {
-        return $this->render('modules.main.rekap.edit', [
-            'record' => $barang        ]);
+    //    
     }
 
     public function show($id)
@@ -179,23 +199,14 @@ class RekapController extends Controller
     //   
     }
 
-    public function update(Request $request, Barang $barang)
+    public function update(Request $request, $id)
     {
-        $barang->fill($request->all());
-        $barang->save();
-
-        return response([
-            'status' => true
-        ]);
+        //
     }
 
 
-    public function destroy(Barang $barang)
+    public function destroy($id)
     {
-        $barang->delete();
-
-        return response([
-            'status' => true,
-        ]);
+        //
     }
 }

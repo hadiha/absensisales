@@ -261,4 +261,150 @@
 
 		var showerror = $('#dataForm' + ' [name=' + key + ']').closest('.field').find('.ui.basic.red.pointing.prompt.label.transition.visible').remove();
 	}
+
+	// $(document).on('click','input[type="text"][name="fileupload"]', function () {
+	// 	$(this).parents('.ui.action').find('button.browse.file').trigger('click');
+	// });
+	// $('.browse.file').unbind('click');
+
+	$(document).on('click','.browse.file', function (e) {
+		$(this).unbind('click');
+        e.preventDefault();
+        var fileinput = $(this).parents('.ui.action.input').find('input[type="file"]');
+        browseFile(fileinput);
+    });
+
+	function browseFile(fileinput) {
+	    $(fileinput).unbind('change');
+	    $(fileinput).on('change', function (e) {
+			var pass = 0;
+			var maxsize = {{Helpers::convertfilesize()}};
+
+	    if(e.target.files.length > 0)
+	        {
+          		$.each(e.target.files, function (index, file) {
+					var showclass = "success";
+
+					if(file.size > maxsize)
+					{
+						showclass="error";
+						pass = 1;
+						$('.showbrowse.file').append(`<div class="two fields upload-file">
+							<div class="sixteen wide field">
+							<div class="ui progress `+showclass+`">
+							<div class="bar">
+							<div class="progress"></div>
+							</div>
+							<div class="label">`+ file.name +` ( Failed to upload size above ` + '{{ini_get('upload_max_filesize')}}' + `B )</div>
+							</div>
+							</div>
+							<div class="two wide field">
+							<input type="file" style="display:none !important;" accept="image/*">
+							<div class="two wide field">
+								<a href="javascript:void(0)" class="ui icon red removefailedupload button">
+								<i class="trash icon"></i>
+								</a>
+							</div>
+							</div>`)
+
+							$('.removefailedupload').on('click', function (e) {
+					        e.preventDefault();
+									$(this).parents('.two.fields:first').remove();
+					    });
+					}else{
+						var formData = new FormData();
+						formData.append('_token', '{{ csrf_token() }}');
+						formData.append('file', file);
+
+						var elem = document.createElement('div');
+						$(elem).attr('class', 'two fields upload-file');
+
+						$.ajax({
+							url: '{{ url('barang/file-upload')  }}',
+							type: "POST",
+							dataType: 'json',
+							processData: false,
+							contentType: false,
+							data : formData,
+							beforeSend : function () {
+								$(elem).html(`<div class="fourteen wide field">
+									<div class="ui progress `+showclass+`">
+										<div class="bar">
+											<div class="progress"></div>
+										</div>
+										<div class="label">`+ file.name +`</div>
+									</div>
+								</div>
+								<div class="two wide field">
+									<button class="ui icon red removebrowse button">
+									<i class="trash icon"></i>
+									</button>
+								</div>`);
+								$('.showbrowse.file').append(elem)
+								$(elem).find('.ui.progress').progress({
+				                    total : e.total,
+				                    value : 0,
+				                })
+							},
+							uploadProgress : function (event, position, total, percentComplete) {
+								$(elem).find('.ui.progress').progress({
+									total : total,
+									value : percentComplete,
+								})
+							},
+							success: function(resp){
+								$(elem).find('.two.wide.field').append(`<input name="filespath[]" value="`+resp.filepath+`" type="hidden">
+									<input name="fileurl[]" value="`+resp.filepath+`" type="hidden">
+									<input name="filename[]" value="`+resp.filename+`" type="hidden">
+								`);
+								$(elem).find('.ui.progress').progress({
+									total : 100,
+									value : 100,
+								})
+								removebrowse();
+					            window.onbeforeunload = function(d) {
+					                return "Dude, are you sure you want to leave? Think of the kittens!";
+					            }
+					            // $('.kedosolan').val(('asdaasd',$('.two.fields.upload-file').length));
+							},
+							error : function(resp){
+							},
+						})
+					}
+				});
+	        }
+	    });
+	}
+
+	$(document).on('click','.removebrowse.button', function (e) {
+			e.preventDefault();
+			var pathinput = $(this).parents('.two.wide.field').find('input[name="filespath[]"]').val();
+			var elem = $(this);
+			var url = '{{ url('barang/unlink') }}';
+			if($(this).data('url'))
+			{
+				url = $(this).data('url');
+			}
+			var formData = new FormData();
+			formData.append('_token', '{{ csrf_token() }}');
+			formData.append('path', pathinput);
+
+			$.ajax({
+				url: url,
+				type: "POST",
+				dataType: 'json',
+				processData: false,
+				contentType: false,
+				data : formData,
+				success: function(resp){
+					elem.parents('div[class="two fields upload-file"]').remove();
+					$('.kedosolan').val(('asdaasd',$('.two.fields.upload-file').length));
+
+				},
+				error : function(resp){
+				},
+			})
+		});
+
+
 </script>

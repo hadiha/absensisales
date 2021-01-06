@@ -8,7 +8,7 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 
-class MainBarang extends Model
+class Laporan extends Model
 {
   // call traits
     use RaidModel;
@@ -16,7 +16,7 @@ class MainBarang extends Model
 
     protected $table = 'trans_barang';
     protected $fillable = [
-      'barang_id', 'tanggal', 'sale_in', 'sale_out', 'stock', 'foto'
+      'barang_id', 'tanggal', 'sale_in', 'sale_out', 'stock'
     ];
 
     protected $dates= [
@@ -32,11 +32,14 @@ class MainBarang extends Model
             return $this->attributes['tanggal'] = !is_null($value) ? Carbon::createFromFormat('d/m/Y', $value) : null;
         }
     }
-   
 
     public function item()
     {
         return $this->belongsTo(Barang::class, 'barang_id');
+    }
+
+    public function files(){
+    	  return $this->hasMany(DataFile::class, 'barang_id');
     }
     
     public function scopeForGrid($query)
@@ -60,6 +63,16 @@ class MainBarang extends Model
     {
         DB::beginTransaction();
         try {
+          $file = [];
+          if(isset($request->filespath)){
+              if(count($request->filespath) > 0){
+                  foreach ($request->filespath as $k => $value) {
+                      $file[$k]['fileurl'] = $value;
+                      $file[$k]['filename'] = $request->filename[$k];
+                  }
+              }
+          }
+
             $record = new self();
             $record->fill($request->all());
             $record->save();

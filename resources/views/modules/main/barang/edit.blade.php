@@ -13,10 +13,14 @@
         	<label>Nama Barang</label>
             <input type="text" placeholder="Nama Barang" value="{{$record->item->name}}" readonly>
 		</div>
+		<div class="field">
+        	<label>Kode Barang</label>
+            <input type="text" placeholder="Nama Barang" value="{{$record->item->kode}}" readonly>
+		</div>
 		<div class="two fields">
 			<div class="field">
-			  <label>Kode Barang</label>
-			  <input type="text" placeholder="Kode" value="{{$record->item->kode}}" readonly>
+			  <label>Tanggal Laporan</label>
+			  <input type="text" placeholder="tanggal" name="tanggal" value="{{ Carbon::parse($record->tanggal)->format('d/m/Y')}}" readonly>
 			</div>
 			<div class="field">
 				<label>Stok</label>
@@ -34,10 +38,45 @@
 			</div>
 		</div>
 		
-        <div class="field">
-        	<label>Keterangan</label>
-            <textarea placeholder="Keterangan" name="keterangan" rows="3"></textarea>
-        </div>
+		<div class="sixteen wide field">
+			<label>Reference Files</label>
+			<div class="ui action input">
+				<input type="text" name="fileupload" placeholder="Search..." readonly>
+				<input type="file" style="display:none !important;" accept="image/*" multiple>
+				<button class="ui button browse file">Cari..</button>
+			</div>
+	  	</div>
+		<div class="field showbrowse file">
+			@if($record->files->count() > 0)
+				@foreach($record->files as $file)
+				<div class="two fields upload-file">
+					<div class="fourteen wide field">
+					<div class="ui progress success" data-percent="100">
+						<div class="bar" style="transition-duration: 300ms; width: 100%;">
+						<div class="progress">100%</div>
+						</div>
+						<div class="label">{!! $file->filename !!}</div>
+					</div>
+					</div>
+					<div class="two wide field">
+						<a href="{{ asset('storage/'.$file->fileurl) }}" download="{{ $file->filename }}" target="_blank" class="mini ui icon green button">
+							<i class="download icon"></i>
+						</a>
+						<button class="mini ui icon red removebrowse button">
+							<i class="trash icon"></i>
+						</button>
+						<input name="fileid[]" value="{!! $file->id !!}" type="hidden">
+						<input name="filespath[]" value="{!! $file->fileurl !!}" type="hidden">
+						<input name="fileurl[]" value="{!! $file->fileurl !!}" type="hidden">
+						<input name="filename[]" value="{!! $file->filename !!}" type="hidden">
+					</div>
+				</div>
+				@endforeach
+			@endif
+		</div>
+
+
+
 	</form>
 </div>
 <div class="actions">

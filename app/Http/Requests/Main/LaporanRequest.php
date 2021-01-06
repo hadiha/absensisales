@@ -19,7 +19,7 @@ class LaporanRequest extends Request
             'stock' => 'required',
             'sale_in' => 'required',
             'sale_out' => 'required',
-            // 'foto' => 'required',
+            'filespath' => 'required',
         ];
 
         return $rules;
@@ -31,11 +31,11 @@ class LaporanRequest extends Request
         // $attributes = $this->attr;
 
         // validasi tambahan
-        $attributes['tanggal']        = 'Tanggal';
+        $attributes['tanggal']      = 'Tanggal';
         $attributes['stock']        = 'Stok';
         $attributes['sale_in']      = 'Sale In';
         $attributes['sale_out']     = 'Sale Out';
-        $attributes['foto']         = 'Foto';
+        $attributes['filespath']    = 'Foto';
         return $attributes;
     }
 

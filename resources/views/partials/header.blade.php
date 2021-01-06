@@ -1,7 +1,7 @@
 <div class="ui fixed blue menu">
     <a href="{{ url('/dashboard') }}" class="header item" style="letter-spacing: 3px;">
         {{-- <img class="logo" src="{{ asset('img/icon-long.png')}}" style="width: 5em;">&nbsp;&nbsp; --}}
-        {{ config('app.name') }}
+        {{ config('app.name', 'ABSENSI SALES') }}
     </a>
     <div class="menu">
         <a href="#" class="item" onclick="toggleSidebar()">

@@ -42,4 +42,21 @@ class Helpers
         fwrite($fp, "\n\n");
         fclose($fp);
     }
+
+    public static function convertfilesize($induction = null)
+    {
+        $size = ini_get('upload_max_filesize');
+
+        switch(substr($size, -1))
+        {
+            case 'G': $return = (int)rtrim($size,substr($size, -1)).'000000000';
+            break;
+            case 'M': $return = (int)rtrim($size,substr($size, -1)).'000000';
+            break;
+            default : $return = (int)$size;
+            break;
+        }
+
+        return $return;
+    }
 }

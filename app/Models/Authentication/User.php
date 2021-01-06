@@ -3,6 +3,7 @@
 namespace App\Models\Authentication;
 
 use App\Models\Main\Absensi;
+use App\Models\Master\Area;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Tymon\JWTAuth\Contracts\JWTSubject;
@@ -28,20 +29,33 @@ class User extends Authenticatable implements JWTSubject
 
     protected $dates = ['last_login'];
     protected $fillable = [
-      'username', 'password', 'email', 'deleted_at', 'last_login'
+      'username','name','foto','phone', 'password', 'email', 'deleted_at', 'last_login'
     ];
 
-    /* Relation */
-    // public function karyawan()
-    // {
-    //     return $this->hasOne(Karyawan::class, 'user_id');
-    // }
+    protected $appends = [
+        'area'
+    ];
 
+    // Mutator & Accessor
+    public function getAreaAttribute($value)
+    {
+        // return 0;
+        $sales = SalesArea::where('user_id', $this->id)->first();
+
+        return $sales ? $sales->area['name'] : '-';
+    }
+
+
+    /* Relation */
     public function absensi()
     {
         return $this->hasMany(Absensi::class, 'pegawai_id');
     }
     
+    public function salesarea()
+    {
+        return $this->hasOne(SalesArea::class, 'area_id');
+    }
     /* End Relation */
 
     /* Mutator */

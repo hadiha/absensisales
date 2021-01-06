@@ -10,6 +10,9 @@
     <script src="{{ asset('plugins/semanticui-calendar/calendar.min.js') }}"></script>
 @append
 
+@section('toolbars')
+@endsection
+
 @section('filters')
 	<div class="field">
         <select name="filter[pegawai_id]" class="ui search dropdown">

@@ -44,6 +44,20 @@ class UsersController extends Controller
             ],
             /* --------------------------- */
             [
+                'data' => 'name',
+                'name' => 'name',
+                'label' => 'Nama Lengkap',
+                'searchable' => false,
+                'sortable' => true,
+            ],
+            [
+                'data' => 'phone',
+                'name' => 'phone',
+                'label' => 'Phone',
+                'searchable' => false,
+                'sortable' => true,
+            ],
+            [
                 'data' => 'username',
                 'name' => 'username',
                 'label' => 'Username',
@@ -187,6 +201,8 @@ class UsersController extends Controller
     {
         $record = User::find($id);
         $record->username = $request->username;
+        $record->name = $request->name;
+        $record->phone = $request->phone;
         $record->email = $request->email;
         if($request->password_lama && !Hash::check($request->password_lama, $record->password)){
             return response([

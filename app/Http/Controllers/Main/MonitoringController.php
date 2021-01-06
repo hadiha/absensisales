@@ -49,8 +49,8 @@ class MonitoringController extends Controller
                 'sortable' => true,
             ],
             [
-                'data' => 'koordinat',
-                'name' => 'kode',
+                'data' => 'area',
+                'name' => 'area',
                 'label' => 'Area',
                 'searchable' => false,
                 'sortable' => true,
@@ -141,14 +141,17 @@ class MonitoringController extends Controller
             ->addColumn('num', function ($record) use ($request) {
                 return $request->get('start');
             })
+            ->editColumn('area', function ($record) {
+                return $record->user->area;
+            })
             ->editColumn('tanggal', function ($record) {
-                return Carbon::parse($record->date_in)->format('d/m/Y');
+                return $record->date_in ? Carbon::parse($record->date_in)->format('d/m/Y') : '-';
             })
             ->editColumn('time_in', function ($record) {
-                return Carbon::parse($record->date_in)->format('H:i');
+                return $record->date_in ? Carbon::parse($record->date_in)->format('H:i') : '-';
             })
             ->editColumn('time_out', function ($record) {
-                return Carbon::parse($record->date_out)->format('H:i');
+                return $record->date_out ? Carbon::parse($record->date_out)->format('H:i') : '-';
             })
             ->editColumn('status', function ($record) {
                 return $record->statusLabel();
@@ -219,12 +222,7 @@ class MonitoringController extends Controller
 
     public function update(AbsensiRequest $request, Absensi $monitoring)
     {
-        $monitoring->fill($request->all());
-        $monitoring->save();
-
-        return response([
-            'status' => true
-        ]);
+       return $monitoring->updateByRequest($request);
     }
 
 

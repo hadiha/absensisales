@@ -51,11 +51,17 @@ class Absensi extends Model
 
     public function scopeForGrid($query)
     {
+        $to = request()->to;
         return $query->when(!request()->has('order'), function ($q) {
                         return $q->orderBy('created_at', 'desc');
                     })
                     ->when($name = request()->name, function ($q) use ($name) {
-                        return $q->where('name', 'like', '%' . $name . '%');
+                        $q->whereHas('user', function($w) use ($name){
+                            return $w->where('name', 'like', '%' . $name . '%');
+                        });
+                    })
+                    ->when($from = request()->from, function ($q) use ($from, $to) {
+                        return $q->whereBetween('date_in', [$from, $to]);
                     });
     }
     
@@ -81,6 +87,37 @@ class Absensi extends Model
             'success' => true,
             'message' => 'Data berhasil disimpan',
             'data'    => $record
+        ]);
+    }
+
+    public function updateByRequest($request)
+    {
+        // return response($request->all(), 422);
+        $in = Carbon::parse($this->date_in)->format('d/m/Y') .' '. $request->time_in .':00';
+        $out = Carbon::parse($this->date_in)->format('d/m/Y') .' '. $request->time_out .':00';
+        // return response($wk, 422);
+        DB::beginTransaction();
+        try {
+            
+            $this->date_in = $in;
+            $this->date_out = $out;
+        $this->keterangan = $request->keterangan;
+            $this->save();
+            
+            DB::commit();
+        } catch (\Exception $e) {
+            DB::rollback();
+
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage()
+            ], 500);
+        }
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Data berhasil disimpan',
+            'data'    => $this
         ]);
     }
     

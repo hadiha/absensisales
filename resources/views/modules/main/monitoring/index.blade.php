@@ -1,14 +1,17 @@
 @extends('layouts.list')
 
 @section('css')
-	<link rel="stylesheet" type="text/css" href="{{ asset('plugins/summernote/summernote-lite.css') }}">
-    {{-- <link rel="stylesheet" type="text/css" href="{{ asset('plugins/semanticui-calendar/calendar.min.css') }}"> --}}
+	{{-- <link rel="stylesheet" type="text/css" href="{{ asset('plugins/summernote/summernote-lite.css') }}"> --}}
+    <link rel="stylesheet" type="text/css" href="{{ asset('plugins/semanticui-calendar/calendar.min.css') }}">
 @append
 
 @section('js')
 	{{-- <script src="{{ asset('plugins/summernote/summernote-lite.js') }}"></script> --}}
     <script src="{{ asset('plugins/semanticui-calendar/calendar.min.js') }}"></script>
 @append
+
+@section('toolbars')
+@endsection
 
 @section('filters')
 	<div class="field">
@@ -18,13 +21,20 @@
 		<input type="text" name="filter[area]" placeholder="Area">
     </div>
     <div class="field">
+        <div class="ui month" id="from">
+            <div class="ui input left icon">
+                <i class="calendar icon"></i>
+                <input type="text" name="filter[from]"  placeholder="Dari" value="">
+            </div>
+        </div>
+    </div>
+    <div class="field">
         <div class="ui month" id="to">
             <div class="ui input left icon">
                 <i class="calendar icon"></i>
-                <input type="text" name="filter[bulan]"  placeholder="Month & year" value="">
+                <input type="text" name="filter[to]"  placeholder="Sampai" value="">
             </div>
         </div>
-        <!-- <input name="filter[bulan]" class="ui month" placeholder="Month & year" type="text"> -->
     </div>
 	<button type="button" class="ui teal icon filter button" data-content="Cari Data">
 		<i class="search icon"></i>
@@ -52,44 +62,27 @@
 @section('init-modal')
 <script>
 	$(document).ready(function() {
-		$('.ui.month').calendar({
-			type: 'day'
-		});
-
+        $('#from').calendar({
+            type: 'date',
+            endCalendar: $('#to')
+        });
+        $('#to').calendar({
+            type: 'date',
+            startCalendar: $('#from')
+        });
 	});
 
-        onShow = function(){
-            $('.checkbox').checkbox();
-            $('.ui.dropdown').dropdown({
-                onChange: function(value) {
-                    var target = $(this).dropdown();
-                    if (value!="") {
-                        target
-                            .find('.dropdown.icon')
-                            .removeClass('dropdown')
-                            .addClass('delete')
-                            .on('click', function() {
-                                target.dropdown('clear');
-                                $(this).removeClass('delete').addClass('dropdown');
-                                return false;
-                            });
-                    }
-                }
-            });
-            // force onChange  event to fire on initialization
-            $('.ui.dropdown')
-                .closest('.ui.selection')
-                .find('.item.active').addClass('qwerty').end()
-                .dropdown('clear')
-                    .find('.qwerty').removeClass('qwerty')
-                .trigger('click');
+    onShow = function(){
+        $('#in').calendar({
+            type: 'time',
+            ampm: false
+        });       
 
-	        $('[name=display_name]').on('change, keyup', function(event) {
-	            var display_name = $(this).val();
-	            $('[name=name]').val(slugify(display_name));
-	        });
+        $('#out').calendar({
+            type: 'time',
+            ampm: false
+        });
+    };
 
-            return false;
-        };
 	</script>
 @endsection

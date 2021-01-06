@@ -45,11 +45,16 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('kehadiran/monitoring/grid', 'Main\MonitoringController@grid');
     Route::resource('kehadiran/monitoring', 'Main\MonitoringController');
     
-    Route::post('barang/grid', 'Main\MainBarangController@grid');
-    Route::resource('barang', 'Main\MainBarangController');
+    Route::post('barang/file-upload', 'Main\LaporanController@fileUpload')->name('barang.file-upload');
+    Route::post('barang/unlink', 'Main\LaporanController@unlink')->name('barang.unlink');
+    Route::post('barang/grid', 'Main\LaporanController@grid');
+    Route::resource('barang', 'Main\LaporanController');
     
     Route::post('kehadiran/rekap/grid', 'Main\RekapController@grid');
     Route::resource('kehadiran/rekap', 'Main\RekapController');
+
+    Route::post('home/get-data', 'DashboardController@getData')->name('home.getData');
+    Route::get('/home', 'DashboardController@index')->name('home');
 });
 
-Route::get('/home', 'HomeController@index')->name('home');
+// Route::get('/home', 'HomeController@index')->name('home');
