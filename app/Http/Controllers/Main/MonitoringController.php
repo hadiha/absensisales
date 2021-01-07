@@ -6,6 +6,7 @@ namespace App\Http\Controllers\Main;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Main\AbsensiRequest;
+use App\Models\Authentication\User;
 use App\Models\Main\Absensi;
 /* Validation */
 // use App\Http\Requests\Konfigurasi\BarangRequest;
@@ -42,7 +43,7 @@ class MonitoringController extends Controller
             ],
             /* --------------------------- */
             [
-                'data' => 'user.username',
+                'data' => 'name',
                 'name' => 'pegawai_id',
                 'label' => 'Nama',
                 'searchable' => false,
@@ -93,7 +94,7 @@ class MonitoringController extends Controller
                 'sortable' => true,
             ],
             [
-                'data' => 'keterangan',
+                'data' => 'absen.keterangan',
                 'name' => 'keterangan',
                 'label' => 'Keterangan',
                 'searchable' => false,
@@ -129,8 +130,18 @@ class MonitoringController extends Controller
 
     public function grid(Request $request)
     {
-        $records = Absensi::with('user')->forGrid()->select('*');
-        
+        $records = User::when($name = request()->name, function ($q) use ($name) {
+                        $q->where('name', 'like', '%' . $name . '%');
+                    })
+                    ->when($area = request()->area, function ($q) use ($area) {
+                        $q->whereHas('salesarea', function($w) use ($area){
+                            return $w->where('area_id', $area);
+                        });
+                    })
+                    ->with(['absen' => function($q){
+                        $q->whereDate('date_in', Carbon::parse(request()->date)->format('Y-m-d'));        
+                    }])->select('*');
+
         //Init Sort
         if (!isset(request()->order[0]['column'])) {
             $records->orderBy('created_at', 'desc');
@@ -141,20 +152,21 @@ class MonitoringController extends Controller
             ->addColumn('num', function ($record) use ($request) {
                 return $request->get('start');
             })
-            ->editColumn('area', function ($record) {
-                return $record->user->area;
-            })
+            // ->editColumn('area', function ($record) {
+            //     return $record->user->area;
+            // })
             ->editColumn('tanggal', function ($record) {
-                return $record->date_in ? Carbon::parse($record->date_in)->format('d/m/Y') : '-';
+                return Carbon::parse(request()->date)->format('d/m/Y');
+                // return $record->absen ? Carbon::parse($record->absen->date_in)->format('d/m/Y') : '-';
             })
             ->editColumn('time_in', function ($record) {
-                return $record->date_in ? Carbon::parse($record->date_in)->format('H:i') : '-';
+                return $record->absen ? Carbon::parse($record->absen->date_in)->format('H:i') : '-';
             })
             ->editColumn('time_out', function ($record) {
-                return $record->date_out ? Carbon::parse($record->date_out)->format('H:i') : '-';
+                return $record->absen ? ($record->absen->date_out != null ? Carbon::parse($record->absen->date_out)->format('H:i') : '-') : '-';
             })
             ->editColumn('status', function ($record) {
-                return $record->statusLabel();
+                return $record->absen ? $record->absen->statusLabel() : '<a class="ui small teal tag label">Belum Absen</a>' ;
             })
             ->addColumn('action', function ($record) use ($link){
                 $btn = '';
@@ -166,20 +178,34 @@ class MonitoringController extends Controller
                 //     'tooltip' => 'Detail',
                 //     'url'  => url($link.$record->id)
                 // ]);
-                
-                $btn .= $this->makeButton([
-                    'type' => 'modal',
-                    'datas' => [
-                        'id' => $record->id
-                    ],
-                    'id'   => $record->id
-                ]);
+
+                if($record->absen == null){
+                    $date = Carbon::parse(request()->date)->format('d/m/Y');
+                    $btn .= $this->makeButton([
+                        'type' => 'modal',
+                        'class'   => 'teal icon custom',
+                        'label'   => '<i class="edit outline icon"></i>',
+                        'tooltip' => 'Tambah',
+                        'id'    => $record->id,
+                        'datas' => [
+                            'url'  => url($link.'add/'.$record->id.'?date='.$date),
+                        ],
+                    ]);
+                } else {                    
+                    $btn .= $this->makeButton([
+                        'type' => 'modal',
+                        'datas' => [
+                            'id' => $record->absen->id
+                        ],
+                        'id'   => $record->absen->id
+                    ]);
+                }
                 // Delete
-                $btn .= $this->makeButton([
-                    'type' => 'delete',
-                    'id'   => $record->id,
-                    'url'   => url($link.$record->id)
-                ]);
+                // $btn .= $this->makeButton([
+                //     'type' => 'delete',
+                //     'id'   => $record->id,
+                //     'url'   => url($link.$record->id)
+                // ]);
 
                 return $btn;
             })
@@ -197,10 +223,39 @@ class MonitoringController extends Controller
         return $this->render('modules.main.monitoring.create');
     }
 
-    public function store(AbsensiRequest $request)
+    public function add($id)
     {
+        // dd(request()->date);
+        $user = User::find($id);
+
+        return $this->render('modules.main.monitoring.edit', [
+            'record'    => $user,
+            'type'      => 'add',
+            'tanggal'   => request()->date   
+        ]);
+    }
+
+    public function store(Request $request)
+    {
+        if($request->status = 'hadir'){
+            $request->validate([
+                'time_in' => 'required'
+            ], [
+                'time_in.required' => 'Jam Masuk Harus diisi'
+            ]);
+        }
+        
         $record = new Absensi();
-        $record->fill($request->all());
+        $record->fill($request->except(['date_in', 'date_out']));
+        if($request->time_in != null){
+            $in = Carbon::createFromFormat('d/m/Y G:i', $request->tanggal.' '.$request->time_in);
+            $record->date_in = $in;
+        }
+        if($request->time_out != null){
+            $out = Carbon::createFromFormat('d/m/Y G:i', $request->tanggal.' '.$request->time_out);
+            $record->date_out = $out;
+        }
+
         $record->save();
 
         return response([
@@ -208,10 +263,12 @@ class MonitoringController extends Controller
         ]);
     }
 
-    public function edit(Absensi $monitoring)
+    public function edit($id)
     {
+        $absen = Absensi::find($id);
         return $this->render('modules.main.monitoring.edit', [
-            'record' => $monitoring        
+            'record' => $absen,
+            'type'   => 'edit'       
         ]);
     }
 

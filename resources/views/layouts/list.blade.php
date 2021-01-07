@@ -114,6 +114,21 @@
                 },
             })
         });
+
+        $(document).on('click', '.ui.custom.button', function(event) {
+            event.preventDefault();
+            var id = $(this).data('id');
+            var url = $(this).data('url');
+            // /* Act on the event */
+            loadModal({
+                'url' : url,
+                'modal' : '.{{ $modalSize }}.modal',
+                'formId' : '#dataForm',
+                'onShow' : function(){ 
+                    onShow();
+                },
+            })
+        });
     </script>
     @yield('rules')
     @yield('init-modal')

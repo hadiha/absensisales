@@ -13,13 +13,15 @@
 		<input type="text" name="filter[name]" placeholder="Nama">
 	</div> --}}
 	<div class="field">
-		<input type="text" name="filter[area]" placeholder="Area">
+        <select name="filter[area]" class="ui search dropdown">
+            {!! \App\Models\Master\Area::options('name','id',[],'Pilih Area') !!}
+        </select>
     </div>
     <div class="field">
         <div class="ui month" id="from">
             <div class="ui input left icon">
                 <i class="calendar icon"></i>
-                <input type="text" name="filter[from]"  placeholder="Dari" value="{{ Carbon::now()->startOfMonth() }}">
+                <input type="text" name="filter[from]"  placeholder="Dari" value="{{ Carbon::now()->startOfMonth()->format('F Y') }}">
             </div>
         </div>
     </div>
@@ -43,7 +45,7 @@
 @endsection
 
 @section('js-filters')
-	d.area = $("input[name='filter[area]']").val();
+	d.area = $("select[name='filter[area]']").val();
 	d.from = $("input[name='filter[from]']").val();
 	{{-- d.to = $("input[name='filter[to]']").val(); --}}
 @endsection

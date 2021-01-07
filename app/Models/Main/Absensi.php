@@ -25,23 +25,23 @@ class Absensi extends Model
     // protected $preventAttrSet = false;
 
     // Accessors & Mutators
-    public function setDateInAttribute($value)
-    {
-        if ($this->preventAttrSet) {
-            return $this->attributes['date_in'] = $value;
-        } else {
-            return $this->attributes['date_in'] = !is_null($value) ? Carbon::createFromFormat('d/m/Y H:i:s', $value) : null;
-        }
-    }
+    // public function setDateInAttribute($value)
+    // {
+    //     if ($this->preventAttrSet) {
+    //         return $this->attributes['date_in'] = $value;
+    //     } else {
+    //         return $this->attributes['date_in'] = !is_null($value) ? Carbon::createFromFormat('d/m/Y H:i:s', $value) : null;
+    //     }
+    // }
 
-    public function setDateOutAttribute($value)
-    {
-        if ($this->preventAttrSet) {
-            return $this->attributes['date_out'] = $value;
-        } else {
-            return $this->attributes['date_out'] = !is_null($value) ? Carbon::createFromFormat('d/m/Y H:i:s', $value) : null;
-        }
-    }
+    // public function setDateOutAttribute($value)
+    // {
+    //     if ($this->preventAttrSet) {
+    //         return $this->attributes['date_out'] = $value;
+    //     } else {
+    //         return $this->attributes['date_out'] = !is_null($value) ? Carbon::createFromFormat('d/m/Y H:i:s', $value) : null;
+    //     }
+    // }
 
     // Relations
     public function user()
@@ -92,16 +92,21 @@ class Absensi extends Model
 
     public function updateByRequest($request)
     {
-        // return response($request->all(), 422);
-        $in = Carbon::parse($this->date_in)->format('d/m/Y') .' '. $request->time_in .':00';
-        $out = Carbon::parse($this->date_in)->format('d/m/Y') .' '. $request->time_out .':00';
-        // return response($wk, 422);
         DB::beginTransaction();
         try {
             
-            $this->date_in = $in;
-            $this->date_out = $out;
-        $this->keterangan = $request->keterangan;
+            if($request->time_in != null){
+                $in = Carbon::createFromFormat('d/m/Y G:i', $request->tanggal.' '.$request->time_in);
+                $this->date_in = $in;
+            }
+            if($request->time_out != null){
+                $out = Carbon::createFromFormat('d/m/Y G:i', $request->tanggal.' '.$request->time_out);
+                $this->date_out = $out;
+            }else{
+                $this->date_out = null;
+            }
+            $this->keterangan = $request->keterangan;
+            $this->status = $request->status;
             $this->save();
             
             DB::commit();

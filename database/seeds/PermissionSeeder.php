@@ -30,19 +30,41 @@ class PermissionSeeder extends Seeder
 				'action'       => ['view'],
     		],
     		// ------------- MASTER ---------------
-    		[
-				'name'         => 'master-pegawai',
-				'display_name' => 'Pegawai',
-				'action'       => ['view', 'add', 'edit', 'delete'],
-			],
+    		// [
+			// 	'name'         => 'master-pegawai',
+			// 	'display_name' => 'Pegawai',
+			// 	'action'       => ['view', 'add', 'edit', 'delete'],
+			// ],
 			[
 				'name'         => 'master-area',
 				'display_name' => 'Data Area',
 				'action'       => ['view', 'add', 'edit', 'delete'],
 			],
 			[
-				'name'         => 'master-Barang',
+				'name'         => 'master-sales',
+				'display_name' => 'Data Sales Area',
+				'action'       => ['view', 'add', 'edit', 'delete'],
+			],
+			[
+				'name'         => 'master-barang',
 				'display_name' => 'Data Barang',
+				'action'       => ['view', 'add', 'edit', 'delete'],
+			],
+			
+			// ------------- MAIN ---------------
+			[
+				'name'         => 'main.monitoring',
+				'display_name' => 'Monitoring',
+				'action'       => ['view', 'add', 'edit', 'delete'],
+			],
+			[
+				'name'         => 'main.rekap',
+				'display_name' => 'Rekap',
+				'action'       => ['view', 'add', 'edit', 'delete'],
+			],
+			[
+				'name'         => 'main.barang',
+				'display_name' => 'Barang',
 				'action'       => ['view', 'add', 'edit', 'delete'],
     		],
 			
@@ -65,7 +87,7 @@ class PermissionSeeder extends Seeder
 					'name'         => $row['name'].'-'.$val,
 					'display_name' => $row['display_name'].' '.ucfirst($val)
     			];	
-    			$perms = Permission::create($temp);
+    			$perms = Permission::firstOrCreate($temp);
 
     			$role_admin->attachPermission($perms);
     			$role_user->attachPermission($perms);

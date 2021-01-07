@@ -18,24 +18,26 @@
 		<input type="text" name="filter[name]" placeholder="Nama">
 	</div>
 	<div class="field">
-		<input type="text" name="filter[area]" placeholder="Area">
+        <select name="filter[area]" class="ui search dropdown">
+            {!! \App\Models\Master\Area::options('name','id',[],'Pilih Area') !!}
+        </select>
     </div>
     <div class="field">
-        <div class="ui month" id="from">
+        <div class="ui month" id="date">
             <div class="ui input left icon">
                 <i class="calendar icon"></i>
-                <input type="text" name="filter[from]"  placeholder="Dari" value="">
+                <input type="text" name="filter[date]"  placeholder="Tanggal" value="{{Carbon::now()->format('F j, Y')}}">
             </div>
         </div>
     </div>
-    <div class="field">
+    {{-- <div class="field">
         <div class="ui month" id="to">
             <div class="ui input left icon">
                 <i class="calendar icon"></i>
                 <input type="text" name="filter[to]"  placeholder="Sampai" value="">
             </div>
         </div>
-    </div>
+    </div> --}}
 	<button type="button" class="ui teal icon filter button" data-content="Cari Data">
 		<i class="search icon"></i>
 	</button>
@@ -45,8 +47,9 @@
 @endsection
 
 @section('js-filters')
-	d.kode = $("input[name='filter[kode]']").val();
+	d.area = $("select[name='filter[area]']").val();
 	d.name = $("input[name='filter[name]']").val();
+	d.date = $("input[name='filter[date]']").val();
 @endsection
 
 @section('rules')
@@ -62,14 +65,14 @@
 @section('init-modal')
 <script>
 	$(document).ready(function() {
-        $('#from').calendar({
+        $('#date').calendar({
             type: 'date',
-            endCalendar: $('#to')
+            // endCalendar: $('#to')
         });
-        $('#to').calendar({
-            type: 'date',
-            startCalendar: $('#from')
-        });
+        // $('#to').calendar({
+        //     type: 'date',
+        //     startCalendar: $('#from')
+        // });
 	});
 
     onShow = function(){

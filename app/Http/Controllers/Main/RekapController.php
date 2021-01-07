@@ -43,8 +43,8 @@ class RekapController extends Controller
             ],
             /* --------------------------- */
             [
-                'data' => 'username',
-                'name' => 'username',
+                'data' => 'name',
+                'name' => 'name',
                 'label' => 'Nama',
                 'searchable' => false,
                 'sortable' => true,
@@ -96,33 +96,24 @@ class RekapController extends Controller
 
     public function grid(Request $request)
     {
-        // dd(Carbon::parse(request()->from)->format('m'));
-        $records = User::when($name = request()->name, function ($q) use ($name) {
-                        return $q->where('name', 'like', '%' . $name . '%');
+        $records = User::when($area = request()->area, function ($q) use ($area) {
+                        $q->whereHas('salesarea', function($w) use ($area){
+                            return $w->where('area_id', $area);
+                        });
                     })
                     ->when($from = request()->from, function ($q) use ($from){
                         $q->with(['absensi' => function($w) use ($from){
-                            return $w->whereMonth('date_in', Carbon::parse($from)->format('m'));
-                                    // ->whereYear('date_in', Carbon::parse($from)->format('Y'));
+                            return $w->whereMonth('date_in', Carbon::parse($from)->format('n'))
+                                    ->whereYear('date_in', Carbon::parse($from)->format('Y'));
                         }]);
                     })
-                    // ->whereHas('absensi', function($q){
-                    //     $q->whereMonth('created_at', Carbon::now()->format('m'));
-                    // })
                     ->select('*');
         
         //Init Sort
-        // $from = Carbon::parse(request()->from)->format('Y-m-d 00:00:00');
-        // $to = Carbon::parse(request()->to)->format('Y-m-d 23:59:59');
-        // if($from){
-        //     $records->whereHas('absensi', function($w) use ($from, $to){
-        //         return $w->whereBetween('date_in', [$from, $to]);
-        //     });
-        // }
-
         if (!isset(request()->order[0]['column'])) {
             $records->orderBy('created_at', 'desc');
         }
+        
         $link = $this->link;
         return DataTables::of($records)
             ->addColumn('num', function ($record) use ($request) {

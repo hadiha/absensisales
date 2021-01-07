@@ -42,6 +42,8 @@ Route::group(['middleware' => 'auth'], function () {
         Route::resource('karyawan', 'KaryawanController');
 	});
 
+    Route::get('kehadiran/monitoring/add/{id}', 'Main\MonitoringController@add');
+    Route::get('kehadiran/monitoring/add-store', 'Main\MonitoringController@addStore');
     Route::post('kehadiran/monitoring/grid', 'Main\MonitoringController@grid');
     Route::resource('kehadiran/monitoring', 'Main\MonitoringController');
     
@@ -55,6 +57,8 @@ Route::group(['middleware' => 'auth'], function () {
 
     Route::post('home/get-data', 'DashboardController@getData')->name('home.getData');
     Route::get('/home', 'DashboardController@index')->name('home');
+
+    Route::get('/get-change', 'Auth\LoginController@getChange');
 });
 
 // Route::get('/home', 'HomeController@index')->name('home');

@@ -51,6 +51,11 @@ class User extends Authenticatable implements JWTSubject
     {
         return $this->hasMany(Absensi::class, 'pegawai_id');
     }
+
+    public function absen()
+    {
+        return $this->hasOne(Absensi::class, 'pegawai_id');
+    }
     
     public function salesarea()
     {
@@ -65,22 +70,22 @@ class User extends Authenticatable implements JWTSubject
     /* Custom Function */
     public function hadir()
     {
-        return $this->absensi()->where('status', 'hadir')->count();
+        return $this->absensi->where('status', 'hadir')->count();
     }
 
     public function izin()
     {
-        return $this->absensi()->where('status', 'izin')->count();
+        return $this->absensi->where('status', 'izin')->count();
     }
 
     public function sakit()
     {
-        return $this->absensi()->where('status', 'sakit')->count();
+        return $this->absensi->where('status', 'sakit')->count();
     }
 
     public function cuti()
     {
-        return $this->absensi()->where('status', 'cuti')->count();
+        return $this->absensi->where('status', 'cuti')->count();
     }
 
     /* End Custom Function */

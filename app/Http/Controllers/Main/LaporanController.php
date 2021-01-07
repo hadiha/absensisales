@@ -158,22 +158,29 @@ class LaporanController extends Controller
             ->editColumn('tanggal', function ($record) {
                 return Carbon::parse($record->tanggal)->format('d/m/Y');
             })
+            ->editColumn('foto', function ($record) {
+                return $record->files->count() .' Foto';
+            })
             ->editColumn('created_at', function ($record) {
                 return $record->created_at->diffForHumans();
             })
             ->editColumn('created_by', function ($record) {
-                return $record->creator->username;
+                return $record->creator->name;
             })
             ->addColumn('action', function ($record) use ($link){
                 $btn = '';
                 
-                // $btn .= $this->makeButton([
-                //     'type' => 'url',
-                //     'class'   => 'teal icon detail',
-                //     'label'   => '<i class="file text icon"></i>',
-                //     'tooltip' => 'Detail',
-                //     'url'  => url($link.$record->id)
-                // ]);
+                $btn .= $this->makeButton([
+                    'type' => 'modal',
+                    'class'   => 'teal icon custom',
+                    'label'   => '<i class="file text icon"></i>',
+                    'tooltip' => 'Detail',
+                    'datas' => [
+                        'url'  => url($link.$record->id),
+                        'modalSize' => 'small'
+                    ],
+                    // 'url'  => url($link.$record->id)
+                ]);
                 
                 $btn .= $this->makeButton([
                     'type' => 'modal',
@@ -219,12 +226,14 @@ class LaporanController extends Controller
     {
         return $this->render('modules.main.barang.edit', [
             'record' => $barang,
-        ]);
-    }
-
-    public function show($id)
+            ]);
+        }
+        
+    public function show(Laporan $barang)
     {
-    //   
+        return $this->render('modules.main.barang.detail', [
+            'record' => $barang,
+        ]);
     }
 
     public function update(LaporanRequest $request, Laporan $barang)
