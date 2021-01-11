@@ -35,7 +35,7 @@
                     </div>
                 </div>
                 <button type="submit" class="ui fluid large blue submit button">Login</button>
-                <a href="{{ url('/register') }}">Register</a>
+                {{-- <a href="{{ url('/register') }}">Register</a> --}}
             </div>
             <a class="btn btn-link" href="{{ route('password.request') }}">
                 {{ __('Forgot Your Password?') }}

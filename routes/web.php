@@ -26,6 +26,9 @@ Route::group(['middleware' => 'auth'], function () {
         Route::put('roles/{id}/grant', 'RolesController@grant');
         Route::post('roles/grid', 'RolesController@grid');
         Route::resource('roles', 'RolesController');
+
+        Route::post('profile/foto', 'SettingController@setFoto');
+        Route::resource('profile', 'SettingController');
     });
     
     Route::group(['prefix' => 'master', 'namespace' => 'Master'], function(){
@@ -57,8 +60,8 @@ Route::group(['middleware' => 'auth'], function () {
 
     Route::post('home/get-data', 'DashboardController@getData')->name('home.getData');
     Route::get('/home', 'DashboardController@index')->name('home');
-
-    Route::get('/get-change', 'Auth\LoginController@getChange');
+    
+    
 });
 
 // Route::get('/home', 'HomeController@index')->name('home');

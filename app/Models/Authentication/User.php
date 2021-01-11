@@ -12,12 +12,10 @@ use Tymon\JWTAuth\Contracts\JWTSubject;
 use Zizaco\Entrust\Traits\EntrustUserTrait;
 
 // Models
-use App\Models\Master\Karyawan;
 use App\Models\Master\SalesArea;
-use App\Models\Project\Project;
-use App\Models\Project\Task;
 use App\Models\Traits\Utilities;
 
+use Carbon\Carbon;
 class User extends Authenticatable implements JWTSubject
 {
     use Utilities;
@@ -86,6 +84,37 @@ class User extends Authenticatable implements JWTSubject
     public function cuti()
     {
         return $this->absensi->where('status', 'cuti')->count();
+    }
+
+    public function showfotopath()
+    {
+        if($this->foto)
+        {
+            return asset('storage/'.$this->foto);
+        }
+
+        return asset('img/no-images.png');
+    }
+
+    public function picUpload($file)
+    {
+        if($file)
+        {
+            if($this->foto != NULL)
+            {
+                if(file_exists(storage_path().'/app/public/'.$this->foto))
+                {
+                    unlink(storage_path().'/app/public/'.$this->foto);
+                }
+            }
+
+            $url = $file->storeAs('profile', md5($file->getClientOriginalName().Carbon::now()->format('Ymdhis')).'.'.$file->getClientOriginalExtension(), 'public');
+
+            $this->foto = $url;
+            $this->save();
+
+            return $url;
+        }
     }
 
     /* End Custom Function */
