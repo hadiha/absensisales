@@ -80,8 +80,8 @@ class MonitoringController extends Controller
                 'sortable' => true,
             ],
             [
-                'data' => 'koordinat',
-                'name' => 'koordinat',
+                'data' => 'latitude',
+                'name' => 'latitude',
                 'label' => 'Koordinat',
                 'searchable' => false,
                 'sortable' => true,
@@ -258,6 +258,8 @@ class MonitoringController extends Controller
 
         $record->save();
 
+        auth()->user()->storeLog('monitoring', 'create', $record->id);
+
         return response([
             'status' => true
         ]);
@@ -286,6 +288,8 @@ class MonitoringController extends Controller
     public function destroy(Absensi $monitoring)
     {
         $monitoring->delete();
+
+        auth()->user()->storeLog('monitoring', 'delete', $this->id);
 
         return response([
             'status' => true,

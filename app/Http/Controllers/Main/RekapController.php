@@ -134,6 +134,14 @@ class RekapController extends Controller
             ->editColumn('cuti', function ($record) {
                 return $record->cuti();
             })
+            ->editColumn('tk', function ($record) {
+                $frm = Carbon::parse(request()->from);
+                $now = $frm->isPast() ? $frm->endOfMonth() : Carbon::now();
+                $str = $now->copy()->startOfMonth();
+                $dif = $str->diffInDays($now);
+
+                return $dif - ($record->hadir() + $record->sakit() + $record->izin() + $record->cuti());
+            })
             
             ->addColumn('action', function ($record) use ($link){
                 $btn = '';

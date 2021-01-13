@@ -25,6 +25,11 @@
             });
 
             showDashboard($('[name="year"]').val());
+            
+        });
+
+        $(document).on('click','.filter.dashboard.button', function(e){
+            showDashboard($('[name="year"]').val());
         });
 
         function statistikKehadiran(data = []){
@@ -91,6 +96,7 @@
             }
         })
         .done(function(response) {
+            console.log('oke');
             statistikKehadiran(response.chart);
         })
         .fail(function(response) {
@@ -117,10 +123,13 @@
                     <div class="ui month" id="filter" style="width: 100%">
                         <div class="ui input left icon">
                             <i class="calendar icon"></i>
-                            <input type="text" name="year"  placeholder="Tahun" value="{{ Carbon::now()->startOfMonth() }}">
+                            <input type="text" name="year" placeholder="Tahun" value="{{ Carbon::now()->format('Y') }}">
                         </div>
                     </div>
                   </div>
+                  <button type="button" class="ui teal icon filter dashboard button" data-content="Cari Data">
+                      <i class="search icon"></i>
+                  </button>
                 </div>
             </div>
             <figure class="highcharts-figure">

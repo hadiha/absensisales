@@ -7,6 +7,7 @@ use App\Models\Master\Area;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Tymon\JWTAuth\Contracts\JWTSubject;
+// use hisorange\BrowserDetect\Facade as Browser;
 
 // entrust
 use Zizaco\Entrust\Traits\EntrustUserTrait;
@@ -14,8 +15,10 @@ use Zizaco\Entrust\Traits\EntrustUserTrait;
 // Models
 use App\Models\Master\SalesArea;
 use App\Models\Traits\Utilities;
-
+// use App\Modelss\Authentication\AuditTrail;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Request;
+
 class User extends Authenticatable implements JWTSubject
 {
     use Utilities;
@@ -49,6 +52,13 @@ class User extends Authenticatable implements JWTSubject
     {
         return $this->hasMany(Absensi::class, 'pegawai_id');
     }
+
+    public function audits()
+    {
+        return $this->hasMany(AuditTrail::class, 'user_id')
+                    ->orderBy('created_at', 'desc');;
+    }
+
 
     public function absen()
     {
@@ -115,6 +125,18 @@ class User extends Authenticatable implements JWTSubject
 
             return $url;
         }
+    }
+
+    public function storeLog($module, $action, $id = null)
+    {
+        $audit = new AuditTrail();
+        $audit->module      = $module;
+        $audit->module_id   = $id;
+        $audit->action      = $action;
+        $audit->browser     = \Browser::browserName();
+        $audit->ip          = Request::ip();
+
+        $this->audits()->save($audit);
     }
 
     /* End Custom Function */

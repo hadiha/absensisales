@@ -187,6 +187,7 @@ return [
         Unlu\Laravel\Api\ApiQueryBuilderServiceProvider::class,
 
         Tymon\JWTAuth\Providers\LaravelServiceProvider::class,
+        \hisorange\BrowserDetect\ServiceProvider::class,
 
     ],
 
@@ -245,6 +246,8 @@ return [
 
         'JWTAuth' => Tymon\JWTAuth\Facades\JWTAuth::class, 
         'JWTFactory' => Tymon\JWTAuth\Facades\JWTFactory::class,
+
+        'Browser' => \hisorange\BrowserDetect\Facade::class,
     ],
 
 ];

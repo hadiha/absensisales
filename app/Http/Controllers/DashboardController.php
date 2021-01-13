@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\Authentication\User;
 use App\Models\Main\Absensi;
+use Carbon\Carbon;
+use Carbon\CarbonPeriod;
 
 class DashboardController extends Controller
 {
@@ -42,13 +44,19 @@ class DashboardController extends Controller
 
     public function getData(Request $request)
     {
+        $set = Carbon::createFromFormat('Y',$request->year);
+        $startMonth = $set->copy()->startOfYear();
+        $lastMonth = $set->copy()->endOfYear();
+        
+        foreach (CarbonPeriod::create($startMonth, '1 month',$lastMonth) as $key => $value) {
+            $period[$key] = $value->format('Y');
+            $chart['hadir'][$key] = Absensi::getDash('hadir', $value);
+            $chart['izin'][$key] = Absensi::getDash('izin', $value);
+            $chart['sakit'][$key] = Absensi::getDash('sakit', $value);
+            $chart['cuti'][$key] = Absensi::getDash('cuti', $value);
+        }
         $chart['periode'] = $request->year;
-        $chart['hadir'] = [43934, 52503, 57177, 69658, 97031, 119931, 137133, 154175, 100233];
-        $chart['izin'] = [24916, 24064, 29742, 29851, 32490, 30282, 38121, 40434];
-        $chart['sakit'] = [11744, 17722, 16005, 19771, 20185, 24377, 32147, 39387]; 
-        $chart['cuti'] = [null, null, 7988, 12169, 15112, 22452, 34400, 34227];
-        $chart['tk'] = [12908, 5948, 8105, 11248, 8989, 11816, 18274, 18111];
-
+        
         return response([
             'status' => true,
             'chart' => $chart,

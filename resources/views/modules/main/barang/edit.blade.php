@@ -41,9 +41,9 @@
 		<div class="sixteen wide field">
 			<label>Reference Files</label>
 			<div class="ui action input">
-				<input type="text" name="fileupload" placeholder="Search..." readonly>
+				<input class="countFile" type="text" name="fileupload" value="{{$record->files->count()}} File" placeholder="Search..." readonly>
 				<input type="file" style="display:none !important;" accept="image/*" multiple>
-				<button class="ui button browse file">Cari..</button>
+				<button type="button" class="ui button browse file">Cari..</button>
 			</div>
 	  	</div>
 		<div class="field showbrowse file">
@@ -72,6 +72,10 @@
 					</div>
 				</div>
 				@endforeach
+			@else
+				<div class="ui floating message">
+					<p>Tidak Ada Foto!</p>
+				</div>
 			@endif
 		</div>
 

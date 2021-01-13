@@ -107,68 +107,68 @@ $(document).ready(function() {
 	});
 });
 
-$(document).on('click', '.ui.file.input input:text, .ui.button.file', function(e) {
-	$(e.target).parent().find('input:file').click();
-});
+// $(document).on('click', '.ui.file.input input:text, .ui.button.file', function(e) {
+// 	$(e.target).parent().find('input:file').click();
+// });
 
-$(document).on('change', '.ui.file.input input:file', function(e) {
-	var file = $(e.target);
-	var name = '';
-	var fieldName = $(this).attr('name');
-	var res = fieldName.split("[]");
-	for (var i=0; i<e.target.files.length; i++) {
-		name += e.target.files[i].name + ', ';
-		var fileDate = new Date(e.target.files[i].lastModified);
-		var day = fileDate.getDate();
-		var month = fileDate.getMonth();
-		var year = fileDate.getFullYear();
-		var hours = fileDate.getHours();
-		var minutes = fileDate.getMinutes();
-		var seconds = fileDate.getSeconds();
+// $(document).on('change', '.ui.file.input input:file', function(e) {
+// 	var file = $(e.target);
+// 	var name = '';
+// 	var fieldName = $(this).attr('name');
+// 	var res = fieldName.split("[]");
+// 	for (var i=0; i<e.target.files.length; i++) {
+// 		name += e.target.files[i].name + ', ';
+// 		var fileDate = new Date(e.target.files[i].lastModified);
+// 		var day = fileDate.getDate();
+// 		var month = fileDate.getMonth();
+// 		var year = fileDate.getFullYear();
+// 		var hours = fileDate.getHours();
+// 		var minutes = fileDate.getMinutes();
+// 		var seconds = fileDate.getSeconds();
 
-		if(day.toString().length == 1)
-		{
-			day = '0' + day.toString();
-		}
+// 		if(day.toString().length == 1)
+// 		{
+// 			day = '0' + day.toString();
+// 		}
 
-		if(month.toString().length == 1)
-		{
-			month = '0' + month.toString();
-		}
+// 		if(month.toString().length == 1)
+// 		{
+// 			month = '0' + month.toString();
+// 		}
 
-		if(hours.toString().length == 1)
-		{
-			hours = '0' + hours.toString();
-		}
+// 		if(hours.toString().length == 1)
+// 		{
+// 			hours = '0' + hours.toString();
+// 		}
 
-		if(minutes.toString().length == 1)
-		{
-			minutes = '0' + minutes.toString();
-		}
+// 		if(minutes.toString().length == 1)
+// 		{
+// 			minutes = '0' + minutes.toString();
+// 		}
 
-		if(seconds.toString().length == 1)
-		{
-			seconds = '0' + seconds.toString();
-		}
+// 		if(seconds.toString().length == 1)
+// 		{
+// 			seconds = '0' + seconds.toString();
+// 		}
 
-		if ($('input[name="'+res[0]+'_taken['+i+']"]').length != 0)
-		{
-			$('input[name="'+res[0]+'_taken['+i+']"]').remove();
-		}
-		var date = e.target.files[i];
-		input = `<input type="hidden" name="`+res[0]+`_taken[`+i+`]" value="`+year+`-`+month+`-`+day+` `+hours+`:`+minutes+`:`+seconds+`">`;
-		$(this).append(input);
-	}
-	// remove trailing ","
-	name = name.replace(/,\s*$/, '');
-	$('input:text', file.parent()).val(name);
-});
+// 		if ($('input[name="'+res[0]+'_taken['+i+']"]').length != 0)
+// 		{
+// 			$('input[name="'+res[0]+'_taken['+i+']"]').remove();
+// 		}
+// 		var date = e.target.files[i];
+// 		input = `<input type="hidden" name="`+res[0]+`_taken[`+i+`]" value="`+year+`-`+month+`-`+day+` `+hours+`:`+minutes+`:`+seconds+`">`;
+// 		$(this).append(input);
+// 	}
+// 	// remove trailing ","
+// 	name = name.replace(/,\s*$/, '');
+// 	$('input:text', file.parent()).val(name);
+// });
 
-$(document).on('click', '.ui.action.input:not(.disabled) input:text, .ui.action.input:not(.disabled) .ui.button', function (e) {
-    $('input:file', $(e.target).parents()).click();
-});
+// $(document).on('click', '.ui.action.input:not(.disabled) input:text, .ui.action.input:not(.disabled) .ui.button', function (e) {
+//     $('input:file', $(e.target).parents()).click();
+// });
 
-$(document).on('change', '.ui.action.input:not(.disabled) input:file', function (e) {
-    var name = e.target.files[0].name;
-    $('input:text', $(e.target).parent()).val(name);
-});
+// $(document).on('change', '.ui.action.input:not(.disabled) input:file', function (e) {
+//     var name = e.target.files[0].name;
+//     $('input:text', $(e.target).parent()).val(name);
+// });

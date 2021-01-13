@@ -20,13 +20,11 @@
         </select>
 		{{-- <input type="text" name="filter[name]" placeholder="Nama"> --}}
 	</div>
-	<div class="field">
+	{{-- <div class="field">
         <select name="filter[area_id]" class="ui search dropdown">
             {!! \App\Models\Master\Area::options('name','id',[],'Pilih Area') !!}
-        </select>
-        
-		{{-- <input type="text" name="filter[area]" placeholder="Area"> --}}
-    </div>
+        </select>       
+    </div> --}}
     <div class="field">
         <div class="ui month" id="from">
             <div class="ui input left icon">
@@ -53,8 +51,8 @@
 @endsection
 
 @section('js-filters')
-    d.name = $("input[name='filter[pegawai_id]']").val();
-    d.area = $("input[name='filter[area_id]']").val();
+    d.name = $("select[name='filter[pegawai_id]']").val();
+    d.area = $("select[name='filter[area_id]']").val();
 	d.from = $("input[name='filter[from]']").val();
 	d.to = $("input[name='filter[to]']").val();
 @endsection
@@ -81,11 +79,6 @@
             startCalendar: $('#from')
         });
 
-        $('[name="barang_id"]').on('change', function(event) {
-            var barang = $(this).val();
-            console.log(barang);
-            // $('[name=name]').val();
-        });
 	});
 
         // onShow = function(){

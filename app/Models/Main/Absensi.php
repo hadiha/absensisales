@@ -72,6 +72,8 @@ class Absensi extends Model
             $record = new Absensi();
             $record->fill($request->all());
             $record->save();
+
+            auth()->user()->storeLog('monitoring', 'create', $record->id);
             
             DB::commit();
         } catch (\Exception $e) {
@@ -108,6 +110,8 @@ class Absensi extends Model
             $this->keterangan = $request->keterangan;
             $this->status = $request->status;
             $this->save();
+
+            auth()->user()->storeLog('monitoring', 'update', $this->id);
             
             DB::commit();
         } catch (\Exception $e) {
@@ -151,6 +155,15 @@ class Absensi extends Model
     public function sakit()
     {
         # code...
+    }
+
+    public static function getDash($status, $year)
+    {
+        $record = Absensi::where('status', $status)
+                    ->whereMonth('created_at', $year->format('m'))
+                    ->whereYear('created_at', $year->format('Y'))->count();
+
+        return $record;
     }
 
 }

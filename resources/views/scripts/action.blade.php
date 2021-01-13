@@ -262,10 +262,10 @@
 		var showerror = $('#dataForm' + ' [name=' + key + ']').closest('.field').find('.ui.basic.red.pointing.prompt.label.transition.visible').remove();
 	}
 
-	// $(document).on('click','input[type="text"][name="fileupload"]', function () {
-	// 	$(this).parents('.ui.action').find('button.browse.file').trigger('click');
-	// });
-	// $('.browse.file').unbind('click');
+	$(document).on('click','input[type="text"][name="fileupload"]', function () {
+		$(this).parents('.ui.action').find('button.browse.file').trigger('click');
+	});
+	$('.browse.file').unbind('click');
 
 	$(document).on('click','.browse.file', function (e) {
 		$(this).unbind('click');
@@ -365,7 +365,7 @@
 					            window.onbeforeunload = function(d) {
 					                return "Dude, are you sure you want to leave? Think of the kittens!";
 					            }
-					            // $('.kedosolan').val(('asdaasd',$('.two.fields.upload-file').length));
+					            $('.countFile').val(($('.two.fields.upload-file').length) +' File');
 							},
 							error : function(resp){
 							},
@@ -398,13 +398,45 @@
 				data : formData,
 				success: function(resp){
 					elem.parents('div[class="two fields upload-file"]').remove();
-					$('.kedosolan').val(('asdaasd',$('.two.fields.upload-file').length));
+					$('.countFile').val(($('.two.fields.upload-file').length)+ ' File');
 
 				},
 				error : function(resp){
 				},
 			})
 		});
+
+		function removebrowse() {
+			$('.removebrowse.button').on('click', function (e) {
+				e.preventDefault();
+				var pathinput = $(this).parents('.two.wide.field').find('input[name="filespath[]"]').val();
+				var elem = $(this);
+				var url = '{{ url('barang/unlink') }}';
+				if($(this).data('url'))
+				{
+						url = $(this).data('url');
+				}
+				var formData = new FormData();
+				formData.append('_token', '{{ csrf_token() }}');
+				formData.append('path', pathinput);
+
+				$.ajax({
+					url: url,
+					type: "POST",
+					dataType: 'json',
+					processData: false,
+					contentType: false,
+					data : formData,
+					success: function(resp){
+						elem.parents('div[class="two fields upload-file"]').remove();
+						$('.countFile').val(($('.two.fields.upload-file').length)+ ' File');
+
+					},
+					error : function(resp){
+					},
+				})
+			});
+		}
 
 
 </script>

@@ -70,6 +70,10 @@ class GenerateMenus
                  ->data('perms', 'konfigurasi-roles')
                  ->active('konfigurasi/roles/*');
 
+            $menu->add('Audit Trail', 'audit')
+                 ->data('icon', 'history')
+               //   ->data('perms', 'barang')
+                 ->active('audit');
         });
 
         return $next($request);

@@ -129,7 +129,7 @@ class LaporanController extends Controller
                         return $q->where('pegawai_id', $name);
                     })
                     ->when($area = request()->area, function ($q) use ($area) {
-                        return $q->where('pegawai_id', $area);
+                        return $q->where('area_id', $area);
                     })
                     ->select('*');
         
@@ -217,6 +217,7 @@ class LaporanController extends Controller
         $record->fill($request->all());
         $record->save();
 
+        auth()->user()->storeLog('barang', 'create', $record->id);
         return response([
             'status' => true
         ]);
@@ -286,6 +287,8 @@ class LaporanController extends Controller
         $barang->fill($request->all());
         $barang->save();
 
+        auth()->user()->storeLog('barang', 'update', $barang->id);
+
         return response([
             'status' => true
         ]);
@@ -294,6 +297,7 @@ class LaporanController extends Controller
     public function destroy(Laporan $barang)
     {
         $barang->delete();
+        auth()->user()->storeLog('barang', 'delete', $this->id);
 
         return response([
             'status' => true,
@@ -326,4 +330,22 @@ class LaporanController extends Controller
         ]);
     }
 
+    public function unlink(Request $request)
+    {
+        try {
+            if(file_exists(storage_path().'/app/public/'.$request->path))
+            {
+                unlink(storage_path().'/app/public/'.$request->path);
+            }
+        } catch (Exception $e) {
+              return response([
+                'status' => false,
+                'errors' => $e
+            ]);
+        }
+
+        return response([
+            'status' => true,
+        ]);
+    }
 }

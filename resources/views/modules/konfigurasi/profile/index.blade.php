@@ -163,7 +163,7 @@
                                             <div class="ui dimmer">
                                                 <div class="content">
                                                     <div class="center">
-                                                        <div class="ui inverted change picture button">Upload</div>
+                                                        <div class="ui inverted change picture button">Ganti</div>
                                                     </div>
                                                 </div>
                                             </div>

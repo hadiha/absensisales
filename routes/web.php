@@ -61,6 +61,8 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('home/get-data', 'DashboardController@getData')->name('home.getData');
     Route::get('/home', 'DashboardController@index')->name('home');
     
+    Route::post('audit/grid', 'Konfigurasi\AuditController@grid');
+    Route::resource('audit', 'Konfigurasi\AuditController');
     
 });
 
