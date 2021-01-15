@@ -18,6 +18,7 @@ use App\Models\Master\Barang;
 use DataTables;
 use Carbon\Carbon;
 use Hash;
+use PDF;
 
 class MonitoringController extends Controller
 {
@@ -80,8 +81,8 @@ class MonitoringController extends Controller
                 'sortable' => true,
             ],
             [
-                'data' => 'latitude',
-                'name' => 'latitude',
+                'data' => 'koordinat',
+                'name' => 'koordinat',
                 'label' => 'Koordinat',
                 'searchable' => false,
                 'sortable' => true,
@@ -167,6 +168,9 @@ class MonitoringController extends Controller
             })
             ->editColumn('status', function ($record) {
                 return $record->absen ? $record->absen->statusLabel() : '<a class="ui small teal tag label">Belum Absen</a>' ;
+            })
+            ->editColumn('koordinat', function ($record) {
+                return $record->absen ? ($record->absen->latitude ? $record->absen->latitude .' , '.$record->absen->longitude : '-') : '-';
             })
             ->addColumn('action', function ($record) use ($link){
                 $btn = '';
@@ -294,5 +298,33 @@ class MonitoringController extends Controller
         return response([
             'status' => true,
         ]);
+    }
+
+    public function export(Request $request)
+    {
+        // return response($request->all(), 422);
+        $records = User::when($name = request()->name, function ($q) use ($name) {
+                        $q->where('name', 'like', '%' . $name . '%');
+                    })
+                    ->when($area = request()->area, function ($q) use ($area) {
+                        $q->whereHas('salesarea', function($w) use ($area){
+                            return $w->where('area_id', $area);
+                        });
+                    })
+                    ->with(['absen' => function($q){
+                        $q->whereDate('date_in', Carbon::parse(request()->date)->format('Y-m-d'));        
+                    }])->get();
+        $tanggal = Carbon::parse(request()->date)->format('d F Y');
+
+        $pdf = PDF::loadView('modules.main.monitoring.export-pdf', ['record'=>$records, 'tanggal' => $tanggal])
+        ->setPaper('a4', 'potrait')->setOptions(
+            [
+                'defaultFont' => 'times-roman',
+                'isHtml5ParserEnabled' => true,
+                'isRemoteEnabled' => true,
+                'isPhpEnabled' => true
+            ]
+        );
+        return $pdf->stream(str_replace('/','-','Monitoring').'.pdf');
     }
 }

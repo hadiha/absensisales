@@ -96,6 +96,16 @@ class User extends Authenticatable implements JWTSubject
         return $this->absensi->where('status', 'cuti')->count();
     }
 
+    public function alfa($date)
+    {
+        $frm = Carbon::parse($date);
+        $now = $frm->isPast() ? $frm->endOfMonth() : Carbon::now();
+        $str = $now->copy()->startOfMonth();
+        $dif = $str->diffInDays($now);
+
+        return $dif - ($this->hadir() + $this->sakit() + $this->izin() + $this->cuti());
+    }
+
     public function showfotopath()
     {
         if($this->foto)

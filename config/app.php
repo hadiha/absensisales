@@ -188,6 +188,7 @@ return [
 
         Tymon\JWTAuth\Providers\LaravelServiceProvider::class,
         \hisorange\BrowserDetect\ServiceProvider::class,
+        Barryvdh\DomPDF\ServiceProvider::class,
 
     ],
 
@@ -248,6 +249,7 @@ return [
         'JWTFactory' => Tymon\JWTAuth\Facades\JWTFactory::class,
 
         'Browser' => \hisorange\BrowserDetect\Facade::class,
+        'PDF' => Barryvdh\DomPDF\Facade::class,
     ],
 
 ];

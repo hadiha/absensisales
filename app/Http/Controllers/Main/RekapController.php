@@ -18,6 +18,7 @@ use App\Models\Master\Barang;
 use DataTables;
 use Carbon\Carbon;
 use Hash;
+use PDF;
 
 class RekapController extends Controller
 {
@@ -135,12 +136,7 @@ class RekapController extends Controller
                 return $record->cuti();
             })
             ->editColumn('tk', function ($record) {
-                $frm = Carbon::parse(request()->from);
-                $now = $frm->isPast() ? $frm->endOfMonth() : Carbon::now();
-                $str = $now->copy()->startOfMonth();
-                $dif = $str->diffInDays($now);
-
-                return $dif - ($record->hadir() + $record->sakit() + $record->izin() + $record->cuti());
+                return $record->alfa(request()->from);
             })
             
             ->addColumn('action', function ($record) use ($link){
@@ -207,5 +203,36 @@ class RekapController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    
+    public function export(Request $request)
+    {
+        // return response($request->all(), 422);
+        $records = User::when($area = request()->area, function ($q) use ($area) {
+                        $q->whereHas('salesarea', function($w) use ($area){
+                            return $w->where('area_id', $area);
+                        });
+                    })
+                    ->when($from = request()->from, function ($q) use ($from){
+                        $q->with(['absensi' => function($w) use ($from){
+                            return $w->whereMonth('date_in', Carbon::parse($from)->format('n'))
+                                    ->whereYear('date_in', Carbon::parse($from)->format('Y'));
+                        }]);
+                    })
+                    ->get();
+
+        $tanggal = Carbon::parse(request()->from)->format('F Y');
+
+        $pdf = PDF::loadView('modules.main.rekap.export-pdf', ['record' => $records, 'tanggal'=>$tanggal])
+        ->setPaper('a4', 'potrait')->setOptions(
+            [
+                'defaultFont' => 'times-roman',
+                'isHtml5ParserEnabled' => true,
+                'isRemoteEnabled' => true,
+                'isPhpEnabled' => true
+            ]
+        );
+        return $pdf->stream(str_replace('/','-','Rekap').'.pdf');
     }
 }

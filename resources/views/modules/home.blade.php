@@ -48,7 +48,7 @@
             },
             yAxis: {
                 title: {
-                    text: 'Persentase (%)'
+                    text: 'Jumlah'
                 }
             },
             plotOptions: {

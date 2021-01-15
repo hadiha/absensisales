@@ -43,6 +43,9 @@
 	</button>
 	<button type="reset" class="ui icon reset button" data-content="Bersihkan Pencarian">
 		<i class="refresh icon"></i>
+    </button>
+    <button type="button" class="ui icon green export button" data-content="Download">
+		<i class="print icon"></i>
 	</button>
 @endsection
 
@@ -59,6 +62,21 @@
 			email: 'empty',
 			roles: 'empty',
 		};
+
+        $(document).on('click', '.export.button', function(event) {
+            event.preventDefault();
+            var area = $("select[name='filter[area]']").val();
+            var name = $("input[name='filter[name]']").val();
+            var date = $("input[name='filter[date]']").val();
+            postNewTab('{{ url('kehadiran/monitoring/export') }}', {
+                '_token'    : '{{ csrf_token() }}',
+                'area' : area,
+                'name' : name,
+                'date' : date,
+            })
+           
+        });
+
 	</script>
 @endsection
 

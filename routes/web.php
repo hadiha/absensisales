@@ -45,6 +45,7 @@ Route::group(['middleware' => 'auth'], function () {
         Route::resource('karyawan', 'KaryawanController');
 	});
 
+    Route::post('kehadiran/monitoring/export', 'Main\MonitoringController@export');
     Route::get('kehadiran/monitoring/add/{id}', 'Main\MonitoringController@add');
     Route::get('kehadiran/monitoring/add-store', 'Main\MonitoringController@addStore');
     Route::post('kehadiran/monitoring/grid', 'Main\MonitoringController@grid');
@@ -55,6 +56,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('barang/grid', 'Main\LaporanController@grid');
     Route::resource('barang', 'Main\LaporanController');
     
+    Route::post('kehadiran/rekap/export', 'Main\RekapController@export');
     Route::post('kehadiran/rekap/grid', 'Main\RekapController@grid');
     Route::resource('kehadiran/rekap', 'Main\RekapController');
 
