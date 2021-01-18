@@ -24,10 +24,12 @@ use Hash;
 class LaporanController extends Controller
 {
     protected $link = 'barang/';
+    protected $perms = 'main-barang';
 
     function __construct()
     {
         $this->setLink($this->link);
+        $this->setPerms($this->perms);
         $this->setTitle("Barang");
         $this->setModalSize("mini");
         $this->setBreadcrumb(['Barang' => '#']);
@@ -126,10 +128,13 @@ class LaporanController extends Controller
     public function grid(Request $request)
     {
         $records = Laporan::when($name = request()->name, function ($q) use ($name) {
-                        return $q->where('pegawai_id', $name);
+                        return $q->where('created_by', $name);
                     })
-                    ->when($area = request()->area, function ($q) use ($area) {
-                        return $q->where('area_id', $area);
+                    ->when($barang = request()->barang, function ($q) use ($barang) {
+                        return $q->where('barang_id', $barang);
+                    })
+                    ->when($from = request()->from, function ($q) use ($from) {
+                        return $q->whereBetween('tanggal',[Carbon::parse($from)->format('Y-m-d'), Carbon::parse(request()->to)->format('Y-m-d') ]);
                     })
                     ->select('*');
         
@@ -181,21 +186,23 @@ class LaporanController extends Controller
                     ],
                     // 'url'  => url($link.$record->id)
                 ]);
-                
-                $btn .= $this->makeButton([
-                    'type' => 'modal',
-                    'datas' => [
-                        'id' => $record->id
-                    ],
-                    'id'   => $record->id
-                ]);
+                if(auth()->user()->can($this->perms.'-edit')){
+                    $btn .= $this->makeButton([
+                        'type' => 'modal',
+                        'datas' => [
+                            'id' => $record->id
+                        ],
+                        'id'   => $record->id
+                    ]);
+                }
                 // Delete
-                $btn .= $this->makeButton([
-                    'type' => 'delete',
-                    'id'   => $record->id,
-                    'url'   => url($link.$record->id)
-                ]);
-
+                if(auth()->user()->can($this->perms.'-delete')){
+                    $btn .= $this->makeButton([
+                        'type' => 'delete',
+                        'id'   => $record->id,
+                        'url'   => url($link.$record->id)
+                    ]);
+                }
                 return $btn;
             })
             ->make(true);

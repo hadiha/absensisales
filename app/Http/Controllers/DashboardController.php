@@ -32,13 +32,10 @@ class DashboardController extends Controller
                 }])
                 ->orderBy('absensi_count', 'asc')
                 ->take(5)->get();
-                // dd($tops);
-        $statistik = Absensi::select('*');
             
         return $this->render('modules.home', [
             'top' => $tops,
             'worst' => $worsts,
-            'statistik' => $statistik,
         ]);
     }
 

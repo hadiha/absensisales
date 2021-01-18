@@ -50,21 +50,26 @@ class PermissionSeeder extends Seeder
 				'display_name' => 'Data Barang',
 				'action'       => ['view', 'add', 'edit', 'delete'],
 			],
+			[
+				'name'         => 'audits',
+				'display_name' => 'Audit Trail',
+				'action'       => ['view', 'add', 'edit', 'delete'],
+			],
 			
 			// ------------- MAIN ---------------
 			[
-				'name'         => 'main.monitoring',
+				'name'         => 'main-monitoring',
 				'display_name' => 'Monitoring',
 				'action'       => ['view', 'add', 'edit', 'delete'],
 			],
 			[
-				'name'         => 'main.rekap',
+				'name'         => 'main-rekap',
 				'display_name' => 'Rekap',
 				'action'       => ['view', 'add', 'edit', 'delete'],
 			],
 			[
-				'name'         => 'main.barang',
-				'display_name' => 'Barang',
+				'name'         => 'main-barang',
+				'display_name' => 'Laporan Barang',
 				'action'       => ['view', 'add', 'edit', 'delete'],
     		],
 			

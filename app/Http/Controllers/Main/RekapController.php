@@ -23,10 +23,12 @@ use PDF;
 class RekapController extends Controller
 {
     protected $link = 'kehadiran/rekap/';
+    protected $perms = 'main-rekap';
 
     function __construct()
     {
         $this->setLink($this->link);
+        $this->setPerms($this->perms);
         $this->setTitle("Rekap Kehadiran");
         $this->setModalSize("mini");
         $this->setBreadcrumb(['Kehadiran' => '#', 'Rekap' => '#']);

@@ -19,6 +19,12 @@
             {!! \App\Models\Authentication\User::options('username','id',[],'Pilih Pegawai') !!}
         </select>
 		{{-- <input type="text" name="filter[name]" placeholder="Nama"> --}}
+    </div>
+    <div class="field">
+        <select name="filter[barang_id]" class="ui search dropdown">
+            {!! \App\Models\Master\Barang::options('name','id',[],'Pilih Barang') !!}
+        </select>
+		{{-- <input type="text" name="filter[name]" placeholder="Nama"> --}}
 	</div>
 	{{-- <div class="field">
         <select name="filter[area_id]" class="ui search dropdown">
@@ -52,7 +58,7 @@
 
 @section('js-filters')
     d.name = $("select[name='filter[pegawai_id]']").val();
-    d.area = $("select[name='filter[area_id]']").val();
+    d.barang = $("select[name='filter[barang_id]']").val();
 	d.from = $("input[name='filter[from]']").val();
 	d.to = $("input[name='filter[to]']").val();
 @endsection

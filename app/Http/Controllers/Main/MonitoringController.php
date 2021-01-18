@@ -23,10 +23,12 @@ use PDF;
 class MonitoringController extends Controller
 {
     protected $link = 'kehadiran/monitoring/';
+    protected $perms = 'main-monitoring';
 
     function __construct()
     {
         $this->setLink($this->link);
+        $this->setPerms($this->perms);
         $this->setTitle("Monitoring Kehadiran");
         $this->setModalSize("mini");
         $this->setBreadcrumb(['Kehadiran' => '#', 'Monitoring' => '#']);
@@ -183,33 +185,37 @@ class MonitoringController extends Controller
                 //     'url'  => url($link.$record->id)
                 // ]);
 
-                if($record->absen == null){
-                    $date = Carbon::parse(request()->date)->format('d/m/Y');
-                    $btn .= $this->makeButton([
-                        'type' => 'modal',
-                        'class'   => 'teal icon custom',
-                        'label'   => '<i class="edit outline icon"></i>',
-                        'tooltip' => 'Tambah',
-                        'id'    => $record->id,
-                        'datas' => [
-                            'url'  => url($link.'add/'.$record->id.'?date='.$date),
-                        ],
-                    ]);
-                } else {                    
-                    $btn .= $this->makeButton([
-                        'type' => 'modal',
-                        'datas' => [
-                            'id' => $record->absen->id
-                        ],
-                        'id'   => $record->absen->id
-                    ]);
+                if(auth()->user()->can($this->perms.'-edit')){
+                    if($record->absen == null){
+                        $date = Carbon::parse(request()->date)->format('d/m/Y');
+                        $btn .= $this->makeButton([
+                            'type' => 'modal',
+                            'class'   => 'teal icon custom',
+                            'label'   => '<i class="edit outline icon"></i>',
+                            'tooltip' => 'Tambah',
+                            'id'    => $record->id,
+                            'datas' => [
+                                'url'  => url($link.'add/'.$record->id.'?date='.$date),
+                            ],
+                        ]);
+                    } else {                    
+                        $btn .= $this->makeButton([
+                            'type' => 'modal',
+                            'datas' => [
+                                'id' => $record->absen->id
+                            ],
+                            'id'   => $record->absen->id
+                        ]);
+                    }
                 }
-                // Delete
-                // $btn .= $this->makeButton([
-                //     'type' => 'delete',
-                //     'id'   => $record->id,
-                //     'url'   => url($link.$record->id)
-                // ]);
+                // if(auth()->user()->can($this->perms.'-delete')){
+                    // Delete
+                    // $btn .= $this->makeButton([
+                    //     'type' => 'delete',
+                    //     'id'   => $record->id,
+                    //     'url'   => url($link.$record->id)
+                    // ]);
+                // }
 
                 return $btn;
             })

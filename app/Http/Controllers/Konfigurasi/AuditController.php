@@ -88,7 +88,7 @@ class AuditController extends Controller
 
     public function grid()
     {
-        $record = AuditTrail::with('user')->select('*')
+        $record = AuditTrail::with('user')
                             ->when(!request()->has('order'), function($q){
                                 $q->orderBy('created_at', 'desc');
                             })
@@ -103,6 +103,10 @@ class AuditController extends Controller
                             ->when(request()->has('action') && request()->action != '', function ($q) {
                                 $q->where('action', request()->action);
                             });
+                            
+        if(auth()->user()->roles()->first()->name != 'admin'){
+            $record->where('created_by', auth()->user()->id)->get();
+        }
 
         $datatables = DataTables::of($record)
             ->editColumn('num', function ($record) {

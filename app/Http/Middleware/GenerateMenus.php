@@ -28,16 +28,16 @@ class GenerateMenus
                  ->data('icon', 'calendar check outline')
                  ->active('kehadiran/*');
             $menu->kehadiran->add('Monitoring', 'kehadiran/monitoring/')
-               //   ->data('perms', 'master-pegawai')
+                 ->data('perms', 'main-monitoring')
                  ->active('kehadiran/monitoring/*');
             $menu->kehadiran->add('Rekap', 'kehadiran/rekap/')
-               // ->data('perms', 'master-area')
+               ->data('perms', 'main-rekap')
                ->active('kehadiran/rekap/*');
 
 
             $menu->add('Barang', 'barang')
                  ->data('icon', 'tags')
-               //   ->data('perms', 'barang')
+                 ->data('perms', 'main-barang')
                  ->active('barang');
 
             /* Data Master */
@@ -48,13 +48,13 @@ class GenerateMenus
           //      //   ->data('perms', 'master-karyawan')
           //        ->active('master/karyawan/*');
             $menu->dataMaster->add('Data Area', 'master/area/')
-               // ->data('perms', 'master-area')
+               ->data('perms', 'master-area')
                ->active('master/area/*');
             $menu->dataMaster->add('Data Sales Area', 'master/sales-area/')
-               // ->data('perms', 'master-area')
+               ->data('perms', 'master-sales')
                ->active('master/sales-area/*');
             $menu->dataMaster->add('Data Barang', 'master/barang/')
-               // ->data('perms', 'master-barang')
+               ->data('perms', 'master-barang')
                ->active('master/barang/*');       
           
 
