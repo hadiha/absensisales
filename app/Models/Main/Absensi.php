@@ -70,10 +70,41 @@ class Absensi extends Model
         DB::beginTransaction();
         try {
             $record = new Absensi();
-            $record->fill($request->all());
+            $record->fill($request->except('date_in','pegawai_id'));
+            $record->pegawai_id = auth()->user()->id;
+            $record->date_in = Carbon::now();
             $record->save();
 
-            auth()->user()->storeLog('monitoring', 'create', $record->id);
+            auth()->user()->storeLog('Absensi', 'Menginput Jam Masuk', $record->id);
+            
+            DB::commit();
+        } catch (\Exception $e) {
+            DB::rollback();
+
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage()
+            ], 500);
+        }
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Data berhasil disimpan',
+            'data'    => $record
+        ]);
+    }
+
+    public static function createOut($request)
+    {
+        DB::beginTransaction();
+        try {
+            $record = Absensi::where('pegawai_id', auth()->user()->id)
+                                ->where('status', 'hadir')
+                                ->whereDate('date_in', Carbon::now()->format('Y-m-d'))->first();
+            $record->date_out = Carbon::now();
+            $record->save();
+
+            auth()->user()->storeLog('Absensi', 'Menginput Jam Pulang', $record->id);
             
             DB::commit();
         } catch (\Exception $e) {
@@ -111,7 +142,7 @@ class Absensi extends Model
             $this->status = $request->status;
             $this->save();
 
-            auth()->user()->storeLog('monitoring', 'update', $this->id);
+            auth()->user()->storeLog('Monitoring', 'Mengupdate data Absensi di Monitoring', $this->id);
             
             DB::commit();
         } catch (\Exception $e) {

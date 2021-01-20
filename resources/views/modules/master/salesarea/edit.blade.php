@@ -11,7 +11,7 @@
 		<input type="hidden" name="id" value="{{ $record->id }}">
         <div class="field">
         	<label>Nama Sales</label>
-            <select name="user_id" class="ui search dropdown">
+            <select name="user_id" class="ui search dropdown" disabled>
 				@foreach ($user as $val)
 					<option value="{{ $val->id }}" {{ $val->id==$record->user_id?'selected':'' }}>{{ $val->username }}</option>
 				@endforeach

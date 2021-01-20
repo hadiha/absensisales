@@ -162,6 +162,8 @@ class AreaController extends Controller
         $record->fill($request->all());
         $record->save();
 
+        auth()->user()->storeLog('Master Area', 'Menginput Area '.$record->name, $record->id);
+
         return response([
             'status' => true
         ]);
@@ -183,6 +185,7 @@ class AreaController extends Controller
         $area->fill($request->all());
         $area->save();
 
+        auth()->user()->storeLog('Master Area', 'Mengedit Area '.$area->name, $area->id);
         return response([
             'status' => true
         ]);
@@ -192,6 +195,7 @@ class AreaController extends Controller
     public function destroy(Area $area)
     {
         $area->delete();
+        auth()->user()->storeLog('Master Area', 'Menghapus Area '.$area->name);
 
         return response([
             'status' => true,

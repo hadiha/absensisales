@@ -268,7 +268,7 @@ class MonitoringController extends Controller
 
         $record->save();
 
-        auth()->user()->storeLog('monitoring', 'create', $record->id);
+        auth()->user()->storeLog('Monitoring', 'Membuat Data Absensi di Monitoring', $record->id);
 
         return response([
             'status' => true
@@ -299,7 +299,7 @@ class MonitoringController extends Controller
     {
         $monitoring->delete();
 
-        auth()->user()->storeLog('monitoring', 'delete', $this->id);
+        auth()->user()->storeLog('Monitoring', 'Menghapus data Monitoring', $this->id);
 
         return response([
             'status' => true,

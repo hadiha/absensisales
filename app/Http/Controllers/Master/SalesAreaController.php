@@ -160,6 +160,8 @@ class SalesAreaController extends Controller
         $record->fill($request->all());
         $record->save();
 
+        auth()->user()->storeLog('Master Sales Area', 'Menambahkan '.$record->user->name .' ke area ' .$record->area->name, $record->id);
+
         return response([
             'status' => true
         ]);
@@ -187,6 +189,8 @@ class SalesAreaController extends Controller
         $sales_area->fill($request->all());
         $sales_area->save();
 
+        auth()->user()->storeLog('Master Sales Area', 'Mengganti '.$sales_area->user->name .' ke area ' .$sales_area->area->name, $sales_area->id);
+
         return response([
             'status' => true
         ]);
@@ -196,7 +200,7 @@ class SalesAreaController extends Controller
     public function destroy(Salesarea $sales_area)
     {
         $sales_area->delete();
-
+        auth()->user()->storeLog('Master Sales Area', 'Menghapus '.$sales_area->user->name.' di area '.$sales_area->area->name);
         return response([
             'status' => true,
         ]);

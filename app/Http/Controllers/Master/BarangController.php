@@ -163,6 +163,8 @@ class BarangController extends Controller
         $record->fill($request->all());
         $record->save();
 
+        auth()->user()->storeLog('Master Barang', 'Menginput Barang '.$record->name, $record->id);
+
         return response([
             'status' => true
         ]);
@@ -184,6 +186,8 @@ class BarangController extends Controller
         $barang->fill($request->all());
         $barang->save();
 
+        auth()->user()->storeLog('Master Barang', 'Mengedit Barang '.$barang->name, $barang->id);
+
         return response([
             'status' => true
         ]);
@@ -193,6 +197,8 @@ class BarangController extends Controller
     public function destroy(Barang $barang)
     {
         $barang->delete();
+
+        auth()->user()->storeLog('Master Barang', 'Menghapus Barang '.$barang->name);
 
         return response([
             'status' => true,

@@ -224,7 +224,7 @@ class LaporanController extends Controller
         $record->fill($request->all());
         $record->save();
 
-        auth()->user()->storeLog('barang', 'create', $record->id);
+        auth()->user()->storeLog('Laporan Barang', 'Membuat Laporan Barang', $record->id);
         return response([
             'status' => true
         ]);
@@ -294,7 +294,7 @@ class LaporanController extends Controller
         $barang->fill($request->all());
         $barang->save();
 
-        auth()->user()->storeLog('barang', 'update', $barang->id);
+        auth()->user()->storeLog('Laporan Barang', 'Mengupdate Laporan Barang', $barang->id);
 
         return response([
             'status' => true
@@ -304,7 +304,7 @@ class LaporanController extends Controller
     public function destroy(Laporan $barang)
     {
         $barang->delete();
-        auth()->user()->storeLog('barang', 'delete', $this->id);
+        auth()->user()->storeLog('Laporan Barang', 'Mengupdate Laporan Barang', $this->id);
 
         return response([
             'status' => true,

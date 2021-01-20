@@ -142,11 +142,13 @@ class RolesController extends Controller
                     'id'   => $record->id
                 ]);
                 // Delete
-                $btn .= $this->makeButton([
-                    'type' => 'delete',
-                    'id'   => $record->id,
-                    'url'   => url($link.$record->id)
-                ]);
+                if($record->users()->count() == 0){
+                    $btn .= $this->makeButton([
+                        'type' => 'delete',
+                        'id'   => $record->id,
+                        'url'   => url($link.$record->id)
+                    ]);
+                }
 
                 return $btn;
             })

@@ -24,6 +24,11 @@ class GenerateMenus
                  ->data('perms', 'dashboard')
                  ->active('home');
 
+            $menu->add('Absensi', 'absensi')
+                 ->data('icon', 'edit')
+               //   ->data('perms', 'main-absensi')
+                 ->active('absensi');
+
             $menu->add('Kehadiran')
                  ->data('icon', 'calendar check outline')
                  ->active('kehadiran/*');
@@ -72,7 +77,7 @@ class GenerateMenus
 
             $menu->add('Audit Trail', 'audit')
                  ->data('icon', 'history')
-               //   ->data('perms', 'barang')
+                 ->data('perms', 'audits')
                  ->active('audit');
         });
 

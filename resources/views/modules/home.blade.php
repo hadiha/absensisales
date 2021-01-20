@@ -96,7 +96,7 @@
             }
         })
         .done(function(response) {
-            console.log('oke');
+            // console.log('oke');
             statistikKehadiran(response.chart);
         })
         .fail(function(response) {

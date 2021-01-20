@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 
 use App\Http\Controllers\Controller;
 use App\Models\Authentication\AuditTrail;
+use Carbon\Carbon;
 
 class AuditController extends Controller
 {
@@ -32,31 +33,31 @@ class AuditController extends Controller
             ],
             /* --------------------------- */
             [
-                'data' => 'user.name',
-                'name' => 'user.name',
-                'label' => 'Name',
-                'sortable' => true,
-                'className' => 'text-color',
-            ],
-            [
                 'data' => 'module',
                 'name' => 'module',
-                'label' => 'Module',
+                'label' => 'Modul',
                 'orderable' => false,
                 'searchable' => false,
             ],
             [
                 'data' => 'action',
                 'name' => 'action',
-                'label' => 'Action',
+                'label' => 'Aktivitas',
                 'orderable' => false,
                 'searchable' => false,
                 'className' => 'text-center',
             ],
             [
+                'data' => 'user.name',
+                'name' => 'user.name',
+                'label' => 'User',
+                'sortable' => true,
+                'className' => 'text-color',
+            ],
+            [
                 'data' => 'ip',
                 'name' => 'ip',
-                'label' => 'IP Address',
+                'label' => 'IP Client',
                 'orderable' => false,
                 'searchable' => false,
             ],
@@ -70,7 +71,7 @@ class AuditController extends Controller
             [
                 'data' => 'created_at',
                 'name' => 'created_at',
-                'label' => 'Time',
+                'label' => 'Tanggal Aktivitas',
                 'orderable' => false,
                 'searchable' => false,
             ],
@@ -100,13 +101,10 @@ class AuditController extends Controller
                             ->when(request()->has('module'), function ($q) {
                                 $q->where('module', 'like', '%' . request()->module . '%');
                             })
-                            ->when(request()->has('action') && request()->action != '', function ($q) {
-                                $q->where('action', request()->action);
+                            ->when($date = request()->date, function ($q) use ($date) {
+                                $q->whereDate('created_at', Carbon::parse($date)->format('Y-m-d'));
                             });
-                            
-        if(auth()->user()->roles()->first()->name != 'admin'){
-            $record->where('created_by', auth()->user()->id)->get();
-        }
+      
 
         $datatables = DataTables::of($record)
             ->editColumn('num', function ($record) {
@@ -134,7 +132,7 @@ class AuditController extends Controller
                 return ucfirst($record->action);
             })
             ->editColumn('created_at', function ($record) {
-                return $record->created_at->diffForHumans();
+                return Carbon::parse($record->created_at)->format('d/m/Y H:i:s');
             })
             ->rawColumns(['act', 'action'])
             ->make(true);

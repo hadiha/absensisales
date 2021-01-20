@@ -276,7 +276,7 @@
                             </td>
                             <td>
                                 <div class="field">
-                                    <label>Passwor Baru</label>
+                                    <label>Password Baru</label>
                                     <div class="ui icon input" style="width: 100%; height: 35px">
                                         <input type="password" placeholder="Passwor Baru" name="password">
                                         <i class="lock icon"></i>

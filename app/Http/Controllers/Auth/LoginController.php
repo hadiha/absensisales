@@ -71,7 +71,7 @@ class LoginController extends Controller
                     $user->last_login = Carbon::now();
                     $user->save();
                     Auth::login($user);
-                    $user->storeLog('auth', 'login');
+                    $user->storeLog('Login', 'Login Kedalam Aplikasi');
                     return redirect(url('/'));
                 }
             } else {

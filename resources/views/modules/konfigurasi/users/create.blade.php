@@ -37,7 +37,7 @@
         </div>
         <div class="field">
         	<label>Hak Akses</label>
-			<select name="roles[]" class="ui fluid multiple dropdown" multiple>
+			<select name="roles[]" class="ui fluid dropdown">
 				{!! App\Models\Authentication\Role::options('display_name', 'id', [], 'Pilih Hak Akses') !!}
 			</select>
         </div>

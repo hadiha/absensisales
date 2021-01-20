@@ -152,12 +152,13 @@ class UsersController extends Controller
                     'id'   => $record->id
                 ]);
                 // Delete
-                $btn .= $this->makeButton([
-                    'type' => 'delete',
-                    'id'   => $record->id,
-                    'url'   => url($link.$record->id)
-                ]);
-
+                if(auth()->user()->id != $record->id){
+                    $btn .= $this->makeButton([
+                        'type' => 'delete',
+                        'id'   => $record->id,
+                        'url'   => url($link.$record->id)
+                    ]);
+                }
                 return $btn;
             })
             ->make(true);
@@ -182,6 +183,8 @@ class UsersController extends Controller
         $record->save();
 
         $record->roles()->sync($request->roles);
+
+        auth()->user()->storeLog('User Pengguna', 'Membuat User Pengguna Baru '.$record->name, $record->id);
 
         return response([
             'status' => true
@@ -217,6 +220,7 @@ class UsersController extends Controller
         $record->save();
 
         $record->roles()->sync($request->roles);
+        auth()->user()->storeLog('User Pengguna', 'Mengupdate User Pengguna '.$record->name, $record->id);
 
         return response([
             'status' => true
@@ -227,6 +231,8 @@ class UsersController extends Controller
     {
         $record = User::find($id);
         $record->delete();
+
+        auth()->user()->storeLog('User Pengguna', 'Menghapus User Pengguna'.$record->name);
 
         return response([
             'status' => true,

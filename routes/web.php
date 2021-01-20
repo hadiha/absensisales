@@ -65,6 +65,11 @@ Route::group(['middleware' => 'auth'], function () {
     
     Route::post('audit/grid', 'Konfigurasi\AuditController@grid');
     Route::resource('audit', 'Konfigurasi\AuditController');
+
+    Route::post('absensi/pengajuan', 'Main\AbsensiController@storePengajuan');
+    Route::put('absensi/out', 'Main\AbsensiController@storeOut');
+    Route::post('absensi/grid', 'Main\AbsensiController@grid');
+    Route::resource('absensi', 'Main\AbsensiController');
     
 });
 

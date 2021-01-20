@@ -29,6 +29,7 @@ Route::middleware(['auth:api'])->group(function () {
     Route::get('refresh-token', 'AuthController@refresh');
     Route::post('/logout', 'AuthController@logout');
     
+    Route::post('/absensi/out', 'API\AbsensiController@out');
     Route::resource('/absensi', 'API\AbsensiController')->only(['index', 'show', 'store']);
     Route::resource('/laporan', 'API\LaporanController')->only(['index', 'show', 'store']);
 

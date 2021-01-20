@@ -32,6 +32,11 @@ class AbsensiController extends ApiController
         return Absensi::createByRequest($request);
     }
 
+    public function out(Request $request)
+    {
+        return Absensi::createOut($request);
+    }
+
     public function show(Absensi $absensi)
     {
         $this->loadIfExists($absensi);
