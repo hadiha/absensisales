@@ -10,13 +10,39 @@
         <div class="field">
         	<label>Nama Sales</label>
             <select name="user_id" class="ui search dropdown">
-				{!! \App\Models\Authentication\User::options('username','id',[],'Pilih Nama') !!}
+				{!! \App\Models\Authentication\User::options('name','id',[],'Pilih Nama') !!}
 			</select>
         </div>
         <div class="field">
         	<label>Nama Area</label>
             <select name="area_id" class="ui search dropdown">
 				{!! \App\Models\Master\Area::options('name','id',[],'Pilih Area') !!}
+			</select>
+		</div>
+		<div class="two fields">
+			<div class="field">
+			  <label>Mulai Tanggal</label>
+			  <div class="ui calendar" id="rangestart">
+				<div class="ui input left icon">
+				  <i class="calendar icon"></i>
+				  <input type="text" name="start_date" placeholder="Mulai" tabindex="0" class="">
+				</div>
+			  </div>
+			</div>
+			<div class="field">
+			  <label>Sampai Tanggal</label>
+			  <div class="ui calendar" id="rangeend">
+				<div class="ui input left icon">
+				  <i class="calendar icon"></i>
+				  <input type="text" name="end_date" placeholder="Sampai" tabindex="0" class="">
+				</div>
+			  </div>
+			</div>
+		</div>
+		<div class="field">
+        	<label>Koordinator</label>
+            <select name="koordinator_id" class="ui search dropdown">
+				{!! \App\Models\Authentication\User::options('name','id',[],'Pilih Nama') !!}
 			</select>
         </div>
 	</form>

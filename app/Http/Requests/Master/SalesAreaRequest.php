@@ -17,6 +17,9 @@ class SalesAreaRequest extends Request
         $rules = [
             'user_id' => 'required|unique:ref_sales_area,user_id,'.$this->get('id'),
             'area_id' => 'required',
+            'start_date' => 'required',
+            'end_date' => 'required',
+            'koordinator_id' => 'required',
         ];
 
         return $rules;
@@ -30,6 +33,9 @@ class SalesAreaRequest extends Request
         // validasi tambahan
         $attributes['user_id']    = 'Sales';
         $attributes['area_id']    = 'Area';
+        $attributes['start_date']    = 'Mulai';
+        $attributes['end_date']    = 'Sampai';
+        $attributes['koordinator_id']    = 'Koordinator';
         return $attributes;
     }
 

@@ -63,6 +63,11 @@ class PermissionSeeder extends Seeder
 				'action'       => ['view', 'add', 'edit', 'delete'],
 			],
 			[
+				'name'         => 'main-absensi',
+				'display_name' => 'Absensi',
+				'action'       => ['view'],
+			],
+			[
 				'name'         => 'main-rekap',
 				'display_name' => 'Rekap',
 				'action'       => ['view', 'add', 'edit', 'delete'],

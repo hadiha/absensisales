@@ -13,7 +13,7 @@
         	<label>Nama Sales</label>
             <select name="user_id" class="ui search dropdown" disabled>
 				@foreach ($user as $val)
-					<option value="{{ $val->id }}" {{ $val->id==$record->user_id?'selected':'' }}>{{ $val->username }}</option>
+					<option value="{{ $val->id }}" {{ $val->id==$record->user_id?'selected':'' }}>{{ $val->name }}</option>
 				@endforeach
 			</select>
         </div>
@@ -21,6 +21,34 @@
         	<label>Nama Area</label>
             <select name="area_id" class="ui search dropdown">
 				@foreach ($area as $val)
+					<option value="{{ $val->id }}" {{ $val->id==$record->area_id?'selected':'' }}>{{ $val->name }}</option>
+				@endforeach
+			</select>
+		</div>
+		<div class="two fields">
+			<div class="field">
+			  <label>Mulai Tanggal</label>
+			  <div class="ui calendar" id="rangestart">
+				<div class="ui input left icon">
+				  <i class="calendar icon"></i>
+				  <input type="text" name="start_date" placeholder="Mulai" tabindex="0" class="" value="{{$record->start_date}}">
+				</div>
+			  </div>
+			</div>
+			<div class="field">
+			  <label>Sampai Tanggal</label>
+			  <div class="ui calendar" id="rangeend">
+				<div class="ui input left icon">
+				  <i class="calendar icon"></i>
+				  <input type="text" name="end_date" placeholder="Sampai" tabindex="0" class="" value="{{$record->end_date}}">
+				</div>
+			  </div>
+			</div>
+		</div>
+		<div class="field">
+        	<label>Koordinator</label>
+            <select name="koordinator_id" class="ui search dropdown">
+				@foreach ($user as $val)
 					<option value="{{ $val->id }}" {{ $val->id==$record->area_id?'selected':'' }}>{{ $val->name }}</option>
 				@endforeach
 			</select>

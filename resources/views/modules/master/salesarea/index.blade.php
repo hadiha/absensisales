@@ -33,37 +33,32 @@
 @section('init-modal')
 	<script>
         onShow = function(){
-            $('.checkbox').checkbox();
-            $('.ui.dropdown').dropdown({
-                onChange: function(value) {
-                    var target = $(this).dropdown();
-                    if (value!="") {
-                        target
-                            .find('.dropdown.icon')
-                            .removeClass('dropdown')
-                            .addClass('delete')
-                            .on('click', function() {
-                                target.dropdown('clear');
-                                $(this).removeClass('delete').addClass('dropdown');
-                                return false;
-                            });
-                    }
-                }
+            $('#rangestart').calendar({
+                type: 'date',
+				endCalendar: $('#rangeend'),
+				formatter: {
+					date: function (date, settings) {
+					if (!date) return '';
+					var day = date.getDate();
+					var month = date.getMonth() + 1;
+					var year = date.getFullYear();
+					return day + '/' + month + '/' + year;
+					}
+				}
             });
-            // force onChange  event to fire on initialization
-            $('.ui.dropdown')
-                .closest('.ui.selection')
-                .find('.item.active').addClass('qwerty').end()
-                .dropdown('clear')
-                    .find('.qwerty').removeClass('qwerty')
-                .trigger('click');
-
-	        $('[name=display_name]').on('change, keyup', function(event) {
-	            var display_name = $(this).val();
-	            $('[name=name]').val(slugify(display_name));
-	        });
-
-            return false;
+            $('#rangeend').calendar({
+                type: 'date',
+				startCalendar: $('#rangestart'),
+				formatter: {
+					date: function (date, settings) {
+					if (!date) return '';
+					var day = date.getDate();
+					var month = date.getMonth() + 1;
+					var year = date.getFullYear();
+					return day + '/' + month + '/' + year;
+					}
+				}
+            });
         };
 	</script>
 @endsection

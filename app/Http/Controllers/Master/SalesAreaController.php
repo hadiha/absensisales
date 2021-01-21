@@ -15,7 +15,7 @@ use App\Models\Master\Area;
 use App\Models\Master\SalesArea;
 /* Libraries */
 use DataTables;
-use Carbon;
+use Carbon\Carbon;
 use Hash;
 
 class SalesAreaController extends Controller
@@ -56,6 +56,20 @@ class SalesAreaController extends Controller
                 'sortable' => true,
             ],
             [
+                'data' => 'periode',
+                'name' => 'periode',
+                'label' => 'Periode',
+                'searchable' => false,
+                'sortable' => true,
+            ],
+            [
+                'data' => 'koordinator.name',
+                'name' => 'koordinator_id',
+                'label' => 'Korrdinator',
+                'searchable' => false,
+                'sortable' => true,
+            ],
+            [
                 'data' => 'created_at',
                 'name' => 'created_at',
                 'label' => 'Dibuat Pada',
@@ -85,7 +99,7 @@ class SalesAreaController extends Controller
 
     public function grid(Request $request)
     {
-        $records = SalesArea::with('user','area')
+        $records = SalesArea::with('user','area','koordinator')
         ->when($sales = request()->sales, function ($q) use ($sales) {
             return $q->whereHas('user', function($w) use ($sales){
                 $w->where('username', 'like', '%'.$sales.'%');
@@ -110,6 +124,9 @@ class SalesAreaController extends Controller
             })
             ->editColumn('created_at', function ($record) {
                 return $record->created_at->diffForHumans();
+            })
+            ->editColumn('periode', function ($record) {
+                return Carbon::parse($record->start_date)->format('d/m/Y').' - '.Carbon::parse($record->end_date)->format('d/m/Y');
             })
             ->editColumn('created_by', function ($record) {
                 return $record->creator->username;

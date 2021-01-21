@@ -26,7 +26,7 @@ class GenerateMenus
 
             $menu->add('Absensi', 'absensi')
                  ->data('icon', 'edit')
-               //   ->data('perms', 'main-absensi')
+                 ->data('perms', 'main-absensi')
                  ->active('absensi');
 
             $menu->add('Kehadiran')
