@@ -16,18 +16,12 @@
                 <i class="ui bell icon" style="margin-right: 0;"></i>
                 <div class="mfs menu"  {{--style="max-height: 25rem !important;margin-top: 0.14em;" --}}>
                     <div {{--style="padding: 0px !important;width:480px;"--}}>
-                        <div class="ui center attached segment mfs " id="area-notif" {{--style="max-height: 25rem !important;overflow-y: scroll;overflow-x: hidden !important;"--}}>
-                            <div {{--style="padding: 0px !important;width:400px;"--}} class="notif item">
-                                <div data-href="#" style="text-align: center;">
-                                    <div style="margin-bottom:-4px;background-color:#fafafa;box-shadow:0 0 0 1px #898b8c63 inset,0 0 0 0 transparent;" class="ui attached message">
-                                        <div class="header">
-                                        <u>No New Notifications</u>
-                                        </div>
-                                    </div>
-                                </div>
+                        <div class="ui center attached segment mfs "  {{--style="max-height: 25rem !important;overflow-y: scroll;overflow-x: hidden !important;"--}}>
+                            <div class="ui relaxed divided list" id="area-notif">
                             </div>
                         </div>
-                        <a href="{{ url('jobs/all-notif') }}">
+                        {{-- <a href="{{ url('all-notif') }}"> --}}
+                        <a href="#">
                             <div class="ui bottom attached segment center aligned">
                                 See All
                             </div>

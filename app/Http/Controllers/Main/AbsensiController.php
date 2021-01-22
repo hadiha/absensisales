@@ -262,7 +262,7 @@ class AbsensiController extends Controller
             $record->fill($request->all());
             $record->save();
 
-            auth()->user()->storeLog('Absensi', 'Membuat Pengajuan', $record->id);
+            auth()->user()->storeLog('Absensi', 'Membuat Pengajuan '.$record->status , $record->id);
             
             DB::commit();
         } catch (\Exception $e) {

@@ -60,6 +60,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('kehadiran/rekap/grid', 'Main\RekapController@grid');
     Route::resource('kehadiran/rekap', 'Main\RekapController');
 
+    Route::get('home/notif', 'DashboardController@getNotif')->name('home.notif');
     Route::post('home/get-data', 'DashboardController@getData')->name('home.getData');
     Route::get('/home', 'DashboardController@index')->name('home');
     

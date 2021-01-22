@@ -128,6 +128,7 @@
     <script src="{{ asset('plugins/sweetalert/sweetalert2.min.js') }}"></script>
     <script src="{{ asset('semantic/semantic.min.js') }}"></script>
     <script src="{{ asset('plugins/semanticui-calendar/calendar.min.js') }}"></script>
+    <script src="{{ asset('plugins/daterangepicker/moment.min.js') }}"></script>
 
     <script src="{{ asset('js/app-v2.js') }}"></script>
     {{-- <script src="{{ asset('js/global-variable.js') }}"></script> --}}
@@ -169,16 +170,15 @@
             $('.message .close').on('click', function() {
                 $(this).closest('.message').transition('fade');
             });
+
+            getNotification();
         });
 
-        $(document)
-          .on('click', '.ui.file.input input:text, .ui.button', function(e) {
+        $(document).on('click', '.ui.file.input input:text, .ui.button', function(e) {
             $(e.target).parent().find('input:file').click();
-          })
-        ;
+        });
 
-        $(document)
-          .on('change', '.ui.file.input input:file', function(e) {
+        $(document).on('change', '.ui.file.input input:file', function(e) {
             var file = $(e.target);
             var name = '';
 
@@ -190,9 +190,46 @@
             console.log(name);
 
             $('input:text', file.parent()).val(name);
-          })
-        ;
+        });
 
+        function getNotification() {
+        var html = '';
+        $.ajax({
+            url: '{{ url("home/notif") }}',
+            type: 'GET',
+            success: function(resp){
+                if(resp.record.length !== 0){
+                    $.each(resp.record,function(k,v){
+                        const time = moment(v.created_at).fromNow();
+                        var status = v.action.substring(8);
+                        html += `
+                            <div class="item">
+                                <i class="large calendar check middle aligned icon"></i>
+                                <div class="content">
+                                    <a class="header">Terdapat `+ status +` dari `+ v.user.name +`</a>
+                                    <div class="description">
+                                        <i class="clock icon"></i> `+ time +`
+                                    </div>
+                                </div>
+                            </div>`;
+                    });
+                }else{
+                    html += `<div class="item">
+                                <i class="bell icon"></i>
+                                <div class="content">
+                                    <u>Belum Ada Notif</u>
+                                </div>
+                            </div>`;
+                }
+                $('#count-notif').html(resp.lengths);
+                $('#area-notif').html(html);
+                $('.ui.dropdown.teals').dropdown();
+                $('.ui.accordion').accordion();
+            }, error : function(resp){
+
+            }
+        });
+    }
 
 
     </script>

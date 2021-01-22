@@ -4,10 +4,12 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Models\Authentication\AuditTrail;
 use App\Models\Authentication\User;
 use App\Models\Main\Absensi;
 use Carbon\Carbon;
 use Carbon\CarbonPeriod;
+use Illuminate\Support\Facades\Auth;
 
 class DashboardController extends Controller
 {
@@ -57,6 +59,22 @@ class DashboardController extends Controller
         return response([
             'status' => true,
             'chart' => $chart,
+        ]);
+    }
+
+    public function getNotif()
+    {
+        if(Auth::check()){
+            if(auth()->user()->roles->first()->name !== 'sales'){
+                $notif = AuditTrail::with('user')->where('action', 'like' ,'%pengajuan%' )->get();
+            } else {
+                $notif = AuditTrail::with('user')->where('action', 'like' ,'%approve%' )->get();
+            }
+        };
+
+        return response([
+            'record' => $notif,
+            // 'lengths' => count($notif),
         ]);
     }
 
