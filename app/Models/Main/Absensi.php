@@ -76,29 +76,42 @@ class Absensi extends Model
                     });
     }
     
+    // untuk API
     public static function createByRequest($request)
     {
         DB::beginTransaction();
         try {
-            $record = new Absensi();
-            $record->fill($request->except('date_in','pegawai_id'));
-            $record->pegawai_id = auth()->user()->id;
-            $record->date_in = Carbon::now();
-            $record->save();
+            $cek = Absensi::whereDate('date_in', Carbon::now()->format('Y-m-d'))->where('status', 'hadir')->first();
 
-            auth()->user()->storeLog('Absensi', 'Menginput Jam Masuk', $record->id);
-            
-            DB::commit();
+            if($cek != null){
+                return response()->json([
+                    'status' => 'available',
+                    'success' => false,
+                    'message' => 'Anda Sudah Absen Hari ini'
+                ]);
+            }else{
+                $record = new Absensi();
+                $record->fill($request->except('date_in','pegawai_id'));
+                $record->pegawai_id = auth()->user()->id;
+                $record->date_in = Carbon::now();
+                $record->save();
+                
+                auth()->user()->storeLog('Absensi', 'Menginput Jam Masuk', $record->id);
+                
+                DB::commit();
+            }
         } catch (\Exception $e) {
             DB::rollback();
 
             return response()->json([
+                'status' => 'gagal',
                 'success' => false,
                 'message' => $e->getMessage()
             ], 500);
         }
 
         return response()->json([
+            'status' => 'sukses',
             'success' => true,
             'message' => 'Data berhasil disimpan',
             'data'    => $record

@@ -99,7 +99,7 @@
                         swal(
                         'Upps!',
                         'Anda Belum Absen Masuk Hari ini.',
-                        'error'
+                        'info'
                         ).then((result) => {
                             return true;
                         })
