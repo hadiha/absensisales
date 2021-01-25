@@ -156,7 +156,7 @@
                     <tbody>
                         <tr>
                             <td rowspan="4" class="five wide center aligned top aligned">
-                                <div class="ui fluid cards">
+                                <div class="ui special cards">
                                     <div class="card">
                                         <input type="file" class="hidden" name="foto" accept="image/*" data-url="{{ url($pageUrl.'foto/') }}">
                                         <div class="blurring dimmable image">
@@ -185,7 +185,7 @@
                                 <div class="field maxdate">
             						<label>Email</label>
             						<div class="ui icon input" style="width: 100%; height: 35px">
-                                        <input type="email" name="email" style="height: 35px;" value="{{auth()->user()->email}}">
+                                        <input type="email" name="email" style="height: 35px;" value="{{auth()->user()->email}}" readonly>
                                         <i class="envelope icon"></i>
             						</div>
             					</div>

@@ -60,13 +60,14 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('kehadiran/rekap/grid', 'Main\RekapController@grid');
     Route::resource('kehadiran/rekap', 'Main\RekapController');
 
-    Route::get('home/notif', 'DashboardController@getNotif')->name('home.notif');
     Route::post('home/get-data', 'DashboardController@getData')->name('home.getData');
     Route::get('/home', 'DashboardController@index')->name('home');
     
     Route::post('audit/grid', 'Konfigurasi\AuditController@grid');
     Route::resource('audit', 'Konfigurasi\AuditController');
-
+    
+    Route::get('absensi/all-notif', 'Main\AbsensiController@getAllNotif')->name('absensi.allnotif');
+    Route::get('absensi/notif', 'Main\AbsensiController@getNotif')->name('absensi.notif');
     Route::post('absensi/pengajuan', 'Main\AbsensiController@storePengajuan');
     Route::put('absensi/out', 'Main\AbsensiController@storeOut');
     Route::post('absensi/grid', 'Main\AbsensiController@grid');

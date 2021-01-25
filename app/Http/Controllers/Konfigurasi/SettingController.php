@@ -46,11 +46,26 @@ class SettingController extends Controller
 
     public function store(Request $request)
     {
+        // dd($request);
+        $request->validate([
+            'name' => 'required',
+            'gender' => 'required',
+            'phone' => 'required',
+            'birth_place' => 'required',
+            'birth_date' => 'required',
+        ],[
+            'name.required' => 'Nama harap diisi',
+            'gender.required' => 'Gender harap diisi',
+            'phone.min' => 'No Telepon harap diisi',
+            'birth_place.required' => 'Tempat Lahir harap diisi',
+            'birth_date.required' => 'Tanggal Lahir harap diisi',
+        ]);
+
         // return response($record, 422);
         $record = User::find($request->id);
         $record->name = $request->name;
         $record->phone = $request->phone;
-        $record->email = $request->email;
+        // $record->email = $request->email;
         $record->gender = $request->gender;
         $record->birth_place = $request->birth_place;
         $record->birth_date = Carbon::createFromFormat('F j, Y', $request->birth_date);

@@ -1,6 +1,7 @@
 <?php 
 namespace App\Models\Main;
 
+use App\Models\Authentication\Notification;
 use App\Models\Authentication\User;
 use App\Models\Traits\RaidModel;
 use App\Models\Traits\Utilities;
@@ -47,6 +48,16 @@ class Absensi extends Model
     public function user()
     {
         return $this->belongsTo(User::class, 'pegawai_id');
+    }
+
+    public function notif()
+    {
+        return $this->morphMany(Notification::class, 'target');
+    }
+
+    public function notifMorphClass()
+    {
+        return 'absensi';
     }
 
     public function scopeForGrid($query)
@@ -101,17 +112,63 @@ class Absensi extends Model
             $record = Absensi::where('pegawai_id', auth()->user()->id)
                                 ->where('status', 'hadir')
                                 ->whereDate('date_in', Carbon::now()->format('Y-m-d'))->first();
-            $record->date_out = Carbon::now();
+            if($record == null){
+                return response()->json([
+                    'status'  => 'empty',
+                    'success' => true,
+                    'message' => 'Upps,, Anda belum Absen Masuk'
+                ]);
+            } else{
+                $record->date_out = Carbon::now();
+                $record->save();
+                
+                auth()->user()->storeLog('Absensi', 'Menginput Jam Pulang', $record->id);
+                
+                DB::commit();
+            };
+        } catch (\Exception $e) {
+            DB::rollback();
+
+            return response()->json([
+                'status'  => 'gagal',
+                'success' => false,
+                'message' => $e->getMessage()
+            ], 500);
+        }
+
+        return response()->json([
+            'status'  => 'berhasil',
+            'success' => true,
+            'message' => 'Data berhasil disimpan',
+            'data'    => $record
+        ]);
+    }
+
+
+    public static function pengajuan($request)
+    {
+        DB::beginTransaction();
+        try {
+            $record = new Absensi();
+            $record->fill($request->all());
             $record->save();
 
-            auth()->user()->storeLog('Absensi', 'Menginput Jam Pulang', $record->id);
-            
+            auth()->user()->storeLog('Absensi', 'Membuat Pengajuan '.$record->status , $record->id);
+
+            $notif = new Notification();
+            $notif->type            = auth()->user()->name. ' Membuat Permohonan '. ucfirst($record->status);
+            $notif->notifiable_type = $record->notifMorphClass();
+            $notif->notifiable_id   = $record->id;
+            $notif->user_id         = auth()->user()->id;
+            $notif->save();
+
             DB::commit();
         } catch (\Exception $e) {
             DB::rollback();
 
             return response()->json([
                 'success' => false,
+                // 'message' => 'Gagal Menyimpan data',
                 'message' => $e->getMessage()
             ], 500);
         }

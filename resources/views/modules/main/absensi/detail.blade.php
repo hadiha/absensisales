@@ -1,47 +1,43 @@
 <div class="ui inverted loading dimmer">
 	<div class="ui text loader">Loading</div>
 </div>
-<div class="header">Detail {{ $title or '' }}</div>
+<div class="header">Detail Permohonan</div>
 <div class="content">
- 	<form class="ui data form" id="dataForm" action="{{ url($pageUrl.$record->id) }}" method="POST">
+ 	<form class="ui data form" id="dataForm" action="" method="POST">
 		<table class="ui basic table" style="font-weight: bold">
 			<thead></thead>
 			<tbody>
 				<tr>
-					<td width="35%">Nama Barang</td>
+					<td rowspan="2"><img class="ui top aligned tiny image" src="{{$record->user->showfotopath()}}"></td>
+					<td width="5%">Nama</td>
 					<td>:</td>
-					<td>{{$record->item->name}}</td>
+					<td>{{$record->user->name}}</td>
 				</tr>
 				<tr>
-					<td>Kode Barang</td>
+					<td>Area</td>
 					<td>:</td>
-					<td>{{$record->item->kode}}</td>
+					<td>{{$record->user->area}}</td>
 				</tr>
 				<tr>
-					<td>Tanggal Laporan</td>
+					<td colspan="2">Tanggal</td>
 					<td>:</td>
-					<td>{{$record->item->name}}</td>
+					<td>{{Carbon::parse($record->created_at)->format('d/m/Y')}}</td>
 				</tr>
 				<tr>
-					<td>Stok</td>
+					<td colspan="2">Status </td>
 					<td>:</td>
-					<td>{{$record->stock}}</td>
+					<td>{{$record->status}}</td>
 				</tr>
 				<tr>
-					<td>Sale In</td>
+					<td colspan="2">Keterangan</td>
 					<td>:</td>
-					<td>{{$record->sale_in}}</td>
-				</tr>
-				<tr>
-					<td>Sale Out</td>
-					<td>:</td>
-					<td>{{$record->sale_out}}</td>
+					<td>{{$record->Keterangan ?? '-'}}</td>
 				</tr>
 				
 			</tbody>
 		</table>
 		
-		<div class="sixteen wide field">
+		{{-- <div class="sixteen wide field">
 			<label><b>Reference Files</b></label>
 			@if($record->files->count() > 0)
 				<div class="ui tiny images">
@@ -54,7 +50,7 @@
 					<p>Data Tidak Ditemukan!</p>
 				</div>
 			@endif
-		</div>
+		</div> --}}
 	</form>
 </div>
 <div class="actions">

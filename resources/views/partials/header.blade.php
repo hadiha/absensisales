@@ -20,8 +20,7 @@
                             <div class="ui relaxed divided list" id="area-notif">
                             </div>
                         </div>
-                        {{-- <a href="{{ url('all-notif') }}"> --}}
-                        <a href="#">
+                        <a href="{{ url('absensi/all-notif') }}">
                             <div class="ui bottom attached segment center aligned">
                                 See All
                             </div>

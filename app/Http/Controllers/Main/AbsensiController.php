@@ -5,24 +5,20 @@ namespace App\Http\Controllers\Main;
 /* Base App */
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Main\AbsensiRequest;
-use App\Http\Requests\Main\LaporanRequest;
+use App\Models\Authentication\Notification;
 use App\Models\Authentication\User;
-use App\Models\Kehadiran\Monitoring;
-use App\Models\Main\Absensi;
-use App\Models\Main\DataFile;
-use App\Models\Main\Laporan;
 /* Validation */
-// use App\Http\Requests\Konfigurasi\LaporanRequest;
+// use App\Http\Requests\Konfigurasi\Request;
 
 /* Models */
-use App\Models\Master\Barang;
+use App\Models\Main\Absensi;
 
 /* Libraries */
 use DataTables;
 use Carbon\Carbon;
 use Exception;
 use Hash;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class AbsensiController extends Controller
@@ -256,54 +252,67 @@ class AbsensiController extends Controller
 
     public function storePengajuan(Request $request)
     {
-        DB::beginTransaction();
-        try {
-            $record = new Absensi();
-            $record->fill($request->all());
-            $record->save();
-
-            auth()->user()->storeLog('Absensi', 'Membuat Pengajuan '.$record->status , $record->id);
-            
-            DB::commit();
-        } catch (\Exception $e) {
-            DB::rollback();
-
-            return response()->json([
-                'success' => false,
-                'message' => 'Gagal Menyimpan data',
-                // 'message' => $e->getMessage()
-            ], 500);
-        }
-
-        return response()->json([
-            'success' => true,
-            'message' => 'Data berhasil disimpan',
-            'data'    => $record
-        ]);
+        return Absensi::pengajuan($request);
     }
 
-    public function edit(Laporan $barang)
+    public function edit(Absensi $absensi)
     {
         return $this->render('modules.main.absensi.edit', [
-            'record' => $barang,
+            'record' => $absensi,
             ]);
         }
         
-    public function show(Laporan $barang)
+    public function show(Absensi $absensi)
     {
+        $notif = Notification::where('notifiable_id', $absensi->id)->first();
+        $notif->read_at = Carbon::now();
+        $notif->save();
+
         return $this->render('modules.main.absensi.detail', [
-            'record' => $barang,
+            'record' => $absensi,
         ]);
     }
 
-    public function update(LaporanRequest $request, Laporan $barang)
+    public function update(Request $request, Absensi $absensi)
     {
         
     }
 
-    public function destroy(Laporan $barang)
+    public function destroy(Absensi $absensi)
     {
        
     }
+    
+    public function getNotif()
+    {
+        if(Auth::check()){
+            if(auth()->user()->roles->first()->name !== 'sales'){
+                $notif = Notification::whereNull('read_at')->get();
+            } else {
+                $notif = Notification::whereNotNull('read_at')->get();
+            }
+        };
+
+        return response([
+            'record' => $notif,
+            'lengths' => count($notif),
+        ]);
+    }
+   
+    public function getAllNotif()
+    {
+        if(auth()->user()->roles->first()->name !== 'sales'){
+            $notif = Notification::with('user')->get();
+        } else {
+            $notif = Notification::whereNotNull('read_at')->get();
+        }
+        $this->setTitle("All Notification");
+
+        return $this->render('modules.main.absensi.allnotif', [
+            'record' => $notif,
+        ]);
+    }
+
+
 
 }

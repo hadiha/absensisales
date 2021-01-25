@@ -71,9 +71,8 @@
 
         $('.absen-pulang').on('click', function(e){
             var user_id = '{{auth()->user()->id}}';
-            // var id = $(this).data('id');
             var elem = $(this);
-            // console.log(elem);
+            console.log(user_id);
 
             $.ajax({
                 type: "PUT",
@@ -84,7 +83,8 @@
                     'user_id' : user_id, 
                     },
                 success: function (response) {
-                    if(response.success == true){
+                    console.log(response);
+                    if(response.status == 'berhasil'){
                         swal(
                         'Yeaay!',
                         'Anda telah Absen Pulang hari ini.',
@@ -93,6 +93,14 @@
                             // location.reload();
                             // elem.attr("disabled", true);
                             dt.draw('page');
+                            return true;
+                        })
+                    }else if(response.status == 'empty'){
+                        swal(
+                        'Upps!',
+                        'Anda Belum Absen Masuk Hari ini.',
+                        'error'
+                        ).then((result) => {
                             return true;
                         })
                     }else{

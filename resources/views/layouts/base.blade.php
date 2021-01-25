@@ -193,43 +193,56 @@
         });
 
         function getNotification() {
-        var html = '';
-        $.ajax({
-            url: '{{ url("home/notif") }}',
-            type: 'GET',
-            success: function(resp){
-                if(resp.record.length !== 0){
-                    $.each(resp.record,function(k,v){
-                        const time = moment(v.created_at).fromNow();
-                        var status = v.action.substring(8);
-                        html += `
-                            <div class="item">
-                                <i class="large calendar check middle aligned icon"></i>
-                                <div class="content">
-                                    <a class="header">Terdapat `+ status +` dari `+ v.user.name +`</a>
-                                    <div class="description">
-                                        <i class="clock icon"></i> `+ time +`
+            var html = '';
+            $.ajax({
+                url: '{{ url("absensi/notif") }}',
+                type: 'GET',
+                success: function(resp){
+                    if(resp.record.length !== 0){
+                        $.each(resp.record,function(k,v){
+                            var url = '{{url('')}}'+'/'+v.notifiable_type+'/'+v.notifiable_id;
+                            const time = moment(v.created_at).fromNow();
+                            html += `
+                                <div class="item">
+                                    <i class="large calendar check middle aligned icon"></i>
+                                    <div class="content detail-notif" data-href="`+url+`">
+                                        <a class="header">`+ v.type +`</a>
+                                        <div class="description">
+                                            <i class="clock icon"></i> `+ time +`
+                                        </div>
                                     </div>
-                                </div>
-                            </div>`;
-                    });
-                }else{
-                    html += `<div class="item">
-                                <i class="bell icon"></i>
-                                <div class="content">
-                                    <u>Belum Ada Notif</u>
-                                </div>
-                            </div>`;
-                }
-                $('#count-notif').html(resp.lengths);
-                $('#area-notif').html(html);
-                $('.ui.dropdown.teals').dropdown();
-                $('.ui.accordion').accordion();
-            }, error : function(resp){
+                                </div>`;
+                        });
+                    }else{
+                        html += `<div class="item">
+                                    <i class="bell icon"></i>
+                                    <div class="content">
+                                        <u>Belum Ada Notif</u>
+                                    </div>
+                                </div>`;
+                    }
+                    $('#count-notif').html(resp.lengths);
+                    $('#area-notif').html(html);
+                    $('.ui.dropdown.teals').dropdown();
+                    $('.ui.accordion').accordion();
+                }, error : function(resp){
 
-            }
+                }
+            });
+        }
+
+        $(document).on('click','.detail-notif', function(e){
+            var url = $(this).data('href');
+
+            loadModal({
+                'url' : url,
+                'modal' : '.{{ $modalSize }}.modal',
+                'formId' : '#dataForm',
+                'onShow' : function(){ 
+                    // onShow();
+                },
+            })
         });
-    }
 
 
     </script>

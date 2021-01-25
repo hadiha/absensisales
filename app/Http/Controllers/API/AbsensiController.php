@@ -7,8 +7,10 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use App\Http\Controllers\ApiController;
 use App\Http\Requests\Main\AbsensiRequest;
+use App\Models\Authentication\Notification;
 use App\Models\Main\Absensi;
 use App\Transformers\MainResource;
+use Illuminate\Support\Facades\DB;
 
 class AbsensiController extends ApiController
 {
@@ -35,6 +37,11 @@ class AbsensiController extends ApiController
     public function out(Request $request)
     {
         return Absensi::createOut($request);
+    }
+
+    public function storePengajuan(Request $request)
+    {
+        return Absensi::pengajuan($request);
     }
 
     public function show(Absensi $absensi)

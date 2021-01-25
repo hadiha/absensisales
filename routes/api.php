@@ -30,6 +30,7 @@ Route::middleware(['auth:api'])->group(function () {
     Route::post('/logout', 'AuthController@logout');
     
     Route::post('/absensi/out', 'API\AbsensiController@out');
+    Route::post('/absensi/pengajuan', 'API\AbsensiController@storePengajuan');
     Route::resource('/absensi', 'API\AbsensiController')->only(['index', 'show', 'store']);
     Route::resource('/laporan', 'API\LaporanController')->only(['index', 'show', 'store']);
 

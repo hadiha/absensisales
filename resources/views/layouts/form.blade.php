@@ -21,8 +21,8 @@
 @append
 
 @section('js')
-    <script src="{{ asset('plugins/input-mask/jquery.mask.js') }}"></script>
-    <script src="{{ asset('plugins/jquery-numeric/jquery-numeric.min.js') }}"></script>
+    {{-- <script src="{{ asset('plugins/input-mask/jquery.mask.js') }}"></script> --}}
+    {{-- <script src="{{ asset('plugins/jquery-numeric/jquery-numeric.min.js') }}"></script> --}}
 @append
 
 @section('scripts')
