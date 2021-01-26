@@ -79,6 +79,7 @@ class Absensi extends Model
     // untuk API
     public static function createByRequest($request)
     {
+        // return response($request->all(), 422);
         DB::beginTransaction();
         try {
             $cek = Absensi::whereDate('date_in', Carbon::now()->format('Y-m-d'))->where('status', 'hadir')->first();
@@ -91,9 +92,12 @@ class Absensi extends Model
                 ]);
             }else{
                 $record = new Absensi();
-                $record->fill($request->except('date_in','pegawai_id'));
                 $record->pegawai_id = auth()->user()->id;
                 $record->date_in = Carbon::now();
+                $record->latitude = $request->latitude;
+                $record->longitude = $request->longitude;
+                $record->status = $request->status;
+                $record->keterangan = $request->keterangan;
                 $record->save();
                 
                 auth()->user()->storeLog('Absensi', 'Menginput Jam Masuk', $record->id);
