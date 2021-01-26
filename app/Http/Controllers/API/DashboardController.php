@@ -7,38 +7,52 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\ApiController;
 use App\Models\Main\Absensi;
 use App\Transformers\MainResource;
+use Carbon\CarbonPeriod;
 
 class DashboardController extends ApiController
 {
-    public function index()
+    public function index(Request $request)
     {
-        $records = Absensi::forGrid()
-                        ->paginate(request()->per_page ?: 10)->appends(request()->query());
+        $set = Carbon::createFromFormat('Y',$request->year);
+        // $set = Carbon::now()->format('Y');
+        $startMonth = $set->copy()->startOfYear();
+        $lastMonth = $set->copy()->endOfYear();
+        
+        foreach (CarbonPeriod::create($startMonth, '1 month',$lastMonth) as $key => $value) {
+            $period[$key] = $value->format('Y');
+            $chart['hadir'][$key] = Absensi::getDash('hadir', $value);
+            $chart['izin'][$key] = Absensi::getDash('izin', $value);
+            $chart['sakit'][$key] = Absensi::getDash('sakit', $value);
+            $chart['cuti'][$key] = Absensi::getDash('cuti', $value);
+        }
+        // $chart['periode'] = '2021';
+        $chart['periode'] = $request->year;
 
-        $this->loadIfExists($records);
+        $this->loadIfExists($chart);
 
-        return MainResource::collection($records);
+        return response([
+            'status' => true,
+            'chart' => $chart,
+        ]);
     }
 
     public function create()
     {
-        return view('main::monitoring.create');
+        // return view('main::monitoring.create');
     }
 
     public function store(Request $request)
     {
-        return Absensi::createByRequest($request);
+
     }
 
     public function show(Absensi $absensi)
     {
-        $this->loadIfExists($absensi);
-        return new MainResource($absensi);
+
     }
 
     public function edit($id)
     {
-        return view('main::monitoring.create');
     }
 
     public function update(Request $request, Absensi $absensi)

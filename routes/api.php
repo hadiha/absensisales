@@ -29,6 +29,8 @@ Route::middleware(['auth:api'])->group(function () {
     Route::get('refresh-token', 'AuthController@refresh');
     Route::post('/logout', 'AuthController@logout');
     
+    Route::post('/home', 'API\DashboardController@index');
+
     Route::post('/absensi/out', 'API\AbsensiController@out');
     Route::post('/absensi/pengajuan', 'API\AbsensiController@storePengajuan');
     Route::resource('/absensi', 'API\AbsensiController')->only(['index', 'show', 'store']);
