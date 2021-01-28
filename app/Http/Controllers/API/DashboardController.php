@@ -5,6 +5,7 @@ namespace App\Http\Controllers\API;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Http\Controllers\ApiController;
+use App\Models\Authentication\User;
 use App\Models\Main\Absensi;
 use App\Transformers\MainResource;
 use Carbon\CarbonPeriod;
@@ -28,9 +29,24 @@ class DashboardController extends ApiController
         // $chart['periode'] = '2021';
         $chart['periode'] = $request->year;
 
+        $tops = User::withCount(['absensi' => function($q){
+            $q->where('status', 'hadir');        
+        }])
+        ->orderBy('absensi_count', 'desc')
+        ->take(5)->get();
+        
+        $worsts = User::withCount(['absensi' => function($q){
+            $q->where('status', 'hadir');        
+        }])
+        ->orderBy('absensi_count', 'asc')
+        ->take(5)->get();
+    
+
         $this->loadIfExists($chart);
 
         return response([
+            'top'   => $tops,
+            'worst'   => $worsts,
             'status' => true,
             'chart' => $chart,
         ]);
