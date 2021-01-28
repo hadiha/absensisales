@@ -289,12 +289,12 @@ class AbsensiController extends Controller
             if(auth()->user()->roles->first()->name !== 'sales'){
                 $notif = Notification::whereNull('read_at')->orderBy('created_at', 'desc')->get();
             } else {
-                $notif = Notification::whereNotNull('read_at')->orderBy('created_at', 'desc')->paginate(2);
+                $notif = Notification::whereNotNull('read_at')->orderBy('created_at', 'desc')->get();
             }
         };
 
         return response([
-            'record' => $notif,
+            'record' => $notif->take(10),
             'lengths' => count($notif),
         ]);
     }
@@ -302,9 +302,9 @@ class AbsensiController extends Controller
     public function getAllNotif()
     {
         if(auth()->user()->roles->first()->name !== 'sales'){
-            $notif = Notification::with('user')->orderBy('created_at', 'desc')->paginate(2);
+            $notif = Notification::with('user')->orderBy('created_at', 'desc')->paginate(10);
         } else {
-            $notif = Notification::whereNotNull('read_at')->orderBy('created_at', 'desc')->paginate(2);
+            $notif = Notification::whereNotNull('read_at')->orderBy('created_at', 'desc')->paginate(10);
         }
         $this->setTitle("All Notification");
 

@@ -26,17 +26,21 @@
 	{{-- <h1 class="ui center aligned header" style="line-height: 500px">
 		U N D E R &nbsp; &nbsp; C O N S T R U C T I O N
     </h1> --}}
-    <div class="ui relaxed divided list">
-		@foreach ($record as $item)
-			<div class="item">
-				<img class="ui avatar image" src="{{ asset($item->user->showfotopath()) }}">
-				<div class="content  detail-notif" data-href="{{url('') .'/'.$item->notifiable_type.'/'.$item->notifiable_id}}">
-					<a href="#" @if($item->read_at == null) class="header" @else style="color: black" @endif>{{$item->type}}</a>
-					<div class="description">{{Carbon::parse($item->created_at)->diffForHumans()}}</div>
+	@if($record->isEmpty())
+		<div class="ui teal message">Data Tidak Ditemukan</div>
+	@else
+    	<div class="ui relaxed divided list">
+			@foreach ($record as $item)
+				<div class="item">
+					<img class="ui avatar image" src="{{ asset($item->user->showfotopath()) }}">
+					<div class="content  detail-notif" data-href="{{url('') .'/'.$item->notifiable_type.'/'.$item->notifiable_id}}">
+						<a href="#" @if($item->read_at == null) class="header" @else style="color: black" @endif>{{$item->type}}</a>
+						<div class="description">{{Carbon::parse($item->created_at)->diffForHumans()}}</div>
+					</div>
 				</div>
-			</div>
-		@endforeach
-	</div>
+			@endforeach
+		</div>
+		@endif
 	<br>
 		{{-- {{($record->links())}} --}}
 	@if (isset($record) && $record->lastPage() > 1)
