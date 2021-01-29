@@ -10,6 +10,7 @@ use App\Http\Requests\Main\AbsensiRequest;
 use App\Models\Authentication\Notification;
 use App\Models\Main\Absensi;
 use App\Transformers\MainResource;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class AbsensiController extends ApiController
@@ -63,6 +64,35 @@ class AbsensiController extends ApiController
     public function destroy(Absensi $absensi)
     {
         // return $absensi->deleteByRequest();
+    }
+
+    public function getNotif()
+    {
+        if(Auth::check()){
+            if(auth()->user()->roles->first()->name !== 'sales'){
+                $notif = Notification::whereNull('read_at')->orderBy('created_at', 'desc')->get();
+            } else {
+                $notif = Notification::whereNotNull('read_at')->orderBy('created_at', 'desc')->get();
+            }
+        };
+
+        return response([
+            'record' => $notif->take(10),
+            'lengths' => count($notif),
+        ]);
+    }
+   
+    public function getAllNotif()
+    {
+        if(auth()->user()->roles->first()->name !== 'sales'){
+            $notif = Notification::with('user')->orderBy('created_at', 'desc')->paginate(10);
+        } else {
+            $notif = Notification::whereNotNull('read_at')->orderBy('created_at', 'desc')->paginate(10);
+        }
+
+        return response([
+            'record' => $notif,
+        ]);
     }
 
 }

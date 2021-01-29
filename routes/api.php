@@ -30,7 +30,9 @@ Route::middleware(['auth:api'])->group(function () {
     Route::post('/logout', 'AuthController@logout');
     
     Route::post('/home', 'API\DashboardController@index');
-
+    
+    Route::get('/absensi/notif', 'API\AbsensiController@getNotif');
+    Route::get('/absensi/all-notif', 'API\AbsensiController@getAllNotif');
     Route::post('/absensi/out', 'API\AbsensiController@out');
     Route::post('/absensi/pengajuan', 'API\AbsensiController@storePengajuan');
     Route::resource('/absensi', 'API\AbsensiController')->only(['index', 'show', 'store']);
