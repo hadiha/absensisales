@@ -31,7 +31,7 @@ class LaporanController extends Controller
         $this->setLink($this->link);
         $this->setPerms($this->perms);
         $this->setTitle("Barang");
-        $this->setModalSize("mini");
+        $this->setModalSize("tiny");
         $this->setBreadcrumb(['Barang' => '#']);
 
         // Header Grid Datatable
