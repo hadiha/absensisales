@@ -35,7 +35,7 @@
             <textarea placeholder="Keterangan" name="keterangan" rows="3"></textarea>
 		</div>
 
-		<div class="sixteen wide field">
+		{{-- <div class="sixteen wide field">
 			<label>Reference Files</label>
 			<div class="ui action input">
 				<input type="text" name="fileupload" placeholder="Search..." readonly>
@@ -44,7 +44,7 @@
 			</div>
 	  	</div>
 		<div class="field showbrowse file">
-		</div>
+		</div> --}}
 		
 </div>
 <div class="actions">
