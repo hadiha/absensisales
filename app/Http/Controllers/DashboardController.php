@@ -26,12 +26,14 @@ class DashboardController extends Controller
     public function index()
     {
         $tops = User::withCount(['absensi' => function($q){
-                    $q->where('status', 'hadir');        
+                    $q->where('status', 'hadir') 
+                    ->whereYear('created_at', Carbon::now()->format('Y'));        
                 }])
                 ->orderBy('absensi_count', 'desc')
                 ->take(5)->get();
         $worsts = User::withCount(['absensi' => function($q){
-                    $q->where('status', 'hadir');        
+                    $q->where('status', 'hadir')
+                    ->whereYear('created_at', Carbon::now()->format('Y'));   
                 }])
                 ->orderBy('absensi_count', 'asc')
                 ->take(5)->get();
