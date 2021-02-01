@@ -42,9 +42,9 @@ class LaporanController extends ApiController
         return view('main::barang.edit');
     }
 
-    public function update(LaporanRequest $request, Laporan $laporan)
+    public function update(Request $request, Laporan $laporan)
     {
-        // return $laporan->updateByRequest($request);
+        return $laporan->updateByRequest($request);
     }
 
     public function destroy(Laporan $laporan)

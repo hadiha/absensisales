@@ -44,19 +44,14 @@ class Laporan extends Model
     
     public function scopeForGrid($query)
     {
-        return $query->when(!request()->has('order'), function ($q) {
+        return $query->withCount('files')->when(!request()->has('order'), function ($q) {
                         return $q->orderBy('created_at', 'desc');
                     })
-                    ->when($kode = request()->kode, function ($q) use ($kode) {
-                        return $q->whereHas('item', function($w) use ($kode){
-                          $w->where('kode', 'like', '%' . $kode . '%');
-                        });
-                    })
-                    ->when($name = request()->name, function ($q) use ($name) {
-                      return $q->whereHas('item', function($w) use ($name){
-                        $w->where('name', 'like', '%' . $name . '%');
-                      });
-                    });
+                    ->when($month = request()->month, function ($q) use ($month) {
+                      return $q->whereMonth('created_at', Carbon::createFromFormat('m', $month)->format('m'))
+                              ->whereYear('created_at', Carbon::createFromFormat('Y', request()->year)->format('Y'));
+                  })
+                  ->where('created_by', auth()->user()->id);
     }
     
     public static function createByRequest($request)
@@ -93,6 +88,56 @@ class Laporan extends Model
             'data'    => $record
         ]);
     }
-	
+  
+    public function updateByRequest($request)
+    {
+      if(isset($request->filespath)){
+        if(count($request->filespath) > 0){
+          foreach ($request->filespath as $key => $value) {
+                  if($request->filename[$key])
+                  {
+                      $saveFile['filename'] = $request->filename[$key];
+                  }
+
+                  $saveFile['fileurl'] = $value;
+                  $saveFile['barang_id'] = $this->id;
+
+                  $recordFile = new DataFile();
+                  if(isset($request->fileid[$key]))
+                  {
+                      $recordFile = DataFile::where('fileurl', $value)->where('barang_id', $this->id)->first();
+                  }
+                  $recordFile->fill($saveFile);
+                  $recordFile->save();
+
+                  $fileid[] = $recordFile->id;
+          }
+
+          $notExist = DataFile::whereNotIn('id', $fileid)->where('barang_id', $this->id)->get();
+
+          if($notExist->count() > 0)
+          {
+                  foreach($notExist as $ne)
+                  {
+                      if(file_exists(storage_path().'/app/public/'.$ne->fileurl))
+                      {
+                              unlink(storage_path().'/app/public/'.$ne->fileurl);
+                      }
+                      $ne->delete();
+                  }
+          }
+        }
+      }
+
+        $this->fill($request->all());
+        $this->save();
+
+        auth()->user()->storeLog('Laporan Barang', 'Mengupdate Laporan Barang', $this->id);
+
+        return response([
+            'status' => true,
+            'record' => $this
+        ]);
+    }
 	
 }

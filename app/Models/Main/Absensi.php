@@ -62,18 +62,14 @@ class Absensi extends Model
 
     public function scopeForGrid($query)
     {
-        $to = request()->to;
         return $query->when(!request()->has('order'), function ($q) {
                         return $q->orderBy('created_at', 'desc');
                     })
-                    ->when($name = request()->name, function ($q) use ($name) {
-                        $q->whereHas('user', function($w) use ($name){
-                            return $w->where('name', 'like', '%' . $name . '%');
-                        });
+                    ->when($month = request()->month, function ($q) use ($month) {
+                        return $q->whereMonth('created_at', Carbon::createFromFormat('m', $month)->format('m'))
+                                ->whereYear('created_at', Carbon::createFromFormat('Y', request()->year)->format('Y'));
                     })
-                    ->when($from = request()->from, function ($q) use ($from, $to) {
-                        return $q->whereBetween('date_in', [$from, $to]);
-                    });
+                    ->where('created_by', auth()->user()->id);
     }
     
     // untuk API
