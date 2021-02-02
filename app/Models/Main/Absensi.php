@@ -78,13 +78,13 @@ class Absensi extends Model
         // return response($request->all(), 422);
         DB::beginTransaction();
         try {
-            $cek = Absensi::whereDate('date_in', Carbon::now()->format('Y-m-d'))->where('status', 'hadir')->first();
+            $cek = Absensi::whereDate('date_in', Carbon::now()->format('Y-m-d'))->orWhere('created_at', Carbon::now()->format('Y-m-d'))->first();
 
             if($cek != null){
                 return response()->json([
                     'status' => 'available',
                     'success' => false,
-                    'message' => 'Anda Sudah Absen Hari ini'
+                    'message' => 'Anda Sudah '.ucfirst($cek->status).' Hari ini'
                 ]);
             }else{
                 $record = new Absensi();
