@@ -66,8 +66,10 @@ class AbsensiController extends ApiController
         return Absensi::pengajuan($request);
     }
 
-    public function show(Absensi $absensi)
+    public function show($id)
     {
+        $absensi = Absensi::find($id);
+
         $this->loadIfExists($absensi);
         return new MainResource($absensi);
     }
