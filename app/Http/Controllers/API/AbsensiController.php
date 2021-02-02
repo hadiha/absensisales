@@ -8,6 +8,7 @@ use Illuminate\Http\Response;
 use App\Http\Controllers\ApiController;
 use App\Http\Requests\Main\AbsensiRequest;
 use App\Models\Authentication\Notification;
+use App\Models\Authentication\User;
 use App\Models\Main\Absensi;
 use App\Transformers\MainResource;
 use Illuminate\Support\Facades\Auth;
@@ -17,12 +18,32 @@ class AbsensiController extends ApiController
 {
     public function index()
     {
-        $records = Absensi::forGrid()
-                        ->paginate(request()->per_page ?: 10)->appends(request()->query());
+        $records = User::withCount([
+            'absensiHadir' => function($q){
+                return $q->whereMonth('created_at', Carbon::createFromFormat('m', request()->month)->format('m'))
+                ->whereYear('created_at', Carbon::createFromFormat('Y', request()->year)->format('Y'));
+            }, 
+            'absensiSakit' => function($q){
+                return $q->whereMonth('created_at', Carbon::createFromFormat('m', request()->month)->format('m'))
+                ->whereYear('created_at', Carbon::createFromFormat('Y', request()->year)->format('Y'));
+            },
+            'absensiIzin' => function($q){
+                return $q->whereMonth('created_at', Carbon::createFromFormat('m', request()->month)->format('m'))
+                ->whereYear('created_at', Carbon::createFromFormat('Y', request()->year)->format('Y'));
+            },
+            ])->find(auth()->id());
 
-        $this->loadIfExists($records);
+            return response()->json([
+                'record'    => $records->append('absensi_alfa_count')
+            ]);
+        // return response($records->append('absensi_alfa_count'));
 
-        return MainResource::collection($records);
+        // $records = Absensi::forGrid()
+        //                 ->paginate(request()->per_page ?: 10)->appends(request()->query());
+
+        // $this->loadIfExists($records);
+
+        // return MainResource::collection($records);
     }
 
     public function create()

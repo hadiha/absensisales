@@ -53,12 +53,26 @@ class User extends Authenticatable implements JWTSubject
         return $this->hasMany(Absensi::class, 'pegawai_id');
     }
 
+    public function absensiSakit()
+    {
+        return $this->hasMany(Absensi::class, 'pegawai_id')->where('status', 'sakit');
+    }
+
+    public function absensiHadir()
+    {
+        return $this->hasMany(Absensi::class, 'pegawai_id')->where('status', 'hadir');
+    }
+
+    public function absensiIzin()
+    {
+        return $this->hasMany(Absensi::class, 'pegawai_id')->where('status', 'izin');
+    }
+
     public function audits()
     {
         return $this->hasMany(AuditTrail::class, 'user_id')
                     ->orderBy('created_at', 'desc');;
     }
-
 
     public function absen()
     {
@@ -104,6 +118,12 @@ class User extends Authenticatable implements JWTSubject
         $dif = $str->diffInDays($now);
 
         return $dif - ($this->hadir() + $this->sakit() + $this->izin() + $this->cuti());
+    }
+
+    public function getAbsensiAlfaCountAttribute()
+    {
+        $date = request()->has('month') && request()->has('year') ? request()->year.'-'.request()->month : Carbon::now()->format('Y-m');
+        return $this->alfa($date);
     }
 
     public function showfotopath()
