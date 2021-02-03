@@ -84,7 +84,7 @@ class Absensi extends Model
                 return response()->json([
                     'status' => 'available',
                     'success' => false,
-                    'message' => 'Anda Sudah '.ucfirst($cek->status).' Hari ini'
+                    'message' => 'Anda Sudah Absen'.ucfirst($cek->status).' Hari ini'
                 ]);
             }else{
                 $record = new Absensi();
