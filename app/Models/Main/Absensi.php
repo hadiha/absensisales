@@ -78,7 +78,7 @@ class Absensi extends Model
         // return response($request->all(), 422);
         DB::beginTransaction();
         try {
-            $cek = Absensi::whereDate('date_in', Carbon::now()->format('Y-m-d'))->orWhere('created_at', Carbon::now()->format('Y-m-d'))->first();
+            $cek = Absensi::whereDate('created_at', Carbon::now()->format('Y-m-d'))->first();
 
             if($cek != null){
                 return response()->json([
@@ -89,7 +89,9 @@ class Absensi extends Model
             }else{
                 $record = new Absensi();
                 $record->pegawai_id = auth()->user()->id;
-                $record->date_in = Carbon::now();
+                if($request->status == 'hadir' ){
+                    $record->date_in = Carbon::now();
+                }
                 $record->latitude = $request->latitude;
                 $record->longitude = $request->longitude;
                 $record->status = $request->status;
