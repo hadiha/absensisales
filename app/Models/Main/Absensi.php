@@ -89,9 +89,7 @@ class Absensi extends Model
             }else{
                 $record = new Absensi();
                 $record->pegawai_id = auth()->user()->id;
-                if($request->status == 'hadir' ){
-                    $record->date_in = Carbon::now();
-                }
+                $record->date_in = Carbon::now();
                 $record->latitude = $request->latitude;
                 $record->longitude = $request->longitude;
                 $record->status = $request->status;
