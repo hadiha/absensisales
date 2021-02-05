@@ -128,10 +128,16 @@ class Absensi extends Model
             if($record == null){
                 return response()->json([
                     'status'  => 'empty',
-                    'success' => true,
+                    'success' => false,
                     'message' => 'Upps,, Anda belum Absen Masuk'
                 ]);
-            } else{
+            }else if($record->date_out != null){
+                return response()->json([
+                    'status'  => 'out',
+                    'success' => false,
+                    'message' => 'Anda Sudah Absen Pulang'
+                ]);
+            }else{
                 $record->date_out = Carbon::now();
                 $record->save();
                 
