@@ -108,11 +108,13 @@ class Laporan extends Model
 
         if(count($request->filespath) > 0){
             foreach ($request->filespath as $k => $value) {
-                $temp = $value->storeAs('fileupload', md5($value->getClientOriginalName().Carbon::now()->format('Ymdhisu')).'.'.$value->getClientOriginalExtension(), 'public');
-                $filetemp = new DataFile();
-                $filetemp->fileurl = $temp;
-                $filetemp->filename = $value->getClientOriginalName();
-                $saveFile[$k] = $filetemp;
+                if($value != null){
+                    $temp = $value->storeAs('fileupload', md5($value->getClientOriginalName().Carbon::now()->format('Ymdhisu')).'.'.$value->getClientOriginalExtension(), 'public');
+                    $filetemp = new DataFile();
+                    $filetemp->fileurl = $temp;
+                    $filetemp->filename = $value->getClientOriginalName();
+                    $saveFile[$k] = $filetemp;
+                }
             }
         }
     }
