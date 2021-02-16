@@ -50,7 +50,7 @@ class User extends Authenticatable implements JWTSubject
     /* Relation */
     public function absensi()
     {
-        return $this->hasMany(Absensi::class, 'pegawai_id');
+        return $this->hasMany(Absensi::class, 'pegawai_id')->orderBy('created_at', 'ASC');
     }
 
     public function absensiSakit()
