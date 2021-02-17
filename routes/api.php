@@ -23,6 +23,7 @@ Route::group(['middleware' => ['auth:api']], function () {
 });
 
 Route::post('/login', 'AuthController@login');
+Route::post('/refresh', 'AuthController@refresh');
 Route::get('/user', 'AuthController@user');
 
 Route::middleware(['auth:api'])->group(function () {
