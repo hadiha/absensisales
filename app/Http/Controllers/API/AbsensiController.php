@@ -31,7 +31,11 @@ class AbsensiController extends ApiController
                 return $q->whereMonth('created_at', Carbon::createFromFormat('m', request()->month)->format('m'))
                 ->whereYear('created_at', Carbon::createFromFormat('Y', request()->year)->format('Y'));
             },
-            ])->find(auth()->id());
+            ])
+            ->with(['absensi' => function($w){
+                return $w->whereMonth('date_in', Carbon::createFromFormat('m', request()->month)->format('m'))
+                        ->whereYear('date_in', Carbon::createFromFormat('Y', request()->year)->format('Y'));
+            }])->find(auth()->id());
 
             return response()->json([
                 'record'    => $records->append('absensi_alfa_count')
