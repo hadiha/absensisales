@@ -143,7 +143,14 @@ class MonitoringController extends Controller
                     })
                     ->with(['absen' => function($q){
                         $q->whereDate('date_in', Carbon::parse(request()->date)->format('Y-m-d'));        
-                    }])->select('*');
+                    }])
+                    ->whereHas('roles', function($r){
+                        $r->where('name', 'sales');
+                    })
+                    ->whereHas('salesarea', function($r){
+                        $r->whereNotNull('area_id');
+                    })
+                    ->select('*');
 
         //Init Sort
         if (!isset(request()->order[0]['column'])) {

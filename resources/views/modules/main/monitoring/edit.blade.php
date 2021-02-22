@@ -32,7 +32,7 @@
 				<option value="izin" @if($record->status == 'izin') selected  @endif>Izin</option>
 				<option value="sakit" @if($record->status == 'sakit') selected  @endif>Sakit</option>
 				<option value="cuti" @if($record->status == 'cuti') selected  @endif>Cuti</option>
-				<option value="tk" @if($record->status == '') selected  @endif>Tanpa Keterangan</option>
+				{{-- <option value="tk" @if($record->status == '') selected  @endif>Tanpa Keterangan</option> --}}
 			</select>
 		</div>
 
@@ -49,7 +49,7 @@
 
         <div class="field">
         	<label>Koordinat</label>
-            <input type="text" placeholder="Koordinat" name="koordinat" value="{{$record->koordinat}}" readonly>
+            <input type="text" placeholder="Koordinat" value="{{$record->koordinat}}" readonly>
 		</div>
 				
 		<div class="field">

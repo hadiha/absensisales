@@ -304,7 +304,7 @@ class LaporanController extends Controller
     public function destroy(Laporan $barang)
     {
         $barang->delete();
-        auth()->user()->storeLog('Laporan Barang', 'Mengupdate Laporan Barang', $this->id);
+        auth()->user()->storeLog('Laporan Barang', 'Menghapus Laporan Barang');
 
         return response([
             'status' => true,

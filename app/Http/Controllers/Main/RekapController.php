@@ -80,13 +80,13 @@ class RekapController extends Controller
                 'searchable' => false,
                 'sortable' => true,
             ],
-            [
-                'data' => 'cuti',
-                'name' => 'cuti',
-                'label' => 'Cuti',
-                'searchable' => false,
-                'sortable' => true,
-            ],
+            // [
+            //     'data' => 'cuti',
+            //     'name' => 'cuti',
+            //     'label' => 'Cuti',
+            //     'searchable' => false,
+            //     'sortable' => true,
+            // ],
             [
                 'data' => 'tk',
                 'name' => 'tk',

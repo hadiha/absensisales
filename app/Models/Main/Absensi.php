@@ -244,7 +244,7 @@ class Absensi extends Model
                 return '<a class="ui small green tag label">Hadir</a>';
                 break;
             case 'izin':
-                return '<a class="ui small teal tag label">Izin</a>';
+                return '<a class="ui small brown tag label">Izin</a>';
                 break;
             case 'sakit':
                 return '<a class="ui small blue tag label">Sakit</a>';
