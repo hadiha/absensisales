@@ -29,7 +29,8 @@ class AuditController extends Controller
                 'orderable' => false,
                 'searchable' => false,
                 'className' => 'text-color',
-                'width' => '20px',
+                'width' => '25px',
+                'className' => 'text-center'
             ],
             /* --------------------------- */
             [
@@ -45,14 +46,14 @@ class AuditController extends Controller
                 'label' => 'Aktivitas',
                 'orderable' => false,
                 'searchable' => false,
-                'className' => 'text-center',
+                // 'className' => 'text-center',
             ],
             [
                 'data' => 'user.name',
                 'name' => 'user.name',
                 'label' => 'User',
                 'sortable' => true,
-                'className' => 'text-color',
+                'className' => 'text-center',
             ],
             [
                 'data' => 'ip',
@@ -60,6 +61,7 @@ class AuditController extends Controller
                 'label' => 'IP Client',
                 'orderable' => false,
                 'searchable' => false,
+                'className' => 'text-center',
             ],
             [
                 'data' => 'browser',
@@ -67,6 +69,7 @@ class AuditController extends Controller
                 'label' => 'Browser',
                 'orderable' => false,
                 'searchable' => false,
+                'className' => 'text-center'
             ],
             [
                 'data' => 'created_at',
@@ -74,6 +77,7 @@ class AuditController extends Controller
                 'label' => 'Tanggal Aktivitas',
                 'orderable' => false,
                 'searchable' => false,
+                'className' => 'text-center'
             ],
             // [
             //     'data' => 'act',

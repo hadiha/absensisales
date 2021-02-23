@@ -15,7 +15,7 @@ class CreateTransBarangTable extends Migration
     {
         Schema::create('trans_barang', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('barang_id')->nullable();
+            $table->integer('barang_id')->unsigned();
             $table->date('tanggal')->nullable();
             $table->integer('stock');
             $table->integer('sale_in');
@@ -24,6 +24,8 @@ class CreateTransBarangTable extends Migration
             $table->integer('created_by')->nullable();
             $table->integer('updated_by')->nullable();
             $table->timestamps();
+
+            $table->foreign('barang_id')->references('id')->on('ref_barang');
         });
     }
 

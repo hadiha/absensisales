@@ -11,7 +11,7 @@ use App\Http\Requests\Konfigurasi\UsersRequest;
 
 /* Models */
 use App\Models\Authentication\User;
-
+use App\Models\Master\SalesArea;
 /* Libraries */
 use DataTables;
 use Entrust;
@@ -176,11 +176,19 @@ class UsersController extends Controller
 
     public function store(UsersRequest $request)
     {
+        // return response($request->all(), 422);
         $record = new User;
         $record->fill($request->all());
         $record->password = bcrypt($request->password);
         $record->last_login = Carbon::now();
         $record->save();
+
+        if($request->roles[0] == '2'){
+            $sales = new SalesArea();
+            $sales->user_id = $record->id;
+            $sales->area_id = $request->area_id;
+            $sales->save();
+        }
 
         $record->roles()->sync($request->roles);
 

@@ -9,9 +9,9 @@
 	{{-- <script src="{{ asset('plugins/summernote/summernote-lite.js') }}"></script> --}}
     <script src="{{ asset('plugins/semanticui-calendar/calendar.min.js') }}"></script>
 @append
-
+{{-- 
 @section('toolbars')
-@endsection
+@endsection --}}
 
 @section('filters')
 	<div class="field">
@@ -83,17 +83,29 @@
 @section('init-modal')
 <script>
 	$(document).ready(function() {
-        $('#date').calendar({
-            type: 'date',
-            // endCalendar: $('#to')
-        });
+        // $('#date').calendar({
+        //     type: 'date',
+        //     // endCalendar: $('#to')
+        // });
         // $('#to').calendar({
         //     type: 'date',
         //     startCalendar: $('#from')
         // });
+
+        $(document).on('change','.chose-user', function (e) { 
+			var area = $('.chose-user option:selected').data('area');
+            $('[name="area"]').val(area);
+            // console.log(area);
+        });
+
 	});
 
     onShow = function(){
+        $('#tangg').calendar({
+            type: 'date',
+            // endCalendar: $('#to')
+        });
+
         $('#in').calendar({
             type: 'time',
             ampm: false

@@ -15,8 +15,8 @@
 		</div>
 		<div class="two fields">
 			<div class="field">
-			  <label>Kode Barang</label>
-			  <input type="text" placeholder="Kode" name="kode">
+			  <label>Tanggal Laporan</label>
+			  <input type="text" placeholder="Tanggal" name="tanggal">
 			</div>
 			<div class="field">
 				<label>Stok</label>

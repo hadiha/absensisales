@@ -46,14 +46,14 @@ class MonitoringController extends Controller
             ],
             /* --------------------------- */
             [
-                'data' => 'user.name',
+                'data' => 'name',
                 'name' => 'pegawai_id',
                 'label' => 'Nama',
                 'searchable' => false,
                 'sortable' => true,
             ],
             [
-                'data' => 'user.area',
+                'data' => 'area',
                 'name' => 'area',
                 'label' => 'Area',
                 'searchable' => false,
@@ -97,7 +97,7 @@ class MonitoringController extends Controller
                 'sortable' => true,
             ],
             [
-                'data' => 'keterangan',
+                'data' => 'absen.keterangan',
                 'name' => 'keterangan',
                 'label' => 'Keterangan',
                 'searchable' => false,
@@ -133,19 +133,23 @@ class MonitoringController extends Controller
 
     public function grid(Request $request)
     {
-        $records = Absensi::when($name = request()->name, function ($q) use ($name) {
-                        $q->whereHas('user', function($w) use ($name){
-                            return $w->where('name', 'like', '%' . $name . '%');
-                        });
+        $records = User::when($name = request()->name, function ($q) use ($name) {
+                        $q->where('name', 'like', '%' . $name . '%');
                     })
                     ->when($area = request()->area, function ($q) use ($area) {
-                        $q->whereHas('user', function($w) use ($area){
-                            $w->whereHas('salesarea', function($z) use ($area){
-                                return $z->where('area_id', $area);
-                            });
+                        $q->whereHas('salesarea', function($w) use ($area){
+                            return $w->where('area_id', $area);
                         });
                     })
-                    ->with('user')
+                    ->with(['absen' => function($q){
+                        $q->whereDate('date_in', Carbon::parse(request()->date)->format('Y-m-d'));        
+                    }])
+                    ->whereHas('roles', function($r){
+                        $r->where('name', 'sales');
+                    })
+                    ->whereHas('salesarea', function($r){
+                        $r->whereNotNull('area_id');
+                    })
                     ->select('*');
 
         //Init Sort
@@ -166,16 +170,16 @@ class MonitoringController extends Controller
                 // return $record->absen ? Carbon::parse($record->absen->date_in)->format('d/m/Y') : '-';
             })
             ->editColumn('time_in', function ($record) {
-                return $record->date_in ? Carbon::parse($record->date_in)->format('H:i') : '-';
+                return $record->absen ? Carbon::parse($record->absen->date_in)->format('H:i') : '-';
             })
             ->editColumn('time_out', function ($record) {
-                return $record->date_out ? Carbon::parse($record->date_out)->format('H:i') : '-';
+                return $record->absen ? ($record->absen->date_out != null ? Carbon::parse($record->absen->date_out)->format('H:i') : '-') : '-';
             })
             ->editColumn('status', function ($record) {
-                return $record->statusLabel();
+                return $record->absen ? $record->absen->statusLabel() : '<a class="ui small teal tag label">Belum Absen</a>' ;
             })
             ->editColumn('koordinat', function ($record) {
-                return $record->latitude ? $record->latitude .' , '.$record->longitude : '-';
+                return $record->absen ? ($record->absen->latitude ? $record->absen->latitude .' , '.$record->absen->longitude : '-') : '-';
             })
             ->addColumn('action', function ($record) use ($link){
                 $btn = '';
@@ -189,13 +193,27 @@ class MonitoringController extends Controller
                 // ]);
 
                 if(auth()->user()->can($this->perms.'-edit')){
-                    $btn .= $this->makeButton([
-                        'type' => 'modal',
-                        'datas' => [
-                            'id' => $record->id
-                        ],
-                        'id'   => $record->id
-                    ]);
+                    if($record->absen == null){
+                        $date = Carbon::parse(request()->date)->format('d/m/Y');
+                        $btn .= $this->makeButton([
+                            'type' => 'modal',
+                            'class'   => 'teal icon custom',
+                            'label'   => '<i class="edit outline icon"></i>',
+                            'tooltip' => 'Tambah',
+                            'id'    => $record->id,
+                            'datas' => [
+                                'url'  => url($link.'add/'.$record->id.'?date='.$date),
+                            ],
+                        ]);
+                    } else {                    
+                        $btn .= $this->makeButton([
+                            'type' => 'modal',
+                            'datas' => [
+                                'id' => $record->absen->id
+                            ],
+                            'id'   => $record->absen->id
+                        ]);
+                    }
                 }
                 // if(auth()->user()->can($this->perms.'-delete')){
                     // Delete
@@ -236,7 +254,6 @@ class MonitoringController extends Controller
 
     public function store(Request $request)
     {
-        // return response($request->all(), 422);
         if($request->status = 'hadir'){
             $request->validate([
                 'time_in' => 'required'
@@ -248,11 +265,11 @@ class MonitoringController extends Controller
         $record = new Absensi();
         $record->fill($request->except(['date_in', 'date_out']));
         if($request->time_in != null){
-            $in = Carbon::createFromFormat('F j, Y G:i', $request->tanggal.' '.$request->time_in);
+            $in = Carbon::createFromFormat('d/m/Y G:i', $request->tanggal.' '.$request->time_in);
             $record->date_in = $in;
         }
         if($request->time_out != null){
-            $out = Carbon::createFromFormat('F j, Y G:i', $request->tanggal.' '.$request->time_out);
+            $out = Carbon::createFromFormat('d/m/Y G:i', $request->tanggal.' '.$request->time_out);
             $record->date_out = $out;
         }
 

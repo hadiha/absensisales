@@ -41,7 +41,12 @@
 @section('init-modal')
 	<script>
 		$(document).ready(function() {
-			
+			$(document).on('change', '.hak-akses', function(){
+				var id = $('.hak-akses option:selected').val();
+				if(id == '2'){
+					$('.chose-area').show();
+				}
+			});
 		});
 	</script>
 @endsection

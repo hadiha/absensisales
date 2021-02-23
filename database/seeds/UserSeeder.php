@@ -10,7 +10,7 @@ class UserSeeder extends Seeder
     public function run()
     {
     	$role_admin = Role::where('name', 'admin')->first();
-	    $role_user  = Role::where('name', 'sales')->first();
+	    $role_sales  = Role::where('name', 'sales')->first();
     	// create user
     	$user = new User();
 		$user->username   = 'admin';
@@ -20,7 +20,16 @@ class UserSeeder extends Seeder
 		$user->last_login = date('Y-m-d H:i:s');
     	$user->save();
     	$user->roles()->attach($role_admin);
-    	$user->roles()->attach($role_user);
+    	// $user->roles()->attach($role_sales);
+
+		$user = new User();
+		$user->username   = 'sales';
+		$user->name   = 'Sales';
+		$user->password   = bcrypt('password');
+		$user->email   = 'sales@gmail.com';
+		$user->last_login = date('Y-m-d H:i:s');
+    	$user->save();
+    	$user->roles()->attach($role_sales);
     }
 }
 

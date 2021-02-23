@@ -13,10 +13,10 @@
 
 @section('filters')
 	<div class="field">
-		<input type="text" name="filter[name]" placeholder="Nama">
+		<input type="text" name="filter[name]" placeholder="User">
 	</div>
 	<div class="field">
-		<input type="text" name="filter[module]" placeholder="Module Name">
+		<input type="text" name="filter[module]" placeholder="Modul">
     </div>
     <div class="field">
         <div class="ui month" id="date">

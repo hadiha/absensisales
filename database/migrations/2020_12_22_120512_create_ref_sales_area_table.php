@@ -15,12 +15,16 @@ class CreateRefSalesAreaTable extends Migration
     {
         Schema::create('ref_sales_area', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('user_id');
-            $table->integer('area_id');
+            $table->integer('user_id')->unsigned();
+            $table->integer('area_id')->unsigned();
             
             $table->integer('created_by')->nullable();
             $table->integer('updated_by')->nullable();
             $table->timestamps();
+
+            $table->foreign('user_id')->references('id')->on('sys_users');
+            $table->foreign('area_id')->references('id')->on('ref_area');
+            
         });
     }
 

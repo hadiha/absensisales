@@ -18,7 +18,7 @@
 		</div>
 		<div class="field">
         	<label>Area</label>
-            <input type="text" placeholder="Area" name="area" value="{{ $record->area ?? '-' }}" readonly>
+            <input type="text" placeholder="Area" name="area" value="{{ $record->user->area ?? '-' }}" readonly>
         </div>
         <div class="field">
         	<label>Tanggal</label>
@@ -31,7 +31,7 @@
 				<option value="hadir" @if($record->status == 'hadir') selected  @endif>Hadir</option>
 				<option value="izin" @if($record->status == 'izin') selected  @endif>Izin</option>
 				<option value="sakit" @if($record->status == 'sakit') selected  @endif>Sakit</option>
-				<option value="cuti" @if($record->status == 'cuti') selected  @endif>Cuti</option>
+				{{-- <option value="cuti" @if($record->status == 'cuti') selected  @endif>Cuti</option> --}}
 				{{-- <option value="tk" @if($record->status == '') selected  @endif>Tanpa Keterangan</option> --}}
 			</select>
 		</div>

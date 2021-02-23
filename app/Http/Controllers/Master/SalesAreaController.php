@@ -42,7 +42,7 @@ class SalesAreaController extends Controller
             ],
             /* --------------------------- */
             [
-                'data' => 'user.username',
+                'data' => 'user.name',
                 'name' => 'user_id',
                 'label' => 'Nama Sales',
                 'searchable' => false,

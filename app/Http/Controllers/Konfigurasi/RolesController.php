@@ -171,6 +171,8 @@ class RolesController extends Controller
         $record->fill($request->all());
         $record->save();
 
+        auth()->user()->storeLog('Hak Akses', 'Membuat Hak Akses '.$record->name, $record->id);
+
         return response([
             'status' => true
         ]);
@@ -200,6 +202,8 @@ class RolesController extends Controller
         $record->fill($request->all());
         $record->save();
 
+        auth()->user()->storeLog('Hak Akses', 'Mengubah Hak Akses '.$record->name, $record->id);
+
         return response([
             'status' => true
         ]);
@@ -219,6 +223,8 @@ class RolesController extends Controller
     {
         $record = Role::find($id);
         $record->delete();
+
+        auth()->user()->storeLog('Hak Akses', 'Menghapus Hak Akses '.$record->name);
 
         return response([
             'status' => true,

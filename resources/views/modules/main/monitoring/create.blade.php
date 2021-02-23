@@ -7,26 +7,39 @@
 		{{-- <div class="ui error message">
 		</div> --}}
 		{!! csrf_field() !!}
-        <div class="field">
-        	<label>Nama Pegawai</label>
-            <input type="text" placeholder="Nama" name="pegawai_id">
+		<div class="field">
+			<label>Nama Pegawai</label>
+			<select name="pegawai_id" class="ui fluid dropdown chose-user">
+				<option value="">Pilih Pegawai</option>
+				@foreach (App\Models\Authentication\User::get() as $item)
+					<option value="{{$item->id}}" data-area="{{$item->area}}">{{$item->name}}</option>					
+				@endforeach
+			</select>
 		</div>
 		<div class="field">
         	<label>Area</label>
-            <input type="text" placeholder="Area" name="area">
+            <input name="area" type="text" placeholder="Area" readonly>
         </div>
-        <div class="field">
+        <div class="field" id="tangg">
         	<label>Tanggal</label>
-            <input type="text" placeholder="Tanggal" name="tanggal">
+            <input type="text" placeholder="Tanggal" name="tanggal" value="{{ Carbon::now()->format('d/m/Y') }}">
 		</div>
-		
-
+		<div class="field">
+        	<label>Status</label>
+            <select name="status" class="ui search dropdown">
+				<option value="">Pilih Salah Satu</option>
+				<option value="hadir">Hadir</option>
+				<option value="izin">Izin</option>
+				<option value="sakit">Sakit</option>
+				{{-- <option value="cuti">Cuti</option> --}}
+			</select>
+		</div>	
 		<div class="two fields">
-			<div class="field">
+			<div class="field" id="in">
 			  <label>Jam Masuk</label>
 			  <input type="text" placeholder="Jam Masuk" name="time_in">
 			</div>
-			<div class="field">
+			<div class="field" id="out">
 			  <label>Jam Pulang</label>
 			  <input type="text" placeholder="Jam Masuk" name="time_out">
 			</div>
@@ -34,7 +47,7 @@
 
         <div class="field">
         	<label>Koordinat</label>
-            <input type="text" placeholder="Koordinat" name="koordinat">
+            <input type="text" placeholder="Koordinat" name="latitude">
 		</div>
 		
         <div class="field">

@@ -37,9 +37,18 @@
         </div>
         <div class="field">
         	<label>Hak Akses</label>
-			<select name="roles[]" class="ui fluid dropdown">
+			<select name="roles[]" class="ui fluid dropdown hak-akses">
 				{!! App\Models\Authentication\Role::options('display_name', 'id', [], 'Pilih Hak Akses') !!}
 			</select>
+        </div>
+        <div class="field chose-area" style="display: none">
+        	<label>Area</label>
+            <div class="ui left icon input">
+                <i class="lock icon"></i>
+                <select name="area_id" class="ui fluid dropdown">
+                    {!! App\Models\Master\Area::options('name', 'id', [], 'Pilih Area') !!}
+                </select>
+            </div>
         </div>
         <div class="field">
         	<label>Password</label>

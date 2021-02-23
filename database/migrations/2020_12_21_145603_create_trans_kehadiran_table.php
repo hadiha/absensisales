@@ -15,7 +15,7 @@ class CreateTransKehadiranTable extends Migration
     {
         Schema::create('trans_kehadiran', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('pegawai_id')->nullable();
+            $table->integer('pegawai_id')->unsigned();
             $table->dateTime('date_in')->nullable();
             $table->dateTime('date_out')->nullable();
             $table->string('status')->nullable()->comment('hadir, izin, sakit, tk, cuti');
@@ -26,6 +26,8 @@ class CreateTransKehadiranTable extends Migration
             $table->integer('created_by')->nullable();
             $table->integer('updated_by')->nullable();
             $table->timestamps();
+
+            $table->foreign('pegawai_id')->references('id')->on('sys_users');
         });
     }
 

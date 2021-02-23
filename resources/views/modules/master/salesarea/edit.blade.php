@@ -49,7 +49,7 @@
         	<label>Koordinator</label>
             <select name="koordinator_id" class="ui search dropdown">
 				@foreach ($user as $val)
-					<option value="{{ $val->id }}" {{ $val->id==$record->area_id?'selected':'' }}>{{ $val->name }}</option>
+					<option value="{{ $val->id }}" @if($val->id==$record->koordinator_id) selected @endif>{{ $val->name }}</option>
 				@endforeach
 			</select>
         </div>

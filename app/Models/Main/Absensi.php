@@ -241,7 +241,7 @@ class Absensi extends Model
     {
         switch ($this->status) {
             case 'hadir':
-                return '<a class="ui small green tag label">Hadir</a>';
+                return '<a class="ui small green tag label">Masuk</a>';
                 break;
             case 'izin':
                 return '<a class="ui small brown tag label">Izin</a>';

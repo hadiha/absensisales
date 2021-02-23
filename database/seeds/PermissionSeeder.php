@@ -70,7 +70,7 @@ class PermissionSeeder extends Seeder
 			[
 				'name'         => 'main-rekap',
 				'display_name' => 'Rekap',
-				'action'       => ['view', 'add', 'edit', 'delete'],
+				'action'       => ['view'],
 			],
 			[
 				'name'         => 'main-barang',
@@ -92,7 +92,19 @@ class PermissionSeeder extends Seeder
     	];
 
     	foreach ($permissions as $row) {
-    		foreach ($row['action'] as $key => $val) {
+			if($row['name'] != 'audits' && $row['name'] != 'konfigurasi-users' && $row['name'] != 'konfigurasi-roles' && $row['name'] != 'main-absensi'){
+				foreach ($row['action'] as $key => $val) {
+					$tempt = [
+						'name'         => $row['name'].'-'.$val,
+						'display_name' => $row['display_name'].' '.ucfirst($val)
+					];	
+					$permss = Permission::firstOrCreate($tempt);
+					
+					$role_user->attachPermission($permss);
+				}
+			}
+    		
+			foreach ($row['action'] as $key => $val) {
     			$temp = [
 					'name'         => $row['name'].'-'.$val,
 					'display_name' => $row['display_name'].' '.ucfirst($val)
@@ -100,8 +112,8 @@ class PermissionSeeder extends Seeder
     			$perms = Permission::firstOrCreate($temp);
 
     			$role_admin->attachPermission($perms);
-    			$role_user->attachPermission($perms);
     		}
+
     	}
     }
 }
