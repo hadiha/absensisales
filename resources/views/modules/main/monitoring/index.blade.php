@@ -83,10 +83,10 @@
 @section('init-modal')
 <script>
 	$(document).ready(function() {
-        // $('#date').calendar({
-        //     type: 'date',
-        //     // endCalendar: $('#to')
-        // });
+        $('#date').calendar({
+            type: 'date',
+            // endCalendar: $('#to')
+        });
         // $('#to').calendar({
         //     type: 'date',
         //     startCalendar: $('#from')

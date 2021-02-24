@@ -94,8 +94,13 @@ class Absensi extends Model
                 $record->longitude = $request->longitude;
                 $record->status = $request->status;
                 $record->keterangan = $request->keterangan;
+
+                if(isset($request->foto)){
+                    $temp = $request->foto->storeAs('foto', md5($request->foto->getClientOriginalName().Carbon::now()->format('Ymdhisu')).'.'.$request->foto->getClientOriginalExtension(), 'public');
+                    $record->fileurl_in = $temp;
+                }
                 $record->save();
-                
+
                 auth()->user()->storeLog('Absensi', 'Menginput Jam Masuk', $record->id);
                 
                 DB::commit();
@@ -138,6 +143,10 @@ class Absensi extends Model
                     'message' => 'Anda Sudah Absen Pulang'
                 ]);
             }else{
+                if(isset($request->foto)){
+                    $temp = $request->foto->storeAs('foto', md5($request->foto->getClientOriginalName().Carbon::now()->format('Ymdhisu')).'.'.$request->foto->getClientOriginalExtension(), 'public');
+                    $record->fileurl_out = $temp;
+                }
                 $record->date_out = Carbon::now();
                 $record->save();
                 

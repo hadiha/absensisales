@@ -145,6 +145,8 @@ class MonitoringController extends Controller
                             });
                         });
                     })
+                    ->whereDate('date_in', Carbon::parse(request()->date)->format('Y-m-d'))
+                    // ->orWhereDate('created_at', Carbon::parse(request()->date)->format('Y-m-d'))     
                     ->with('user')
                     ->select('*');
 
@@ -180,13 +182,17 @@ class MonitoringController extends Controller
             ->addColumn('action', function ($record) use ($link){
                 $btn = '';
                 
-                // $btn .= $this->makeButton([
-                //     'type' => 'url',
-                //     'class'   => 'teal icon detail',
-                //     'label'   => '<i class="file text icon"></i>',
-                //     'tooltip' => 'Detail',
-                //     'url'  => url($link.$record->id)
-                // ]);
+                $btn .= $this->makeButton([
+                    'type' => 'modal',
+                    'class'   => 'teal icon custom',
+                    'label'   => '<i class="file text icon"></i>',
+                    'tooltip' => 'Detail',
+                    'datas' => [
+                        'url'  => url($link.$record->id),
+                        'modalSize' => 'small'
+                    ],
+                    // 'url'  => url($link.$record->id)
+                ]);
 
                 if(auth()->user()->can($this->perms.'-edit')){
                     $btn .= $this->makeButton([
@@ -274,9 +280,11 @@ class MonitoringController extends Controller
         ]);
     }
 
-    public function show($id)
+    public function show(Absensi $monitoring)
     {
-    //   
+        return $this->render('modules.main.monitoring.detail', [
+            'record' => $monitoring,
+        ]);
     }
 
     public function update(AbsensiRequest $request, Absensi $monitoring)
