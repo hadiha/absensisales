@@ -30,11 +30,11 @@ class PermissionSeeder extends Seeder
 				'action'       => ['view'],
     		],
     		// ------------- MASTER ---------------
-    		// [
-			// 	'name'         => 'master-pegawai',
-			// 	'display_name' => 'Pegawai',
-			// 	'action'       => ['view', 'add', 'edit', 'delete'],
-			// ],
+    		[
+				'name'         => 'master-client',
+				'display_name' => 'Data Klien',
+				'action'       => ['view', 'add', 'edit', 'delete'],
+			],
 			[
 				'name'         => 'master-area',
 				'display_name' => 'Data Area',
@@ -76,6 +76,12 @@ class PermissionSeeder extends Seeder
 				'name'         => 'main-barang',
 				'display_name' => 'Laporan Barang',
 				'action'       => ['view', 'add', 'edit', 'delete'],
+    		],
+			[
+				'name'         => 'main-documentasi',
+				'display_name' => 'Dokumentasi',
+				'action'       => ['view'],
+				// 'action'       => ['view', 'add', 'edit', 'delete'],
     		],
 			
     		// ------------- Konfigurasi ---------------

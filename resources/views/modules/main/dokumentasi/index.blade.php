@@ -15,38 +15,27 @@
 
 @section('filters')
 	<div class="field">
-        <select name="filter[pegawai_id]" class="ui search dropdown">
-            {!! \App\Models\Authentication\User::options('username','id',[],'Pilih Pegawai') !!}
+        <select name="filter[area_id]" class="ui search dropdown">
+            {!! \App\Models\Master\Area::options('name','id',[],'Pilih Area') !!}
         </select>
 		{{-- <input type="text" name="filter[name]" placeholder="Nama"> --}}
     </div>
-    <div class="field">
-        <select name="filter[barang_id]" class="ui search dropdown">
-            {!! \App\Models\Master\Barang::options('name','id',[],'Pilih Barang') !!}
-        </select>
-		{{-- <input type="text" name="filter[name]" placeholder="Nama"> --}}
-	</div>
-	{{-- <div class="field">
-        <select name="filter[area_id]" class="ui search dropdown">
-            {!! \App\Models\Master\Area::options('name','id',[],'Pilih Area') !!}
-        </select>       
-    </div> --}}
     <div class="field">
         <div class="ui month" id="from">
             <div class="ui input left icon">
                 <i class="calendar icon"></i>
-                <input type="text" name="filter[from]"  placeholder="Dari" value="">
+                <input type="text" name="filter[date]"  placeholder="Tanggal" value="">
             </div>
         </div>
     </div>
-    <div class="field">
+    {{-- <div class="field">
         <div class="ui month" id="to">
             <div class="ui input left icon">
                 <i class="calendar icon"></i>
                 <input type="text" name="filter[to]"  placeholder="Sampai" value="">
             </div>
         </div>
-    </div>
+    </div> --}}
 
 	<button type="button" class="ui teal icon filter button" data-content="Cari Data">
 		<i class="search icon"></i>
@@ -54,16 +43,11 @@
 	<button type="reset" class="ui icon reset button" data-content="Bersihkan Pencarian">
 		<i class="refresh icon"></i>
 	</button>
-    <button type="button" class="ui icon green export button" data-content="Download">
-		<i class="print icon"></i>
-	</button>
 @endsection
 
 @section('js-filters')
-    d.name = $("select[name='filter[pegawai_id]']").val();
-    d.barang = $("select[name='filter[barang_id]']").val();
-	d.from = $("input[name='filter[from]']").val();
-	d.to = $("input[name='filter[to]']").val();
+    d.area = $("select[name='filter[area_id]']").val();
+	d.date = $("input[name='filter[date]']").val();
 @endsection
 
 @section('rules')
@@ -73,22 +57,6 @@
 			email: 'empty',
 			roles: 'empty',
 		};
-        $(document).on('click', '.export.button', function(event) {
-            event.preventDefault();
-            var name = $("select[name='filter[pegawai_id]']").val();
-            var barang = $("select[name='filter[barang_id]']").val();
-            var from = $("input[name='filter[from]']").val();
-            var to = $("input[name='filter[to]']").val();
-
-            postNewTab('{{ url('barang/laporan/export') }}', {
-                '_token'    : '{{ csrf_token() }}',
-                'name' : name,
-                'barang' : barang,
-                'from' : from,
-                'to' : to,
-            })
-           
-        });
 	</script>
 @endsection
 
@@ -97,12 +65,12 @@
 	$(document).ready(function() {
         $('#from').calendar({
             type: 'date',
-            endCalendar: $('#to')
+            // endCalendar: $('#to')
         });
-        $('#to').calendar({
-            type: 'date',
-            startCalendar: $('#from')
-        });
+        // $('#to').calendar({
+        //     type: 'date',
+        //     startCalendar: $('#from')
+        // });
 
 	});
 

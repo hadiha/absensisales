@@ -19,7 +19,7 @@ class LaporanRequest extends Request
             'stock' => 'required',
             'sale_in' => 'required',
             'sale_out' => 'required',
-            'filespath' => 'required',
+            // 'filespath' => 'required',
         ];
 
         return $rules;
@@ -35,7 +35,7 @@ class LaporanRequest extends Request
         $attributes['stock']        = 'Stok';
         $attributes['sale_in']      = 'Sale In';
         $attributes['sale_out']     = 'Sale Out';
-        $attributes['filespath']    = 'Foto';
+        // $attributes['filespath']    = 'Foto';
         return $attributes;
     }
 

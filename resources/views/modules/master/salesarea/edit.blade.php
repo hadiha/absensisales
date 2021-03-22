@@ -9,6 +9,7 @@
 		{!! csrf_field() !!}
 		<input type="hidden" name="_method" value="PUT">
 		<input type="hidden" name="id" value="{{ $record->id }}">
+		<input type="hidden" name="client_id" value="{{$record->client_id}}">
         <div class="field">
         	<label>Nama Sales</label>
             <select name="user_id" class="ui search dropdown" disabled>

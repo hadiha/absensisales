@@ -14,7 +14,7 @@ class Barang extends Model
 
     protected $table = 'ref_barang';
     protected $fillable = [
-      'kode', 'name', 'jumlah'
+      'client_id', 'kode', 'name', 'jumlah'
     ];
 
     public function laporan()

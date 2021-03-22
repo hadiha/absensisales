@@ -35,6 +35,16 @@
                 <input type="text" placeholder="Phone" name="phone" value="{{ old('phone') }}">
             </div>
         </div>
+        @if (auth()->user()->client_id == null)
+            <div class="field">
+                <label>Klien</label>
+                <select name="client_id" class="ui fluid dropdown hak-akses">
+                    {!! App\Models\Master\Client::options('name', 'id', [], 'Pilih Klien') !!}
+                </select>
+            </div>
+        @else
+            <input type="hidden" name="client_id" value="{{auth()->user()->client_id}}">    
+        @endif
         <div class="field">
         	<label>Hak Akses</label>
 			<select name="roles[]" class="ui fluid dropdown hak-akses">

@@ -1,6 +1,6 @@
 <html>
 <head>
-    <title>Monitoring</title>
+    <title>Laporan</title>
 <style>
         @page {
             /* margin: 60px 25px; */
@@ -197,34 +197,34 @@
 </style>
 </head>
 <body>
-    <h4 style="text-align: center">Monitoring Kehadiran</h4>
-    <h5 style="text-align: center; margin-top:-15px">Pertanggal {{$tanggal}}</h5>
+    <h4 style="text-align: center">Laporan Barang</h4>
+    {{-- <h5 style="text-align: center; margin-top:-15px">Pertanggal {{$tanggal}}</h5> --}}
     <table class="ui table bordered" style="font-size: 10px">
        <thead>
          <tr style="font-weight: bold">
            <td>No</td>
-           <td>Nama</td>
-           <td>Area</td>
-           <td>Tanggal</td>
-           <td>Jam Masuk</td>
-           <td>Jam Keluar</td>
-           <td>Koordinat</td>
-           <td>Status</td>
-           <td>Keterangan</td>
+           <td>Nama Barang</td>
+           <td>Kode Barang</td>
+           <td>Tanggal Laporan</td>
+           <td>Stok</td>
+           <td>Sale In</td>
+           <td>Sale Out</td>
+           <td>Dibuat pada</td>
+           <td>Dibuat oleh</td>
          </tr>
        </thead>
        <tbody>
-         @foreach ($record as $item)
+         @foreach ($record as $data)
           <tr>
             <td>{{$loop->iteration}}.</td>
-            <td>{{$item->user->name}}</td>
-            <td>{{$item->user->area}}</td>
-            <td>{{$tanggal}}</td>
-            <td>{{$item->date_in != null ? Carbon::parse($item->date_in)->format('H:i') : '-' }}</td>
-            <td>{{$item->date_out != null ? Carbon::parse($item->date_out)->format('H:i') : '-' }}</td>
-            <td>{{$item->latitude ? $item->latitude .' , '.$item->longitude : '-'}}</td>
-            <td>{{ucfirst($item->status ?? '-')}}</td>
-            <td>{{ucfirst($item->keterangan ?? '-')}}</td>
+            <td>{{$data->item->name}}</td>
+            <td>{{$data->item->kode}}</td>
+            <td>{{Carbon::parse($data->tanggal)->format('d/m/Y')}}</td>
+            <td>{{$data->stock}}</td>
+            <td>{{$data->sale_in}}</td>
+            <td>{{$data->sale_out}}</td>
+            <td>{{Carbon::parse($data->created_at)->format('d/m/Y')}}</td>
+            <td>{{$data->creator->name}}</td>
           </tr>
          @endforeach
        </tbody>

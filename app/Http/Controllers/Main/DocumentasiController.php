@@ -5,12 +5,11 @@ namespace App\Http\Controllers\Main;
 /* Base App */
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Main\LaporanRequest;
-use App\Models\Kehadiran\Monitoring;
-use App\Models\Main\DataFile;
-use App\Models\Main\Laporan;
+use App\Http\Requests\Main\DocRequest;
+use App\Models\Main\DocFile;
+use App\Models\Main\Documentasi;
 /* Validation */
-// use App\Http\Requests\Konfigurasi\LaporanRequest;
+// use App\Http\Requests\Konfigurasi\DocRequest;
 
 /* Models */
 use App\Models\Master\Barang;
@@ -20,20 +19,19 @@ use DataTables;
 use Carbon\Carbon;
 use Exception;
 use Hash;
-use PDF;
 
-class LaporanController extends Controller
+class DocumentasiController extends Controller
 {
-    protected $link = 'barang/';
-    protected $perms = 'main-barang';
+    protected $link = 'documentasi/';
+    protected $perms = 'main-documentasi';
 
     function __construct()
     {
         $this->setLink($this->link);
         $this->setPerms($this->perms);
-        $this->setTitle("Barang");
+        $this->setTitle("Dokumentasi");
         $this->setModalSize("tiny");
-        $this->setBreadcrumb(['Barang' => '#']);
+        $this->setBreadcrumb(['Dokumentasi' => '#']);
 
         // Header Grid Datatable
         $this->setTableStruct([
@@ -48,56 +46,33 @@ class LaporanController extends Controller
             ],
             /* --------------------------- */
             [
-                'data' => 'barang_id',
-                'name' => 'barang_id',
-                'label' => 'Nama Barang',
+                'data' => 'area_id',
+                'name' => 'area_id',
+                'label' => 'Area',
                 'searchable' => false,
                 'sortable' => true,
             ],
             [
-                'data' => 'kode',
-                'name' => 'kode',
-                'label' => 'Kode Barang',
+                'data' => 'date',
+                'name' => 'date',
+                'label' => 'Tanggal',
                 'searchable' => false,
                 'sortable' => true,
             ],
             [
-                'data' => 'tanggal',
-                'name' => 'tanggal',
-                'label' => 'Tanggal Laporan',
+                'data' => 'keterangan',
+                'name' => 'keterangan',
+                'label' => 'Keterangan',
                 'searchable' => false,
                 'sortable' => true,
             ],
             [
-                'data' => 'stock',
-                'name' => 'stock',
-                'label' => 'Stock',
+                'data' => 'foto',
+                'name' => 'foto',
+                'label' => 'Foto',
                 'searchable' => false,
                 'sortable' => true,
             ],
-            [
-                'data' => 'sale_in',
-                'name' => 'sale_in',
-                'label' => 'Sale In',
-                'searchable' => false,
-                'className' => 'text-center',
-                'sortable' => true,
-            ],
-            [
-                'data' => 'sale_out',
-                'name' => 'sale_out',
-                'label' => 'Sale Out',
-                'searchable' => false,
-                'className' => 'text-center',
-                'sortable' => true,
-            ],
-            // [
-            //     'data' => 'foto',
-            //     'name' => 'foto',
-            //     'label' => 'Foto',
-            //     'searchable' => false,
-            //     'sortable' => true,
-            // ],
             [
                 'data' => 'created_at',
                 'name' => 'created_at',
@@ -128,21 +103,17 @@ class LaporanController extends Controller
 
     public function grid(Request $request)
     {
-        $records = Laporan::when($name = request()->name, function ($q) use ($name) {
-                        return $q->where('created_by', $name);
+        $records = Documentasi::when($date = request()->date, function ($q) use ($date) {
+                        return $q->where('date', $date);
                     })
-                    ->when($barang = request()->barang, function ($q) use ($barang) {
-                        return $q->where('barang_id', $barang);
-                    })
-                    ->when($from = request()->from, function ($q) use ($from) {
-                        return $q->whereBetween('tanggal',[Carbon::parse($from)->format('Y-m-d'), Carbon::parse(request()->to)->format('Y-m-d') ]);
+                    ->when($area = request()->area, function ($q) use ($area) {
+                        $q->whereHas('area', function($w) use ($area){
+                                return $w->where('id', $area);
+                        });
                     })
                     ->select('*');
-                    
         if(auth()->user()->client_id != null){
-            $records->whereHas('item', function($e){
-                return $e->where('client_id', auth()->user()->client_id);
-            });
+                return $records->where('client_id', auth()->user()->client_id);
         }
         
         //Init Sort
@@ -155,24 +126,15 @@ class LaporanController extends Controller
             ->addColumn('num', function ($record) use ($request) {
                 return $request->get('start');
             })
-            ->editColumn('barang_id', function ($record) {
-                return $record->item->name;
+            ->editColumn('area_id', function ($record) {
+                return $record->area->name;
             })
-            ->editColumn('kode', function ($record) {
-                return $record->item->kode;
+            ->editColumn('date', function ($record) {
+                return Carbon::parse($record->date)->format('d/m/Y');
             })
-            ->editColumn('sale_in', function ($record) {
-                return $record->sale_in;
+            ->editColumn('foto', function ($record) {
+                return $record->files->count() .' Foto';
             })
-            ->editColumn('time_out', function ($record) {
-                return $record->sale_out;
-            })
-            ->editColumn('tanggal', function ($record) {
-                return Carbon::parse($record->tanggal)->format('d/m/Y');
-            })
-            // ->editColumn('foto', function ($record) {
-            //     return $record->files->count() .' Foto';
-            // })
             ->editColumn('created_at', function ($record) {
                 return $record->created_at->diffForHumans();
             })
@@ -189,27 +151,27 @@ class LaporanController extends Controller
                     'tooltip' => 'Detail',
                     'datas' => [
                         'url'  => url($link.$record->id),
-                        'modalSize' => 'small'
+                        'modalSize' => 'medium'
                     ],
                     // 'url'  => url($link.$record->id)
                 ]);
-                if(auth()->user()->can($this->perms.'-edit')){
-                    $btn .= $this->makeButton([
-                        'type' => 'modal',
-                        'datas' => [
-                            'id' => $record->id
-                        ],
-                        'id'   => $record->id
-                    ]);
-                }
+                // if(auth()->user()->can($this->perms.'-edit')){
+                    // $btn .= $this->makeButton([
+                    //     'type' => 'modal',
+                    //     'datas' => [
+                    //         'id' => $record->id
+                    //     ],
+                    //     'id'   => $record->id
+                    // ]);
+                // }
                 // Delete
-                if(auth()->user()->can($this->perms.'-delete')){
-                    $btn .= $this->makeButton([
-                        'type' => 'delete',
-                        'id'   => $record->id,
-                        'url'   => url($link.$record->id)
-                    ]);
-                }
+                // if(auth()->user()->can($this->perms.'-delete')){
+                    // $btn .= $this->makeButton([
+                    //     'type' => 'delete',
+                    //     'id'   => $record->id,
+                    //     'url'   => url($link.$record->id)
+                    // ]);
+                // }
                 return $btn;
             })
             ->make(true);
@@ -217,41 +179,41 @@ class LaporanController extends Controller
 
     public function index()
     {
-        return $this->render('modules.main.barang.index');
+        return $this->render('modules.main.dokumentasi.index');
     }
 
     public function create()
     {
-        return $this->render('modules.main.barang.create');
+        return $this->render('modules.main.dokumentasi.create');
     }
 
-    public function store(LaporanRequest $request)
+    public function store(DocRequest $request)
     {
-        $record = new Laporan();
+        $record = new Documentasi();
         $record->fill($request->all());
         $record->save();
 
-        auth()->user()->storeLog('Laporan Barang', 'Membuat Laporan Barang', $record->id);
+        auth()->user()->storeLog('Dokumentasi Barang', 'Membuat Dokumentasi Barang', $record->id);
         return response([
             'status' => true
         ]);
     }
 
-    public function edit(Laporan $barang)
+    public function edit(Documentasi $documentasi)
     {
-        return $this->render('modules.main.barang.edit', [
-            'record' => $barang,
+        return $this->render('modules.main.dokumentasi.edit', [
+            'record' => $documentasi,
             ]);
         }
         
-    public function show(Laporan $barang)
+    public function show(Documentasi $documentasi)
     {
-        return $this->render('modules.main.barang.detail', [
-            'record' => $barang,
+        return $this->render('modules.main.dokumentasi.detail', [
+            'record' => $documentasi,
         ]);
     }
 
-    public function update(LaporanRequest $request, Laporan $barang)
+    public function update(DocRequest $request, Documentasi $documentasi)
     {
         // dd($request->all());
         if(isset($request->filespath)){
@@ -263,12 +225,12 @@ class LaporanController extends Controller
                                 }
 
                                 $saveFile['fileurl'] = $value;
-                                $saveFile['barang_id'] = $barang->id;
+                                $saveFile['barang_id'] = $documentasi->id;
 
-                                $recordFile = new DataFile();
+                                $recordFile = new DocFile();
                                 if(isset($request->fileid[$key]))
                                 {
-                                    $recordFile = DataFile::where('fileurl', $value)->where('barang_id', $barang->id)->first();
+                                    $recordFile = DocFile::where('fileurl', $value)->where('barang_id', $documentasi->id)->first();
                                 }
                                 $recordFile->fill($saveFile);
                                 $recordFile->save();
@@ -276,7 +238,7 @@ class LaporanController extends Controller
                                 $fileid[] = $recordFile->id;
                         }
 
-                        $notExist = DataFile::whereNotIn('id', $fileid)->where('barang_id', $barang->id)->get();
+                        $notExist = DocFile::whereNotIn('id', $fileid)->where('barang_id', $documentasi->id)->get();
 
                         if($notExist->count() > 0)
                         {
@@ -298,20 +260,20 @@ class LaporanController extends Controller
         //         ]);
         }
 
-        $barang->fill($request->all());
-        $barang->save();
+        $documentasi->fill($request->all());
+        $documentasi->save();
 
-        auth()->user()->storeLog('Laporan Barang', 'Mengupdate Laporan Barang', $barang->id);
+        auth()->user()->storeLog('Dokumentasi Barang', 'Mengupdate Dokumentasi Barang', $documentasi->id);
 
         return response([
             'status' => true
         ]);
     }
 
-    public function destroy(Laporan $barang)
+    public function destroy(Documentasi $documentasi)
     {
-        $barang->delete();
-        auth()->user()->storeLog('Laporan Barang', 'Menghapus Laporan Barang');
+        $documentasi->delete();
+        auth()->user()->storeLog('Dokumentasi Barang', 'Menghapus Dokumentasi Barang');
 
         return response([
             'status' => true,
@@ -362,33 +324,4 @@ class LaporanController extends Controller
             'status' => true,
         ]);
     }
-
-    public function export(Request $request)
-    {
-        // return response($request->all(), 422);
-        $records = Laporan::when($name = request()->name, function ($q) use ($name) {
-                        return $q->where('created_by', $name);
-                    })
-                    ->when($barang = request()->barang, function ($q) use ($barang) {
-                        return $q->where('barang_id', $barang);
-                    })
-                    ->when($from = request()->from, function ($q) use ($from) {
-                        return $q->whereBetween('tanggal',[Carbon::parse($from)->format('Y-m-d'), Carbon::parse(request()->to)->format('Y-m-d') ]);
-                    })
-                    ->get();
-
-        $tanggal = Carbon::parse(request()->date)->format('d F Y');
-
-        $pdf = PDF::loadView('modules.main.barang.export-pdf', ['record'=>$records, 'tanggal' => $tanggal])
-        ->setPaper('a4', 'potrait')->setOptions(
-            [
-                'defaultFont' => 'times-roman',
-                'isHtml5ParserEnabled' => true,
-                'isRemoteEnabled' => true,
-                'isPhpEnabled' => true
-            ]
-        );
-        return $pdf->stream(str_replace('/','-','Laporan').'.pdf');
-    }
-
 }

@@ -7,14 +7,13 @@
 		{{-- <div class="ui error message">
 		</div> --}}
 		{!! csrf_field() !!}
-		<input type="hidden" name="client_id" value="{{auth()->user()->client_id}}">
         <div class="field">
-        	<label>Kode Area</label>
-            <input type="text" placeholder="Kode Area" name="kode">
+        	<label>Kode Klien</label>
+            <input type="text" placeholder="Kode Klien" name="code">
         </div>
         <div class="field">
-        	<label>Nama Area</label>
-            <input type="text" placeholder="Nama Area" name="name">
+        	<label>Nama Klien</label>
+            <input type="text" placeholder="Nama Klien" name="name">
         </div>
 	</form>
 </div>

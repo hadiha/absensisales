@@ -100,6 +100,10 @@ class BarangController extends Controller
                         return $q->where('name', 'like', '%' . $name . '%');
                     })
                     ->select('*');
+
+        if(auth()->user()->client_id != null){
+            $records->where('client_id', auth()->user()->client_id);
+        }
         
         //Init Sort
         if (!isset(request()->order[0]['column'])) {

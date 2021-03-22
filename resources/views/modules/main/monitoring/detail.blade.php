@@ -20,17 +20,17 @@
 				<tr>
 					<td>Tanggal</td>
 					<td>:</td>
-					<td>{{Carbon::parse($record->date_in)->format('d/m/Y')}}</td>
+					<td>{{ $record->date_in ? Carbon::parse($record->date_in)->format('d/m/Y') : Carbon::parse($record->created_at)->format('d/m/Y')}}</td>
 				</tr>
 				<tr>
 					<td>Jam Masuk</td>
 					<td>:</td>
-					<td>{{Carbon::parse($record->date_in)->format('H:i')}}</td>
+					<td>{{ $record->date_in ? Carbon::parse($record->date_in)->format('H:i') : '-'}}</td>
 				</tr>
 				<tr>
 					<td>Jam Keluar</td>
 					<td>:</td>
-					<td>{{Carbon::parse($record->date_out)->format('H:i')}}</td>
+					<td>{{ $record->date_out ? Carbon::parse($record->date_out)->format('H:i') : '-'}}</td>
 				</tr>
 				<tr>
 					<td>Koordinat</td>
@@ -47,31 +47,50 @@
 					<td>:</td>
 					<td>{{$record->keterangan}}</td>
 				</tr>
-				
 			</tbody>
 		</table>
 		<table class="ui celled table" style="font-weight: bold;text-align:center">
+			@if($record->status == 'hadir')
+				<thead>
+					<tr>
+						<th>Foto Masuk</th>
+						<th>Foto Pulang</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td>
+							@if($record->fileurl_in != null) 
+							<div class="ui tiny images">
+									<img class="ui image" src="{{ url('storage/'.$record->fileurl_in) }}">
+							</div>
+							@else
+							Tidak ada Foto
+							@endif
+						</td>
+						<td>
+							@if($record->fileurl_out != null) 
+							<div class="ui tiny images">
+									<img class="ui image" src="{{ url('storage/'.$record->fileurl_out) }}">
+							</div>
+							@else
+							Tidak ada Foto
+							@endif
+						</td>
+					</tr>
+				</tbody>
+			@else
 			<thead>
 				<tr>
-					<th>Foto Masuk</th>
-					<th>Foto Pulang</th>
+					<th>Foto</th>
 				</tr>
 			</thead>
 			<tbody>
 				<tr>
 					<td>
-						@if($record->fileurl_in != null) 
+						@if($record->fileurl_sakit != null) 
 						<div class="ui tiny images">
-								<img class="ui image" src="{{ url('storage/'.$record->fileurl_in) }}">
-						</div>
-						@else
-						Tidak ada Foto
-						@endif
-					</td>
-					<td>
-						@if($record->fileurl_out != null) 
-						<div class="ui tiny images">
-								<img class="ui image" src="{{ url('storage/'.$record->fileurl_out) }}">
+								<img class="ui image" src="{{ url('storage/'.$record->fileurl_sakit) }}">
 						</div>
 						@else
 						Tidak ada Foto
@@ -79,6 +98,7 @@
 					</td>
 				</tr>
 			</tbody>
+			@endif
 		</table>
 		
 		{{-- <div class="sixteen wide field">

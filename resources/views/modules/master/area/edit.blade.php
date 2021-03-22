@@ -9,6 +9,7 @@
 		{!! csrf_field() !!}
 		<input type="hidden" name="_method" value="PUT">
 		<input type="hidden" name="id" value="{{ $record->id }}">
+		<input type="hidden" name="client_id" value="{{$record->client_id}}">
         <div class="field">
         	<label>Kode Area</label>
             <input type="text" placeholder="Kode Area" name="kode" value="{{$record->kode}}">

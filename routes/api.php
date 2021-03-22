@@ -38,6 +38,7 @@ Route::middleware(['auth:api'])->group(function () {
     Route::post('/absensi/pengajuan', 'API\AbsensiController@storePengajuan');
     Route::resource('/absensi', 'API\AbsensiController');
     Route::resource('/laporan', 'API\LaporanController');
+    Route::resource('/documentasi', 'API\DocumentasiController');
 
     Route::resource('/master/user', 'API\UserController')->only(['index']);
     Route::resource('/master/barang', 'API\BarangController')->only(['index']);

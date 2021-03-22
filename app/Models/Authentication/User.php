@@ -4,6 +4,7 @@ namespace App\Models\Authentication;
 
 use App\Models\Main\Absensi;
 use App\Models\Master\Area;
+use App\Models\Master\Client;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Tymon\JWTAuth\Contracts\JWTSubject;
@@ -30,7 +31,7 @@ class User extends Authenticatable implements JWTSubject
 
     protected $dates = ['last_login'];
     protected $fillable = [
-      'username','name','foto','phone', 'password', 'email', 'deleted_at', 'last_login'
+      'username','name','foto','phone', 'password', 'email', 'deleted_at', 'last_login', 'client_id'
     ];
 
     protected $appends = [
@@ -82,6 +83,11 @@ class User extends Authenticatable implements JWTSubject
     public function salesarea()
     {
         return $this->hasOne(SalesArea::class, 'area_id');
+    }
+
+    public function client()
+    {
+        return $this->hasOne(Client::class, 'client_id');
     }
     /* End Relation */
 

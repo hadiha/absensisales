@@ -5,15 +5,15 @@ use App\Models\Traits\RaidModel;
 use App\Models\Traits\Utilities;
 use Illuminate\Database\Eloquent\Model;
 
-class Area extends Model
+class Client extends Model
 {
   // call traits
     use RaidModel;
     use Utilities;
 
-    protected $table = 'ref_area';
+    protected $table = 'ref_client';
     protected $fillable = [
-      'client_id','kode', 'name', 'jumlah'
+      'code', 'name'
     ];
 	
 }

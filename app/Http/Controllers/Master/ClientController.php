@@ -7,27 +7,24 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
 /* Validation */
-use App\Http\Requests\Master\AreaRequest;
-use App\Http\Requests\Master\SalesAreaRequest;
-use App\Models\Authentication\User;
+use App\Http\Requests\Master\ClientRequest;
 /* Models */
-use App\Models\Master\Area;
-use App\Models\Master\SalesArea;
+use App\Models\Master\Client;
 /* Libraries */
 use DataTables;
-use Carbon\Carbon;
+use Carbon;
 use Hash;
 
-class SalesAreaController extends Controller
+class ClientController extends Controller
 {
-    protected $link = 'master/sales-area/';
+    protected $link = 'master/client/';
 
     function __construct()
     {
         $this->setLink($this->link);
-        $this->setTitle("Data Sales Area");
+        $this->setTitle("Data Klien");
         $this->setModalSize("mini");
-        $this->setBreadcrumb(['Master' => '#', 'Data Sales Area' => '#']);
+        $this->setBreadcrumb(['Master' => '#', 'Data Klien' => '#']);
 
         // Header Grid Datatable
         $this->setTableStruct([
@@ -42,30 +39,16 @@ class SalesAreaController extends Controller
             ],
             /* --------------------------- */
             [
-                'data' => 'user.name',
-                'name' => 'user_id',
-                'label' => 'Nama Sales',
+                'data' => 'code',
+                'name' => 'code',
+                'label' => 'Kode Klien',
                 'searchable' => false,
                 'sortable' => true,
             ],
             [
-                'data' => 'area.name',
-                'name' => 'area_id',
-                'label' => 'Nama Area',
-                'searchable' => false,
-                'sortable' => true,
-            ],
-            [
-                'data' => 'periode',
-                'name' => 'periode',
-                'label' => 'Periode',
-                'searchable' => false,
-                'sortable' => true,
-            ],
-            [
-                'data' => 'koordinator.name',
-                'name' => 'koordinator_id',
-                'label' => 'Korrdinator',
+                'data' => 'name',
+                'name' => 'name',
+                'label' => 'Nama Klien',
                 'searchable' => false,
                 'sortable' => true,
             ],
@@ -99,22 +82,13 @@ class SalesAreaController extends Controller
 
     public function grid(Request $request)
     {
-        $records = SalesArea::with('user','area','koordinator')
-                    ->when($sales = request()->sales, function ($q) use ($sales) {
-                        return $q->whereHas('user', function($w) use ($sales){
-                            $w->where('username', 'like', '%'.$sales.'%');
-                        });
-                    })
-                    ->when($area = request()->area, function ($q) use ($area) {
-                        return $q->whereHas('area', function($w) use ($area){
-                            $w->where('name', 'like', '%'.$area.'%');
-                        });
-                    })
-                    ->select('*');
-
-        if(auth()->user()->client_id != null){
-            $records->where('client_id', auth()->user()->client_id);
-        }
+        $records = Client::when($kode = request()->code, function ($q) use ($kode) {
+            return $q->where('code', 'like', '%' . $kode . '%');
+        })
+        ->when($name = request()->name, function ($q) use ($name) {
+            return $q->where('name', 'like', '%' . $name . '%');
+        })
+        ->select('*');
         
         //Init Sort
         if (!isset(request()->order[0]['column'])) {
@@ -128,9 +102,6 @@ class SalesAreaController extends Controller
             })
             ->editColumn('created_at', function ($record) {
                 return $record->created_at->diffForHumans();
-            })
-            ->editColumn('periode', function ($record) {
-                return Carbon::parse($record->start_date)->format('d/m/Y').' - '.Carbon::parse($record->end_date)->format('d/m/Y');
             })
             ->editColumn('created_by', function ($record) {
                 return $record->creator->username;
@@ -167,37 +138,31 @@ class SalesAreaController extends Controller
 
     public function index()
     {
-        return $this->render('modules.master.salesarea.index', ['mockup' => false]);
+        return $this->render('modules.master.client.index', ['mockup' => false]);
     }
 
     public function create()
     {
-        return $this->render('modules.master.salesarea.create');
+        return $this->render('modules.master.client.create');
     }
 
-    public function store(SalesAreaRequest $request)
+    public function store(ClientRequest $request)
     {
-        $record = new SalesArea();
+        $record = new Client();
         $record->fill($request->all());
         $record->save();
 
-        auth()->user()->storeLog('Master Sales Area', 'Menambahkan '.$record->user->name .' ke area ' .$record->area->name, $record->id);
+        auth()->user()->storeLog('Master Klien', 'Menginput Data Klien '.$record->name, $record->id);
 
         return response([
             'status' => true
         ]);
     }
 
-    public function edit(SalesArea $sales_area)
+    public function edit(Client $client)
     {
-        $user = User::all();
-        $area = Area::all();
-
-        return $this->render('modules.master.salesarea.edit', [
-            'record' => $sales_area,
-            'user' => $user,
-            'area' => $area
-        ]);
+        return $this->render('modules.master.client.edit', [
+            'record' => $client        ]);
     }
 
     public function show($id)
@@ -205,23 +170,23 @@ class SalesAreaController extends Controller
     //   
     }
 
-    public function update(Request $request, SalesArea $sales_area)
+    public function update(Request $request, Client $client)
     {
-        $sales_area->fill($request->all());
-        $sales_area->save();
+        $client->fill($request->all());
+        $client->save();
 
-        auth()->user()->storeLog('Master Sales Area', 'Mengganti '.$sales_area->user->name .' ke area ' .$sales_area->area->name, $sales_area->id);
-
+        auth()->user()->storeLog('Master Klien', 'Mengedit Client '.$client->name, $client->id);
         return response([
             'status' => true
         ]);
     }
 
 
-    public function destroy(Salesarea $sales_area)
+    public function destroy(Client $client)
     {
-        $sales_area->delete();
-        auth()->user()->storeLog('Master Sales Area', 'Menghapus '.$sales_area->user->name.' di area '.$sales_area->area->name);
+        $client->delete();
+        auth()->user()->storeLog('Master Klien', 'Menghapus Client '.$client->name);
+
         return response([
             'status' => true,
         ]);

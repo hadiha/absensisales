@@ -7,6 +7,7 @@
 		{{-- <div class="ui error message">
 		</div> --}}
 		{!! csrf_field() !!}
+		<input type="hidden" name="client_id" value="{{auth()->user()->client_id}}">
         <div class="field">
         	<label>Nama Sales</label>
             <select name="user_id" class="ui search dropdown">

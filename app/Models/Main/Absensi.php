@@ -78,13 +78,13 @@ class Absensi extends Model
         // return response($request->all(), 422);
         DB::beginTransaction();
         try {
-            $cek = Absensi::whereDate('created_at', Carbon::now()->format('Y-m-d'))->first();
+            $cek = Absensi::where('pegawai_id', auth()->user()->id)->whereDate('created_at', Carbon::now()->format('Y-m-d'))->first();
 
             if($cek != null){
                 return response()->json([
                     'status' => 'available',
                     'success' => false,
-                    'message' => 'Anda Sudah Absen'.ucfirst($cek->status).' Hari ini'
+                    'message' => 'Anda Sudah Absen '.ucfirst($cek->status).' Hari ini'
                 ]);
             }else{
                 $record = new Absensi();
@@ -177,8 +177,13 @@ class Absensi extends Model
     {
         DB::beginTransaction();
         try {
+            
             $record = new Absensi();
             $record->fill($request->all());
+            if(isset($request->foto)){
+                $temp = $request->foto->storeAs('sakit', md5($request->foto->getClientOriginalName().Carbon::now()->format('Ymdhisu')).'.'.$request->foto->getClientOriginalExtension(), 'public');
+                $record->fileurl_sakit = $temp;
+            }
             $record->save();
 
             auth()->user()->storeLog('Absensi', 'Membuat Pengajuan '.$record->status , $record->id);

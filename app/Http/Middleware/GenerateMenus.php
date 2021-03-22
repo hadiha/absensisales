@@ -44,6 +44,10 @@ class GenerateMenus
                  ->data('icon', 'tags')
                  ->data('perms', 'main-barang')
                  ->active('barang');
+            $menu->add('Dokumentasi', 'documentasi')
+                 ->data('icon', 'image')
+                 ->data('perms', 'main-documentasi')
+                 ->active('documentasi');
 
             /* Data Master */
             $menu->add('Data Master')
@@ -52,6 +56,9 @@ class GenerateMenus
           //   $menu->dataMaster->add('Data User Aplikasi', 'master/karyawan/')
           //      //   ->data('perms', 'master-karyawan')
           //        ->active('master/karyawan/*');
+            $menu->dataMaster->add('Data Klien', 'master/client/')
+               ->data('perms', 'master-client')
+               ->active('master/client/*');
             $menu->dataMaster->add('Data Area', 'master/area/')
                ->data('perms', 'master-area')
                ->active('master/area/*');

@@ -1,9 +1,9 @@
 <?php
-namespace App\Http\Requests\Master;
+namespace App\Http\Requests\Main;
 
 use App\Http\Requests\Request;
 
-class BarangRequest extends Request
+class DocRequest extends Request
 {
 
     
@@ -15,8 +15,10 @@ class BarangRequest extends Request
     {
         // ambil validasi dasar
         $rules = [
-            'kode' => 'required|unique:ref_barang,kode,'.$this->get('id').',client_id'.$this->get('id'),
-            'name' => 'required|unique:ref_barang,name,'.$this->get('id').',client_id'.$this->get('id'),
+            'date' => 'required',
+            'area_id' => 'required',
+            'keterangan' => 'required',
+            'filespath' => 'required',
         ];
 
         return $rules;
@@ -28,8 +30,10 @@ class BarangRequest extends Request
         // $attributes = $this->attr;
 
         // validasi tambahan
-        $attributes['kode']    = 'Kode';
-        $attributes['name']    = 'Nama';
+        $attributes['date']          = 'Tanggal';
+        $attributes['area_id']       = 'Area';
+        $attributes['keterangan']    = 'Keterangan';
+        $attributes['filespath']     = 'Foto';
         return $attributes;
     }
 

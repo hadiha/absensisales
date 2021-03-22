@@ -3,7 +3,7 @@ namespace App\Http\Requests\Master;
 
 use App\Http\Requests\Request;
 
-class BarangRequest extends Request
+class ClientRequest extends Request
 {
 
     
@@ -15,8 +15,8 @@ class BarangRequest extends Request
     {
         // ambil validasi dasar
         $rules = [
-            'kode' => 'required|unique:ref_barang,kode,'.$this->get('id').',client_id'.$this->get('id'),
-            'name' => 'required|unique:ref_barang,name,'.$this->get('id').',client_id'.$this->get('id'),
+            'code' => 'required|unique:ref_client,code,'.$this->get('id'),
+            'name' => 'required|unique:ref_client,name,'.$this->get('id'),
         ];
 
         return $rules;
@@ -28,7 +28,7 @@ class BarangRequest extends Request
         // $attributes = $this->attr;
 
         // validasi tambahan
-        $attributes['kode']    = 'Kode';
+        $attributes['code']    = 'Kode';
         $attributes['name']    = 'Nama';
         return $attributes;
     }

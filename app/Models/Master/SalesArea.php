@@ -15,7 +15,7 @@ class SalesArea extends Model
 
     protected $table = 'ref_sales_area';
     protected $fillable = [
-      'user_id', 'area_id','start_date', 'end_date', 'koordinator_id'
+      'client_id','user_id', 'area_id','start_date', 'end_date', 'koordinator_id'
     ];
 
     protected $dates = [

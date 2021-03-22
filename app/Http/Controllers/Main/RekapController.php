@@ -87,13 +87,13 @@ class RekapController extends Controller
             //     'searchable' => false,
             //     'sortable' => true,
             // ],
-            [
-                'data' => 'tk',
-                'name' => 'tk',
-                'label' => 'Tanpa Keterangan',
-                'searchable' => false,
-                'sortable' => true,
-            ],
+            // [
+            //     'data' => 'tk',
+            //     'name' => 'tk',
+            //     'label' => 'Tanpa Keterangan',
+            //     'searchable' => false,
+            //     'sortable' => true,
+            // ],
         ]);
     }
 
@@ -111,6 +111,10 @@ class RekapController extends Controller
                         }]);
                     })
                     ->select('*');
+
+        if(auth()->user()->client_id != null){
+            $records->where('client_id', auth()->user()->client_id);
+        }
         
         //Init Sort
         if (!isset(request()->order[0]['column'])) {
@@ -137,9 +141,9 @@ class RekapController extends Controller
             ->editColumn('cuti', function ($record) {
                 return $record->cuti();
             })
-            ->editColumn('tk', function ($record) {
-                return $record->alfa(request()->from);
-            })
+            // ->editColumn('tk', function ($record) {
+            //     return $record->alfa(request()->from);
+            // })
             
             ->addColumn('action', function ($record) use ($link){
                 $btn = '';
@@ -211,7 +215,10 @@ class RekapController extends Controller
     public function export(Request $request)
     {
         // return response($request->all(), 422);
-        $records = User::when($area = request()->area, function ($q) use ($area) {
+       
+
+        if(auth()->user()->client_id != null){
+            $records = User::where('client_id', auth()->user()->client_id)->when($area = request()->area, function ($q) use ($area) {
                         $q->whereHas('salesarea', function($w) use ($area){
                             return $w->where('area_id', $area);
                         });
@@ -223,6 +230,20 @@ class RekapController extends Controller
                         }]);
                     })
                     ->get();
+        } else {
+            $records = User::when($area = request()->area, function ($q) use ($area) {
+                $q->whereHas('salesarea', function($w) use ($area){
+                    return $w->where('area_id', $area);
+                });
+            })
+            ->when($from = request()->from, function ($q) use ($from){
+                $q->with(['absensi' => function($w) use ($from){
+                    return $w->whereMonth('date_in', Carbon::parse($from)->format('n'))
+                            ->whereYear('date_in', Carbon::parse($from)->format('Y'));
+                }]);
+            })
+            ->get();
+        }
 
         $tanggal = Carbon::parse(request()->from)->format('F Y');
 

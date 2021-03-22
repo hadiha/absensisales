@@ -9,18 +9,17 @@
 		{!! csrf_field() !!}
 		<input type="hidden" name="_method" value="PUT">
 		<input type="hidden" name="id" value="{{ $record->id }}">
-		<input type="hidden" name="client_id" value="{{$record->client_id}}">
         <div class="field">
-        	<label>Kode Barang</label>
-            <input type="text" placeholder="Kode Barang" name="kode" value="{{$record->kode}}">
+        	<label>Kode Klien</label>
+            <input type="text" placeholder="Kode Klien" name="code" value="{{$record->code}}">
         </div>
         <div class="field">
-        	<label>Nama Barang</label>
-            <input type="text" placeholder="Nama Barang" name="name" value="{{$record->name}}">
+        	<label>Nama Klien</label>
+            <input type="text" placeholder="Nama Klien" name="name" value="{{$record->name}}">
         </div>
         {{-- <div class="field">
 			<label>Jumlah</label>
-			<input type="number" placeholder="Jumlah Barang" name="jumlah" value="{{$record->jumlah}}">
+			<input type="number" placeholder="Jumlah Klien" name="jumlah" value="{{$record->jumlah}}">
         </div> --}}
 	</form>
 </div>

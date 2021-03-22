@@ -8,6 +8,7 @@
 		</div> --}}
 		{!! csrf_field() !!}
         <div class="field">
+			<input type="hidden" name="client_id" value="{{auth()->user()->client_id}}">
         	<label>Kode Barang</label>
             <input type="text" placeholder="Kode Barang" name="kode">
         </div>

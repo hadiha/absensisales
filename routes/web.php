@@ -41,8 +41,8 @@ Route::group(['middleware' => 'auth'], function () {
         Route::post('barang/grid', 'BarangController@grid');
         Route::resource('barang', 'BarangController');
 
-        Route::post('karyawan/grid', 'KaryawanController@grid');
-        Route::resource('karyawan', 'KaryawanController');
+        Route::post('client/grid', 'ClientController@grid');
+        Route::resource('client', 'ClientController');
 	});
 
     Route::post('kehadiran/monitoring/export', 'Main\MonitoringController@export');
@@ -51,11 +51,17 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('kehadiran/monitoring/grid', 'Main\MonitoringController@grid');
     Route::resource('kehadiran/monitoring', 'Main\MonitoringController');
     
+    Route::post('barang/laporan/export', 'Main\LaporanController@export');
     Route::post('barang/file-upload', 'Main\LaporanController@fileUpload')->name('barang.file-upload');
     Route::post('barang/unlink', 'Main\LaporanController@unlink')->name('barang.unlink');
     Route::post('barang/grid', 'Main\LaporanController@grid');
     Route::resource('barang', 'Main\LaporanController');
-    
+
+    // Route::post('barang/file-upload', 'Main\LaporanController@fileUpload')->name('barang.file-upload');
+    Route::post('documentasi/unlink', 'Main\DocumentasiController@unlink')->name('documentasi.unlink');
+    Route::post('documentasi/grid', 'Main\DocumentasiController@grid');
+    Route::resource('documentasi', 'Main\DocumentasiController');
+
     Route::post('kehadiran/rekap/export', 'Main\RekapController@export');
     Route::post('kehadiran/rekap/grid', 'Main\RekapController@grid');
     Route::resource('kehadiran/rekap', 'Main\RekapController');

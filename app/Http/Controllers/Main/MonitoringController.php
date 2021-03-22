@@ -145,10 +145,17 @@ class MonitoringController extends Controller
                             });
                         });
                     })
-                    ->whereDate('date_in', Carbon::parse(request()->date)->format('Y-m-d'))
-                    // ->orWhereDate('created_at', Carbon::parse(request()->date)->format('Y-m-d'))     
+                    ->whereDate('created_at', Carbon::parse(request()->date)->format('Y-m-d'))     
+                    ->orWhere('date_in', Carbon::parse(request()->date)->format('Y-m-d'))
                     ->with('user')
                     ->select('*');
+
+        // TODO BELUM BERES  
+            if(auth()->user()->client_id != null){
+                $records->whereHas('user', function($e){
+                    return $e->where('client_id', auth()->user()->client_id);
+                });
+            }
 
         //Init Sort
         if (!isset(request()->order[0]['column'])) {
@@ -307,17 +314,44 @@ class MonitoringController extends Controller
     public function export(Request $request)
     {
         // return response($request->all(), 422);
-        $records = User::when($name = request()->name, function ($q) use ($name) {
-                        $q->where('name', 'like', '%' . $name . '%');
-                    })
-                    ->when($area = request()->area, function ($q) use ($area) {
-                        $q->whereHas('salesarea', function($w) use ($area){
-                            return $w->where('area_id', $area);
-                        });
-                    })
-                    ->with(['absen' => function($q){
-                        $q->whereDate('date_in', Carbon::parse(request()->date)->format('Y-m-d'));        
-                    }])->get();
+        if(auth()->user()->client_id != null){
+           $records =  Absensi::when($name = request()->name, function ($q) use ($name) {
+                            $q->whereHas('user', function($w) use ($name){
+                                return $w->where('name', 'like', '%' . $name . '%');
+                            });
+                        })
+                        ->when($area = request()->area, function ($q) use ($area) {
+                            $q->whereHas('user', function($w) use ($area){
+                                $w->whereHas('salesarea', function($z) use ($area){
+                                    return $z->where('area_id', $area);
+                                });
+                            });
+                        })
+                        ->whereDate('created_at', Carbon::parse(request()->date)->format('Y-m-d'))     
+                        ->orWhere('date_in', Carbon::parse(request()->date)->format('Y-m-d'))
+                        ->whereHas('user', function($e){
+                            return $e->where('client_id', auth()->user()->client_id);
+                        })
+                        ->get();
+        } else {
+            $records = Absensi::when($name = request()->name, function ($q) use ($name) {
+                            $q->whereHas('user', function($w) use ($name){
+                                return $w->where('name', 'like', '%' . $name . '%');
+                            });
+                        })
+                        ->when($area = request()->area, function ($q) use ($area) {
+                            $q->whereHas('user', function($w) use ($area){
+                                $w->whereHas('salesarea', function($z) use ($area){
+                                    return $z->where('area_id', $area);
+                                });
+                            });
+                        })
+                        ->whereDate('created_at', Carbon::parse(request()->date)->format('Y-m-d'))     
+                        ->orWhere('date_in', Carbon::parse(request()->date)->format('Y-m-d'))
+                        ->with('user')
+                        ->get();
+        }
+
         $tanggal = Carbon::parse(request()->date)->format('d F Y');
 
         $pdf = PDF::loadView('modules.main.monitoring.export-pdf', ['record'=>$records, 'tanggal' => $tanggal])

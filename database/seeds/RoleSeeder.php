@@ -25,5 +25,11 @@ class RoleSeeder extends Seeder
 	    $role_employee->description = 'Sales';
 	    $role_employee->save();
 
+		$role_employee = new Role();
+	    $role_employee->name = 'TL';
+	    $role_employee->display_name = 'Team Leader';
+	    $role_employee->description = 'Team Leader';
+	    $role_employee->save();
+
     }
 }

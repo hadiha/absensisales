@@ -3,23 +3,37 @@
 </div>
 <div class="header">Detail {{ $title or '' }}</div>
 <div class="content">
- 	<form class="ui data form" id="dataForm" action="{{ url($pageUrl.$record->id) }}" method="POST">
+ 	{{-- <form class="ui data form" id="dataForm" action="{{ url($pageUrl.$record->id) }}" method="POST"> --}}
 		<table class="ui basic table" style="font-weight: bold">
-			<thead></thead>
 			<tbody>
 				<tr>
-					<td width="35%">Nama Barang</td>
-					<td>:</td>
-					<td>{{$record->item->name}}</td>
+					<td width="35%">Store</td>
+					<td width="5%">:</td>
+					<td>{{$record->creator->area}}</td>
 				</tr>
 				<tr>
-					<td>Kode Barang</td>
+					<td>Hari</td>
 					<td>:</td>
-					<td>{{$record->item->kode}}</td>
+					<td>{{Carbon::parse($record->tanggal)->formatLocalized("%A")}}</td>
 				</tr>
 				<tr>
 					<td>Tanggal Laporan</td>
 					<td>:</td>
+					<td>{{Carbon::parse($record->tanggal)->format('d/m/Y')}}</td>
+				</tr>
+				<tr>
+					<td>Spg</td>
+					<td>:</td>
+					<td>{{$record->creator->name}}</td>
+				</tr>
+				
+			</tbody>
+		</table>
+		<table class="ui basic table" style="font-weight: bold">
+			<tbody>
+				<tr>
+					<td width="35%">Nama Barang</td>
+					<td width="5%">:</td>
 					<td>{{$record->item->name}}</td>
 				</tr>
 				<tr>
@@ -41,7 +55,8 @@
 			</tbody>
 		</table>
 		
-		<div class="sixteen wide field">
+		{{-- dihilangkan --}}
+		{{-- <div class="sixteen wide field">
 			<label><b>Reference Files</b></label>
 			@if($record->files->count() > 0)
 				<div class="ui tiny images">
@@ -54,8 +69,8 @@
 					<p>Data Tidak Ditemukan!</p>
 				</div>
 			@endif
-		</div>
-	</form>
+		</div> --}}
+	{{-- </form> --}}
 </div>
 <div class="actions">
 	<div class="ui teal deny button">

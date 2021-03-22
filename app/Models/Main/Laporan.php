@@ -59,23 +59,23 @@ class Laporan extends Model
         // dd($request->filespath[0]->getClientOriginalName());
         DB::beginTransaction();
         try {
-            $file = [];
-            if(isset($request->filespath)){
-                if(count($request->filespath) > 0){
-                    foreach ($request->filespath as $k => $value) {
-                        $temp = $value->storeAs('fileupload', md5($value->getClientOriginalName().Carbon::now()->format('Ymdhisu')).'.'.$value->getClientOriginalExtension(), 'public');
-                        $filetemp = new DataFile();
-                        $filetemp->fileurl = $temp;
-                        $filetemp->filename = $value->getClientOriginalName();
-                        $file[$k] = $filetemp;
-                    }
-                }
-            }
+            // $file = [];
+            // if(isset($request->filespath)){
+            //     if(count($request->filespath) > 0){
+            //         foreach ($request->filespath as $k => $value) {
+            //             $temp = $value->storeAs('fileupload', md5($value->getClientOriginalName().Carbon::now()->format('Ymdhisu')).'.'.$value->getClientOriginalExtension(), 'public');
+            //             $filetemp = new DataFile();
+            //             $filetemp->fileurl = $temp;
+            //             $filetemp->filename = $value->getClientOriginalName();
+            //             $file[$k] = $filetemp;
+            //         }
+            //     }
+            // }
 
             $record = new self();
             $record->fill($request->all());
             $record->save();
-            $record->files()->saveMany($file);
+            // $record->files()->saveMany($file);
             
             DB::commit();
         } catch (\Exception $e) {
@@ -96,32 +96,32 @@ class Laporan extends Model
   
     public function updateByRequest($request)
     {
-    $saveFile = [];
-    if(isset($request->filespath)){
-        foreach($this->files as $k => $file){
-            if(file_exists(storage_path().'/app/public/'.$file->fileurl))
-            {
-                unlink(storage_path().'/app/public/'.$file->fileurl);
-            }
-            $file->delete();
-        };
+    // $saveFile = [];
+    // if(isset($request->filespath)){
+    //     foreach($this->files as $k => $file){
+    //         if(file_exists(storage_path().'/app/public/'.$file->fileurl))
+    //         {
+    //             unlink(storage_path().'/app/public/'.$file->fileurl);
+    //         }
+    //         $file->delete();
+    //     };
 
-        if(count($request->filespath) > 0){
-            foreach ($request->filespath as $k => $value) {
-                if($value != null){
-                    $temp = $value->storeAs('fileupload', md5($value->getClientOriginalName().Carbon::now()->format('Ymdhisu')).'.'.$value->getClientOriginalExtension(), 'public');
-                    $filetemp = new DataFile();
-                    $filetemp->fileurl = $temp;
-                    $filetemp->filename = $value->getClientOriginalName();
-                    $saveFile[$k] = $filetemp;
-                }
-            }
-        }
-    }
+    //     if(count($request->filespath) > 0){
+    //         foreach ($request->filespath as $k => $value) {
+    //             if($value != null){
+    //                 $temp = $value->storeAs('fileupload', md5($value->getClientOriginalName().Carbon::now()->format('Ymdhisu')).'.'.$value->getClientOriginalExtension(), 'public');
+    //                 $filetemp = new DataFile();
+    //                 $filetemp->fileurl = $temp;
+    //                 $filetemp->filename = $value->getClientOriginalName();
+    //                 $saveFile[$k] = $filetemp;
+    //             }
+    //         }
+    //     }
+    // }
 
         $this->fill($request->all());
         $this->save();
-        $this->files()->saveMany($saveFile);
+        // $this->files()->saveMany($saveFile);
 
         auth()->user()->storeLog('Laporan Barang', 'Mengupdate Laporan Barang', $this->id);
 

@@ -198,7 +198,7 @@
 </head>
 <body>
     <h4 style="text-align: center">Rekap Kehadiran</h4>
-    <h5 style="text-align: center; margin-top:-15px">Per {{$tanggal}}</h5>
+    <h5 style="text-align: center; margin-top:-15px">Per {{ Carbon::parse($tanggal)->formatLocalized("%B %Y")}}</h5>
     <table class="ui table bordered" style="font-size: 10px">
        <thead>
          <tr style="font-weight: bold">
@@ -208,8 +208,8 @@
            <td>Hadir</td>
            <td>Izin</td>
            <td>Sakit</td>
-           <td>Cuti</td>
-           <td>Tanpa Keterangan</td>
+           {{-- <td>Cuti</td>
+           <td>Tanpa Keterangan</td> --}}
          </tr>
        </thead>
        <tbody>
@@ -221,8 +221,8 @@
             <td>{{$item->hadir()}}</td>
             <td>{{$item->izin()}}</td>
             <td>{{$item->sakit()}}</td>
-            <td>{{$item->absen ? ($item->absen->latitude ? $item->absen->latitude.' , '.$item->absen->longitude : '-' ): '-' }}</td>
-            <td>{{$item->alfa($tanggal)}}</td>
+            {{-- <td>{{$item->absen ? ($item->absen->latitude ? $item->absen->latitude.' , '.$item->absen->longitude : '-' ): '-' }}</td>
+            <td>{{$item->alfa($tanggal)}}</td> --}}
           </tr>
          @endforeach
        </tbody>
