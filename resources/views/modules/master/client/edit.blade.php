@@ -17,10 +17,16 @@
         	<label>Nama Klien</label>
             <input type="text" placeholder="Nama Klien" name="name" value="{{$record->name}}">
         </div>
-        {{-- <div class="field">
-			<label>Jumlah</label>
-			<input type="number" placeholder="Jumlah Klien" name="jumlah" value="{{$record->jumlah}}">
-        </div> --}}
+        <div class="sixteen wide field">
+			<label>Logo</label>
+			<div class="ui action input">
+				<input type="text" placeholder="Logo" name="file" value="{{$record->filename}}" readonly>
+				<input type="file" name="logo" style="display:none !important;" accept="image/*">
+				<div class="ui icon button">
+				Cari
+				</div>
+			</div>
+	  	</div>
 	</form>
 </div>
 <div class="actions">

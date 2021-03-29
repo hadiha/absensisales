@@ -179,6 +179,7 @@
         });
 
         $(document).on('change', '.ui.file.input input:file', function(e) {
+            console.log(name);
             var file = $(e.target);
             var name = '';
 
@@ -187,7 +188,6 @@
             }
             // remove trailing ","
             name = name.replace(/,\s*$/, '');
-            console.log(name);
 
             $('input:text', file.parent()).val(name);
         });

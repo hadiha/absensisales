@@ -12,7 +12,7 @@ use App\Http\Requests\Master\ClientRequest;
 use App\Models\Master\Client;
 /* Libraries */
 use DataTables;
-use Carbon;
+use Carbon\Carbon;
 use Hash;
 
 class ClientController extends Controller
@@ -148,7 +148,13 @@ class ClientController extends Controller
 
     public function store(ClientRequest $request)
     {
+        // return response($request->file(), 422);
         $record = new Client();
+        if(isset($request->file)){
+            $temp = $request->logo->storeAs('logo', md5($request->logo->getClientOriginalName().Carbon::now()->format('Ymdhisu')).'.'.$request->logo->getClientOriginalExtension(), 'public');
+            $record->filename = $request->logo->getClientOriginalName();
+            $record->fileurl = $temp;
+        }
         $record->fill($request->all());
         $record->save();
 
@@ -172,6 +178,16 @@ class ClientController extends Controller
 
     public function update(Request $request, Client $client)
     {
+        if(isset($request->file)){
+            // if(file_exists(storage_path().'/app/public/'.$client->fileurl))
+            // {
+            //     unlink(storage_path().'/app/public/'.$client->fileurl);
+            // }
+            
+            $temp = $request->logo->storeAs('logo', md5($request->logo->getClientOriginalName().Carbon::now()->format('Ymdhisu')).'.'.$request->logo->getClientOriginalExtension(), 'public');
+            $client->filename = $request->logo->getClientOriginalName();
+            $client->fileurl = $temp;
+        }
         $client->fill($request->all());
         $client->save();
 

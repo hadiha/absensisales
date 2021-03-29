@@ -17,6 +17,7 @@ class ClientRequest extends Request
         $rules = [
             'code' => 'required|unique:ref_client,code,'.$this->get('id'),
             'name' => 'required|unique:ref_client,name,'.$this->get('id'),
+            'file' => 'required',
         ];
 
         return $rules;
@@ -30,6 +31,7 @@ class ClientRequest extends Request
         // validasi tambahan
         $attributes['code']    = 'Kode';
         $attributes['name']    = 'Nama';
+        $attributes['file']    = 'Logo';
         return $attributes;
     }
 

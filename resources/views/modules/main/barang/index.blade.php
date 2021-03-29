@@ -15,15 +15,33 @@
 
 @section('filters')
 	<div class="field">
-        <select name="filter[pegawai_id]" class="ui search dropdown">
-            {!! \App\Models\Authentication\User::options('username','id',[],'Pilih Pegawai') !!}
-        </select>
+        @if (auth()->user()->client_id != null)
+            <select name="filter[pegawai_id]" class="ui search dropdown">
+                <option value="">Pilih Area</option>
+                @foreach (\App\Models\Authentication\User::where('client_id', auth()->user()->client_id)->get() as $item)
+                    <option value="{{$item->id}}">{{$item->name}}</option>
+                @endforeach
+            </select>
+        @else
+            <select name="filter[pegawai_id]" class="ui search dropdown">
+                {!! \App\Models\Authentication\User::options('username','id',[],'Pilih Pegawai') !!}
+            </select>
+        @endif
 		{{-- <input type="text" name="filter[name]" placeholder="Nama"> --}}
     </div>
     <div class="field">
-        <select name="filter[barang_id]" class="ui search dropdown">
-            {!! \App\Models\Master\Barang::options('name','id',[],'Pilih Barang') !!}
-        </select>
+        @if (auth()->user()->client_id != null)
+            <select name="filter[barang_id]" class="ui search dropdown">
+                <option value="">Pilih Barang</option>
+                @foreach (\App\Models\Master\Barang::where('client_id', auth()->user()->client_id)->get() as $item)
+                    <option value="{{$item->id}}">{{$item->name}}</option>
+                @endforeach
+            </select>
+        @else
+            <select name="filter[barang_id]" class="ui search dropdown">
+                {!! \App\Models\Master\Barang::options('name','id',[],'Pilih Barang') !!}
+            </select>
+        @endif
 		{{-- <input type="text" name="filter[name]" placeholder="Nama"> --}}
 	</div>
 	{{-- <div class="field">

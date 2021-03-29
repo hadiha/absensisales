@@ -32,36 +32,49 @@
 
 @section('init-modal')
 	<script>
-        onShow = function(){
-            $('.checkbox').checkbox();
-            $('.ui.dropdown').dropdown({
-                onChange: function(value) {
-                    var target = $(this).dropdown();
-                    if (value!="") {
-                        target
-                            .find('.dropdown.icon')
-                            .removeClass('dropdown')
-                            .addClass('delete')
-                            .on('click', function() {
-                                target.dropdown('clear');
-                                $(this).removeClass('delete').addClass('dropdown');
-                                return false;
-                            });
-                    }
-                }
-            });
-            // force onChange  event to fire on initialization
-            $('.ui.dropdown')
-                .closest('.ui.selection')
-                .find('.item.active').addClass('qwerty').end()
-                .dropdown('clear')
-                    .find('.qwerty').removeClass('qwerty')
-                .trigger('click');
 
-	        $('[name=display_name]').on('change, keyup', function(event) {
-	            var display_name = $(this).val();
-	            $('[name=name]').val(slugify(display_name));
-	        });
+
+        onShow = function(){
+            $("input:text").click(function() {
+                $(this).parent().find("input:file").click();
+            });
+
+            $('input:file', '.ui.action.input')
+            .on('change', function(e) {
+                var name = e.target.files[0].name;
+                $('input:text', $(e.target).parent()).val(name);
+            });
+
+
+            // $('.checkbox').checkbox();
+            // $('.ui.dropdown').dropdown({
+            //     onChange: function(value) {
+            //         var target = $(this).dropdown();
+            //         if (value!="") {
+            //             target
+            //                 .find('.dropdown.icon')
+            //                 .removeClass('dropdown')
+            //                 .addClass('delete')
+            //                 .on('click', function() {
+            //                     target.dropdown('clear');
+            //                     $(this).removeClass('delete').addClass('dropdown');
+            //                     return false;
+            //                 });
+            //         }
+            //     }
+            // });
+            // // force onChange  event to fire on initialization
+            // $('.ui.dropdown')
+            //     .closest('.ui.selection')
+            //     .find('.item.active').addClass('qwerty').end()
+            //     .dropdown('clear')
+            //         .find('.qwerty').removeClass('qwerty')
+            //     .trigger('click');
+
+	        // $('[name=display_name]').on('change, keyup', function(event) {
+	        //     var display_name = $(this).val();
+	        //     $('[name=name]').val(slugify(display_name));
+	        // });
 
             return false;
         };

@@ -35,6 +35,13 @@
                 <input type="text" placeholder="Phone" name="phone" value="{{ old('phone') }}">
             </div>
         </div>
+       
+        <div class="field">
+        	<label>Hak Akses</label>
+			<select name="roles[]" class="ui fluid dropdown hak-akses">
+				{!! App\Models\Authentication\Role::options('display_name', 'id', [], 'Pilih Hak Akses') !!}
+			</select>
+        </div>
         @if (auth()->user()->client_id == null)
             <div class="field">
                 <label>Klien</label>
@@ -45,19 +52,22 @@
         @else
             <input type="hidden" name="client_id" value="{{auth()->user()->client_id}}">    
         @endif
-        <div class="field">
-        	<label>Hak Akses</label>
-			<select name="roles[]" class="ui fluid dropdown hak-akses">
-				{!! App\Models\Authentication\Role::options('display_name', 'id', [], 'Pilih Hak Akses') !!}
-			</select>
-        </div>
         <div class="field chose-area" style="display: none">
         	<label>Area</label>
             <div class="ui left icon input">
                 <i class="lock icon"></i>
+                @if (auth()->user()->client_id == null)
+                    <select name="area_id" class="ui fluid dropdown">
+                        {!! App\Models\Master\Area::options('name', 'id', [], 'Pilih Area') !!}
+                    </select>
+                @else
                 <select name="area_id" class="ui fluid dropdown">
-                    {!! App\Models\Master\Area::options('name', 'id', [], 'Pilih Area') !!}
+                    <option value="">Pilih Area</option>
+                    @foreach (App\Models\Master\Area::where('client_id', auth()->user()->client_id)->get() as $item)
+                        <option value="{{$item->id}}">{{$item->name}}</option>
+                    @endforeach
                 </select>
+                @endif
             </div>
         </div>
         <div class="field">

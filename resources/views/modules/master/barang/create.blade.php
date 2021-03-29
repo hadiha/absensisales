@@ -7,8 +7,17 @@
 		{{-- <div class="ui error message">
 		</div> --}}
 		{!! csrf_field() !!}
-        <div class="field">
+		@if (auth()->user()->client_id == null)
+			<div class="field">
+				<label>Nama Klien</label>
+				<select name="client_id" class="ui search dropdown">
+					{!! \App\Models\Master\Client::options('name','id',[],'Pilih Klien') !!}		
+				</select>
+			</div>
+		@else
 			<input type="hidden" name="client_id" value="{{auth()->user()->client_id}}">
+		@endif
+        <div class="field">
         	<label>Kode Barang</label>
             <input type="text" placeholder="Kode Barang" name="kode">
         </div>

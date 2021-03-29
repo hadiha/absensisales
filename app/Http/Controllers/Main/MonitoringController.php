@@ -152,7 +152,7 @@ class MonitoringController extends Controller
 
         // TODO BELUM BERES  
             if(auth()->user()->client_id != null){
-                $records->whereHas('user', function($e){
+                $records->whereHas('user', function($e) {
                     return $e->where('client_id', auth()->user()->client_id);
                 });
             }

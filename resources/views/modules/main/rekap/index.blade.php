@@ -12,10 +12,19 @@
 	{{-- <div class="field">
 		<input type="text" name="filter[name]" placeholder="Nama">
 	</div> --}}
-	<div class="field">
-        <select name="filter[area]" class="ui search dropdown">
-            {!! \App\Models\Master\Area::options('name','id',[],'Pilih Area') !!}
-        </select>
+    <div class="field">
+        @if (auth()->user()->client_id != null)
+            <select name="filter[area]" class="ui search dropdown">
+                <option value="">Pilih Area</option>
+                @foreach (\App\Models\Master\Area::where('client_id', auth()->user()->client_id)->get() as $item)
+                    <option value="{{$item->id}}">{{$item->name}}</option>
+                @endforeach
+            </select>
+        @else
+            <select name="filter[area]" class="ui search dropdown">
+                {!! \App\Models\Master\Area::options('name','id',[],'Pilih Area') !!}
+            </select>
+        @endif
     </div>
     <div class="field">
         <div class="ui month" id="from">

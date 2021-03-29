@@ -13,7 +13,7 @@ class Client extends Model
 
     protected $table = 'ref_client';
     protected $fillable = [
-      'code', 'name'
+      'code', 'name', 'fileurl', 'filename'
     ];
 	
 }
