@@ -110,12 +110,11 @@ class RekapController extends Controller
                                     ->whereYear('date_in', Carbon::parse($from)->format('Y'));
                         }]);
                     })
+                    ->when(!is_null(auth()->user()->client_id), function($e){
+                        return $e->where('client_id', auth()->user()->client_id);
+                    })
                     ->select('*');
 
-        if(auth()->user()->client_id != null){
-            $records->where('client_id', auth()->user()->client_id);
-        }
-        
         //Init Sort
         if (!isset(request()->order[0]['column'])) {
             $records->orderBy('created_at', 'desc');

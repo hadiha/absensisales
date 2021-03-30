@@ -145,17 +145,15 @@ class MonitoringController extends Controller
                             });
                         });
                     })
+                    ->when(!is_null(auth()->user()->client_id), function($q){
+                        $q->whereHas('user', function($e) {
+                            return $e->where('client_id', auth()->user()->client_id);
+                        });
+                    })
                     ->whereDate('created_at', Carbon::parse(request()->date)->format('Y-m-d'))     
                     ->orWhere('date_in', Carbon::parse(request()->date)->format('Y-m-d'))
                     ->with('user')
                     ->select('*');
-
-        // TODO BELUM BERES  
-            if(auth()->user()->client_id != null){
-                $records->whereHas('user', function($e) {
-                    return $e->where('client_id', auth()->user()->client_id);
-                });
-            }
 
         //Init Sort
         if (!isset(request()->order[0]['column'])) {

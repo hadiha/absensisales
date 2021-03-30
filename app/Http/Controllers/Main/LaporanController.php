@@ -137,14 +137,13 @@ class LaporanController extends Controller
                     ->when($from = request()->from, function ($q) use ($from) {
                         return $q->whereBetween('tanggal',[Carbon::parse($from)->format('Y-m-d'), Carbon::parse(request()->to)->format('Y-m-d') ]);
                     })
+                    ->when(!is_null(auth()->user()->client_id), function($q){
+                        $q->whereHas('user', function($e) {
+                            return $e->where('client_id', auth()->user()->client_id);
+                        });
+                    })
                     ->select('*');
                     
-        if(auth()->user()->client_id != null){
-            $records->whereHas('item', function($e){
-                return $e->where('client_id', auth()->user()->client_id);
-            });
-        }
-        
         //Init Sort
         if (!isset(request()->order[0]['column'])) {
             $records->orderBy('created_at', 'desc');

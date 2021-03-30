@@ -111,10 +111,10 @@ class DocumentasiController extends Controller
                                 return $w->where('id', $area);
                         });
                     })
+                    ->when(!is_null(auth()->user()->client_id), function($e){
+                        return $e->where('client_id', auth()->user()->client_id);
+                    })
                     ->select('*');
-        if(auth()->user()->client_id != null){
-                return $records->where('client_id', auth()->user()->client_id);
-        }
         
         //Init Sort
         if (!isset(request()->order[0]['column'])) {
