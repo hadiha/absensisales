@@ -1,7 +1,12 @@
 <div class="ui fixed blue menu">
     <a href="{{ url('/dashboard') }}" class="header item" style="letter-spacing: 3px;">
-        {{-- <img class="logo" src="{{ asset('img/icon-long.png')}}" style="width: 5em;">&nbsp;&nbsp; --}}
-        {{ config('app.name', 'ABSENSI SALES') }}
+        @if(!is_null(auth()->user()->client_id))
+            @if(!is_null(auth()->user()->client->fileurl))
+                <img class="logo" src="{{ url('storage/'.auth()->user()->client->fileurl) }}" style="width: 4em;">&nbsp;&nbsp;
+                {{-- <img class="logo" src="{{ asset('img/icon-long.png')}}" style="width: 5em;">&nbsp;&nbsp; --}}
+            @endif
+        @endif
+        {{ config('app.name', 'ABSENSI') }}
     </a>
     <div class="menu">
         <a href="#" class="item" onclick="toggleSidebar()">
