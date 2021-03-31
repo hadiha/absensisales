@@ -35,7 +35,7 @@ class User extends Authenticatable implements JWTSubject
     ];
 
     protected $appends = [
-        'area'
+        'area', 'role'
     ];
 
     // Mutator & Accessor
@@ -47,6 +47,10 @@ class User extends Authenticatable implements JWTSubject
         return $sales ? $sales->area['name'] : '-';
     }
 
+    public function getRoleAttribute($value)
+    {
+        return $this->roles()->first()->name;
+    }
 
     /* Relation */
     public function absensi()

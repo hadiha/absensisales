@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\ValidateUserLogin;
 use App\Http\Resources\User as UserResource;
-use App\User;
+use App\Models\Authentication\User;
 use Illuminate\Http\Request;
 
 class AuthController extends Controller
@@ -32,8 +32,10 @@ class AuthController extends Controller
                 ]  
             ], 401);
         }
+    
+        $user = User::where('username', $request->username)->first();
 
-        return $this->respondWithToken($token);
+        return $this->respondWithToken($token, $user);
     }
  
     public function logout()
@@ -53,12 +55,13 @@ class AuthController extends Controller
         return $this->respondWithToken(auth('api')->refresh());
     }
 
-    protected function respondWithToken($token)
+    protected function respondWithToken($token, $user)
     {
         return response()->json([
             'access_token' => $token,
             'token_type'   => 'bearer',
-            'expires_in'   => auth('api')->factory()->getTTL() * 60
+            'expires_in'   => auth('api')->factory()->getTTL() * 60,
+            'user'   => $user
         ]);
     }
 
