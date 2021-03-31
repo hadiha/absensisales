@@ -42,5 +42,6 @@ Route::middleware(['auth:api'])->group(function () {
 
     Route::resource('/master/user', 'API\UserController')->only(['index']);
     Route::resource('/master/barang', 'API\BarangController')->only(['index']);
+    Route::resource('/master/area', 'API\AreaController')->only(['index']);
 
 });

@@ -99,12 +99,11 @@ class BarangController extends Controller
                     ->when($name = request()->name, function ($q) use ($name) {
                         return $q->where('name', 'like', '%' . $name . '%');
                     })
+                    ->when(!is_null(auth()->user()->client_id), function($q){
+                        return $q->where('client_id', auth()->user()->client_id);
+                    })
                     ->select('*');
 
-        if(auth()->user()->client_id != null){
-            $records->where('client_id', auth()->user()->client_id);
-        }
-        
         //Init Sort
         if (!isset(request()->order[0]['column'])) {
             $records->orderBy('created_at', 'desc');

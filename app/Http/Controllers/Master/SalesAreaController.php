@@ -110,12 +110,11 @@ class SalesAreaController extends Controller
                             $w->where('name', 'like', '%'.$area.'%');
                         });
                     })
+                    ->when(!is_null(auth()->user()->client_id), function($q){
+                        return $q->where('client_id', auth()->user()->client_id);
+                    })
                     ->select('*');
 
-        if(auth()->user()->client_id != null){
-            $records->where('client_id', auth()->user()->client_id);
-        }
-        
         //Init Sort
         if (!isset(request()->order[0]['column'])) {
             $records->orderBy('created_at', 'desc');
