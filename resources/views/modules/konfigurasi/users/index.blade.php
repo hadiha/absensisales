@@ -45,6 +45,8 @@
 				var id = $('.hak-akses option:selected').val();
 				if(id == '2'){
 					$('.chose-area').show();
+				} else {
+					$('.chose-area').hide();
 				}
 			});
 		});

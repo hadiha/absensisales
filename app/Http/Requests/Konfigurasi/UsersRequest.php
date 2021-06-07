@@ -19,7 +19,8 @@ class UsersRequest extends Request
             // 'password_lama'    => 'required',
             'username' => 'required|unique:sys_users,username,'.$this->get('id'),
             'email' => 'required|unique:sys_users,email,'.$this->get('id'),
-            'roles' => 'required'
+            'roles.*' => 'required',
+            'client_id' => 'required'
             
         ];
 
@@ -44,6 +45,8 @@ class UsersRequest extends Request
         // $attributes['password_lama']    = 'Password Lama';
         $attributes['username']         = 'Username';
         $attributes['email']            = 'E-Mail';
+        $attributes['roles.*']            = 'Hak Akses';
+        $attributes['client_id']        = 'Klient';
         $attributes['area_id']          = 'Area';
         $attributes['password']         = 'Password Baru';
         $attributes['confirm_password'] = 'Konfirmasi Password';

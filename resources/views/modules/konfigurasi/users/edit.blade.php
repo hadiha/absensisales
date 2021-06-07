@@ -39,10 +39,39 @@
         </div>
         <div class="field">
         	<label>Hak Akses</label>
-			<select name="roles[]" class="ui fluid dropdown">
+			<select name="roles[]" class="ui fluid dropdown hak-akses">
 				{!! App\Models\Authentication\Role::options('display_name', 'id', ['selected' => $record->roles->pluck('id')->toArray()], 'Pilih Hak Akses') !!}
 			</select>
         </div>
+        <div class="field">
+            <label>Klien</label>
+            <select name="client_id" class="ui fluid dropdown hak-akses">
+                @foreach (App\Models\Master\Client::get() as $item)
+                    <option value="{{$item->id}}" @if($record->client_id == $item->id) selected @endif >{{$item->name}}</option>
+                @endforeach
+            </select>
+        </div>
+        {{-- @if($record->roles->first()->name == 'sales') --}}
+            <div class="field chose-area" @if($record->roles->first()->name != 'sales') style="display : none" @endif>
+                <label>Area</label>
+                <div class="ui left icon input">
+                    <i class="lock icon"></i>
+                    @if ($record->area_id == null)
+                        <select name="area_id" class="ui fluid dropdown">
+                            {!! App\Models\Master\Area::options('name', 'id', [], 'Pilih Area') !!}
+                        </select>
+                    @else
+                    <select name="area_id" class="ui fluid dropdown">
+                        <option value="">Pilih Area</option>
+                        @foreach (App\Models\Master\Area::where('client_id', $record->client_id)->get() as $are)
+                            <option value="{{$are->id}}" @if($record->area_id == $are->id) selected @endif>{{$are->name}}</option>
+                        @endforeach
+                    </select>
+                    @endif
+                </div>
+            </div>
+        {{-- @endif --}}
+
         <div class="field">
         	<label>Password Lama</label>
             <div class="ui left icon input">
