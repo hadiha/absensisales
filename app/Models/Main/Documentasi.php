@@ -49,8 +49,8 @@ class Documentasi extends Model
                         return $q->orderBy('created_at', 'desc');
                     })
                     ->when($month = request()->month, function ($q) use ($month) {
-                      return $q->whereMonth('created_at', Carbon::createFromFormat('m', $month)->format('m'))
-                              ->whereYear('created_at', Carbon::createFromFormat('Y', request()->year)->format('Y'));
+                      return $q->whereMonth('date', Carbon::createFromFormat('m', $month)->format('m'))
+                              ->whereYear('date', Carbon::createFromFormat('Y', request()->year)->format('Y'));
                   })
                   ->where('created_by', auth()->user()->id);
     }
