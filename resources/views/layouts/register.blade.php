@@ -121,7 +121,7 @@
             </div>
           </div>
     
-          <div class="col-sm-5 px-0 h-100 bg-white d-flex">
+          <div class="col-sm-5 px-0 h-100 bg-white d-flex" style="background-image:url('{{ asset('img/backgrounds/bg-1.jpg') }}');background-position:left">
             @yield('content')
           </div>
         </div>
