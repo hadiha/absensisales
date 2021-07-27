@@ -11,7 +11,7 @@
 			<label>Nama Pegawai</label>
 			<select name="pegawai_id" class="ui fluid dropdown chose-user">
 				<option value="">Pilih Pegawai</option>
-				@foreach (App\Models\Authentication\User::get() as $item)
+				@foreach ($users as $item)
 					<option value="{{$item->id}}" data-area="{{$item->area}}">{{$item->name}}</option>					
 				@endforeach
 			</select>

@@ -138,7 +138,7 @@ class LaporanController extends Controller
                         return $q->whereBetween('tanggal',[Carbon::parse($from)->format('Y-m-d'), Carbon::parse(request()->to)->format('Y-m-d') ]);
                     })
                     ->when(!is_null(auth()->user()->client_id), function($q){
-                        $q->whereHas('user', function($e) {
+                        $q->whereHas('creator', function($e) {
                             return $e->where('client_id', auth()->user()->client_id);
                         });
                     })

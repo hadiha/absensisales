@@ -106,7 +106,11 @@ class UsersController extends Controller
 
     public function grid(Request $request)
     {
-        $records = User::select('*');
+        if(!is_null(auth()->user()->client_id)){
+            $records = User::where('client_id', auth()->user()->client_id)->select('*');
+        } else {
+            $records = User::select('*');
+        }
         
         //Init Sort
         if (!isset(request()->order[0]['column'])) {

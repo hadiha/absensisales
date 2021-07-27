@@ -107,6 +107,11 @@ class AuditController extends Controller
                             })
                             ->when($date = request()->date, function ($q) use ($date) {
                                 $q->whereDate('created_at', Carbon::parse($date)->format('Y-m-d'));
+                            })
+                            ->when(!is_null(auth()->user()->client_id), function($q){
+                                $q->whereHas('user', function($e) {
+                                    return $e->where('client_id', auth()->user()->client_id);
+                                });
                             });
       
 

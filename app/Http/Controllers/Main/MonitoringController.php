@@ -230,7 +230,10 @@ class MonitoringController extends Controller
 
     public function create()
     {
-        return $this->render('modules.main.monitoring.create');
+        $users = User::when(!is_null(auth()->user()->client_id), function($q){
+                            $q->where('client_id', auth()->user()->client_id);
+                        })->get();
+        return $this->render('modules.main.monitoring.create', compact('users'));
     }
 
     public function add($id)

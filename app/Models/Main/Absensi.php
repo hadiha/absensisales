@@ -281,8 +281,14 @@ class Absensi extends Model
     public static function getDash($status, $year)
     {
         $record = Absensi::where('status', $status)
+                    ->when(!is_null(auth()->user()->client_id), function($q){
+                        $q->whereHas('user', function($e) {
+                            return $e->where('client_id', auth()->user()->client_id);
+                        });
+                    })
                     ->whereMonth('created_at', $year->format('m'))
                     ->whereYear('created_at', $year->format('Y'))->count();
+                    
 
         return $record;
     }

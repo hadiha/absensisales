@@ -13,6 +13,7 @@ use App\Http\Rules\TrelloCheckUser;
 
 // libraries
 use anlutro\cURL\cURL;
+use App\Models\Master\Client;
 use Carbon\Carbon;
 
 class RegisterController extends Controller
@@ -59,8 +60,14 @@ class RegisterController extends Controller
             'email'           => 'required|email',
             'username'        => 'required|string|max:255',
             'password'        => 'required|string|min:6|confirmed',
-            'username_trello' => ['required', new TrelloCheckUser],
-            'nama'            => 'required',
+            // 'username_trello' => ['required', new TrelloCheckUser],
+            // 'nama'            => 'required',
+        ], [
+            'username.required' => 'Username tidak boleh kosong',
+            'email.required' => 'Email tidak boleh kosong',
+            'email.email' => 'Format Email tidak sesuai',
+            'password.required' => 'Password tidak boleh kosong',
+            'password.confirmed' => 'Password tidak sama',
         ]);
     }
 
@@ -78,31 +85,22 @@ class RegisterController extends Controller
 
     protected function create(array $data)
     {
+        $klien = Client::create([
+            'code' => 'GUEST',
+            'name' => $data['perusahaan'],
+        ]);
+
         $user =  User::create([
+            'client_id'  => $klien->id,
             'username'   => $data['username'],
+            'name'       => ucfirst($data['username']),
             'last_login' => date('Y-m-d H:i:s'),
             'password'   => bcrypt($data['password']),
             'email'      => $data['email'],
         ]);
         
-        $user->roles()->attach(Role::where('name', 'user')->first());
+        $user->roles()->attach(Role::where('name', 'admin')->first());
         
-        $user->karyawan()->create([
-            'nik'         => $data['nik'],
-            'nama'        => $data['nama'],
-            'tgl_lahir'   => Carbon::createFromFormat('d/m/Y', $data['birth_date'])->format('Y-m-d'),
-            'tmp_lahir'   => $data['tmp_lahir'],
-            'jk'          => $data['gender'],
-            'jabatan'     => $data['jabatan'],
-            'no_hp'       => $data['phone'],
-            'no_npwp'     => $data['npwp'],
-            'no_rekening' => $data['no_rekening'],
-            'atas_nama'   => $data['atas_nama'],
-            'tgl_masuk'   => date('Y-m-d'),
-            'tgl_keluar'  => null,
-            'status'      => $data['status'],
-        ]);
-
         return $user;
     }
 }

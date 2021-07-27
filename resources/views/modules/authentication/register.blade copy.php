@@ -14,15 +14,15 @@
 </style>
 @append
 @section('content')
-<div class="ui middle aligned center aligned grid w-100 pl-5">
-    <div class="twenty wide column content" style="max-width: 100%">
+<div class="ui middle aligned center aligned grid">
+    <div class="eight wide column content">
         {{-- @if (count($errors) > 0) --}}
         <div class="ui negative message" style="display: none;">
             <i class="close icon"></i>
-            <div class="header" style="font-size: medium !important">
+            <div class="header">
                 <strong>Mohon Maaf, </strong>Terjadi Kesalahan<br>
             </div>
-            <ul class="ui left aligned h6" style="text-align: left;">
+            <ul class="ui left aligned" style="text-align: left;">
                 {{-- @foreach ($errors->all() as $error)
                 <li>{{ $error }}</li>
                 @endforeach --}}
@@ -35,7 +35,7 @@
             <div class="ui top attached segment">
 
                 <div class="ui grid">
-                    <div class="sixteen wide column" style="max-width: -webkit-fill-available;">
+                    <div class="sixteen wide column">
                         {{-- <div class="ui blue ribbon label"> --}}
                         <h4 class="ui horizontal divider header">
                             <i class="user icon"></i>
@@ -61,17 +61,6 @@
                                 <div class="ui left icon input">
                                     <i class="mail icon"></i>
                                     <input type="text"  placeholder="E-mail" name="email" value="{{ old('email') }}">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="two fields">
-                            <div class="five wide field">
-                                <label for="email" style="text-align: left;">Perusahaan</label>
-                            </div>
-                            <div class="eleven wide field">
-                                <div class="ui left icon input">
-                                    <i class="building icon"></i>
-                                    <input type="text"  placeholder="Perusahaan" name="perusahaan">
                                 </div>
                             </div>
                         </div>

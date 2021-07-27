@@ -29,12 +29,18 @@ class DashboardController extends Controller
                     $q->where('status', 'hadir') 
                     ->whereYear('created_at', Carbon::now()->format('Y'));        
                 }])
+                ->when(!is_null(auth()->user()->client_id), function($w){
+                    $w->where('client_id', auth()->user()->client_id);
+                })
                 ->orderBy('absensi_count', 'desc')
                 ->take(5)->get();
         $worsts = User::withCount(['absensi' => function($q){
                     $q->where('status', 'hadir')
                     ->whereYear('created_at', Carbon::now()->format('Y'));   
                 }])
+                ->when(!is_null(auth()->user()->client_id), function($w){
+                    $w->where('client_id', auth()->user()->client_id);
+                })
                 ->orderBy('absensi_count', 'asc')
                 ->take(5)->get();
             
