@@ -59,12 +59,14 @@ class RegisterController extends Controller
         return Validator::make($data, [
             'email'           => 'required|email',
             'username'        => 'required|string|max:255',
+            'perusahaan'      => 'required|string|max:255',
             'password'        => 'required|string|min:6|confirmed',
             // 'username_trello' => ['required', new TrelloCheckUser],
             // 'nama'            => 'required',
         ], [
             'username.required' => 'Username tidak boleh kosong',
             'email.required' => 'Email tidak boleh kosong',
+            'perusahaan.required' => 'Perusahaan tidak boleh kosong',
             'email.email' => 'Format Email tidak sesuai',
             'password.required' => 'Password tidak boleh kosong',
             'password.confirmed' => 'Password tidak sama',
