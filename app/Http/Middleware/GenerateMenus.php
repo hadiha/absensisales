@@ -40,7 +40,7 @@ class GenerateMenus
                ->active('kehadiran/rekap/*');
 
 
-            $menu->add('Barang', 'barang')
+            $menu->add('Laporan Barang', 'barang')
                  ->data('icon', 'tags')
                  ->data('perms', 'main-barang')
                  ->active('barang');
@@ -53,9 +53,6 @@ class GenerateMenus
             $menu->add('Data Master')
                  ->data('icon', 'database')
                  ->active('master/*');
-          //   $menu->dataMaster->add('Data User Aplikasi', 'master/karyawan/')
-          //      //   ->data('perms', 'master-karyawan')
-          //        ->active('master/karyawan/*');
             $menu->dataMaster->add('Data Klien', 'master/client/')
                ->data('perms', 'master-client')
                ->active('master/client/*');
